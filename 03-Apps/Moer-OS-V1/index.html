@@ -30,6 +30,7 @@
         <button class="nav-item" data-page="quotation-center" type="button">Quotation Center</button>
         <button class="nav-item" data-page="shipment-center" type="button">Shipment Center</button>
         <button class="nav-item" data-page="product-center" type="button">Product Center</button>
+        <button class="nav-item" data-page="finance-center" type="button">Finance Center</button>
         <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
         <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
         <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
@@ -1179,6 +1180,129 @@
         </div>
       </section>
 
+      <section class="page" id="finance-center">
+        <header class="page-header">
+          <p class="eyebrow">Finance Center</p>
+          <h1>Finance Center V1</h1>
+          <p class="date-line">A simple local payment tracker for receivables, payables, deposits, balances, supplier payments, and notes.</p>
+        </header>
+
+        <section class="finance-dashboard" id="financeDashboard"></section>
+
+        <div class="finance-center-layout">
+          <section class="finance-panel finance-form-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Create / Edit</p>
+              <h2 id="financeFormTitle">New Finance Record</h2>
+            </div>
+            <form id="financeForm" class="finance-form">
+              <input id="financeId" type="hidden">
+              <label>
+                Record ID
+                <input id="financeCode" type="text" placeholder="FIN-2026-001" required>
+              </label>
+              <label>
+                Type
+                <select id="financeType" required>
+                  <option>Customer Payment</option>
+                  <option>Supplier Payment</option>
+                  <option>Expense</option>
+                  <option>Refund</option>
+                </select>
+              </label>
+              <label>
+                Related customer
+                <select id="financeCustomer"></select>
+              </label>
+              <label>
+                Related supplier
+                <input id="financeSupplier" type="text" placeholder="Supplier name" list="supplierOptions">
+              </label>
+              <label>
+                Related order
+                <select id="financeRelatedOrder"></select>
+              </label>
+              <label>
+                Amount
+                <input id="financeAmount" type="number" min="0" step="0.01" placeholder="5580">
+              </label>
+              <label>
+                Currency
+                <select id="financeCurrency">
+                  <option>USD</option>
+                  <option>CNY</option>
+                  <option>EUR</option>
+                  <option>GBP</option>
+                </select>
+              </label>
+              <label>
+                Payment status
+                <select id="financePaymentStatus">
+                  <option>Waiting</option>
+                  <option>Partial</option>
+                  <option>Paid</option>
+                  <option>Overdue</option>
+                  <option>Cancelled</option>
+                </select>
+              </label>
+              <label>
+                Due date
+                <input id="financeDueDate" type="date">
+              </label>
+              <label>
+                Paid date
+                <input id="financePaidDate" type="date">
+              </label>
+              <label class="full-field">
+                Payment method
+                <input id="financePaymentMethod" type="text" placeholder="Bank transfer / WeChat Pay / Cash">
+              </label>
+              <label class="full-field">
+                Notes
+                <textarea id="financeNotes" placeholder="Payment details, reminders, risk, or next follow-up"></textarea>
+              </label>
+              <div class="finance-form-actions">
+                <button class="open-link" type="submit">Save Record</button>
+                <button class="open-link secondary" id="resetFinanceForm" type="button">New Blank Record</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="finance-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Payments</p>
+              <h2>Payment List</h2>
+            </div>
+            <div class="finance-filter-grid">
+              <input id="financeSearchInput" type="search" placeholder="Search finance records">
+              <select id="financeTypeFilter">
+                <option value="">All types</option>
+              </select>
+              <select id="financeStatusFilter">
+                <option value="">All statuses</option>
+              </select>
+              <select id="financeCustomerFilter">
+                <option value="">All customers</option>
+              </select>
+              <select id="financeSupplierFilter">
+                <option value="">All suppliers</option>
+              </select>
+            </div>
+            <div class="finance-list" id="financeList"></div>
+          </section>
+
+          <section class="finance-panel finance-detail-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Detail</p>
+              <h2 id="financeDetailTitle">Select a finance record</h2>
+            </div>
+            <div id="financeDetail" class="finance-detail">
+              <p class="empty-state">Choose a finance record to view basic info, related order, timeline, and notes.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section class="page" id="knowledge-center">
         <header class="page-header">
           <p class="eyebrow">Knowledge Center</p>
@@ -1274,6 +1398,7 @@
       <button class="bottom-item" data-page="quotation-center" type="button">Quotes</button>
       <button class="bottom-item" data-page="shipment-center" type="button">Shipments</button>
       <button class="bottom-item" data-page="product-center" type="button">Products</button>
+      <button class="bottom-item" data-page="finance-center" type="button">Finance</button>
       <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
       <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
       <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>

@@ -17,12 +17,14 @@ const storageKeys = {
   quotations: "moerOS.quotations",
   shipments: "moerOS.shipments",
   products: "moerOS.products",
+  financeRecords: "moerOS.financeRecords",
   ordersSeededV1: "moerOS.ordersSeededV1",
   customersSeededV2: "moerOS.customersSeededV2",
   suppliersSeededV1: "moerOS.suppliersSeededV1",
   quotationsSeededV1: "moerOS.quotationsSeededV1",
   shipmentsSeededV1: "moerOS.shipmentsSeededV1",
-  productsSeededV1: "moerOS.productsSeededV1"
+  productsSeededV1: "moerOS.productsSeededV1",
+  financeRecordsSeededV1: "moerOS.financeRecordsSeededV1"
 };
 
 const orderStatusOptions = ["New Inquiry", "Quoting", "Waiting Supplier", "Waiting Customer", "Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered", "On Hold"];
@@ -38,6 +40,9 @@ const shipmentStatusOptions = ["Preparing", "Booked", "In Transit", "Arrived", "
 const shipmentDocumentStatusOptions = ["Not Started", "Pending", "Partial", "Ready", "Sent"];
 const shipmentDocumentNames = ["Commercial Invoice", "Packing List", "Bill of Lading", "Certificate of Origin", "Other documents"];
 const productCategoryOptions = ["Stationery", "Christmas Items", "Daily-use Products", "Toys", "Packaging", "Household", "Kitchenware", "Gift Items", "Bags", "Personal Care"];
+const financeTypeOptions = ["Customer Payment", "Supplier Payment", "Expense", "Refund"];
+const financePaymentStatusOptions = ["Waiting", "Partial", "Paid", "Overdue", "Cancelled"];
+const financeCurrencyOptions = ["USD", "CNY", "EUR", "GBP"];
 
 const customerSeedData = [
   {
@@ -789,6 +794,111 @@ const productSeedData = [
   }
 ];
 
+const financeSeedData = [
+  {
+    id: "finance-001",
+    financeCode: "FIN-2026-001",
+    type: "Customer Payment",
+    customerName: "Nicholas",
+    supplierName: "",
+    relatedOrder: "MOER-2026-001",
+    amount: "5580",
+    currency: "USD",
+    paymentStatus: "Paid",
+    dueDate: "2026-06-21",
+    paidDate: "2026-06-22",
+    paymentMethod: "Bank transfer",
+    notes: "30% deposit received for Nicholas Trinidad container project.",
+    createdAt: "2026-06-21T10:00:00",
+    updatedAt: "2026-06-22T10:30:00"
+  },
+  {
+    id: "finance-002",
+    financeCode: "FIN-2026-002",
+    type: "Customer Payment",
+    customerName: "Nicholas",
+    supplierName: "",
+    relatedOrder: "MOER-2026-001",
+    amount: "13020",
+    currency: "USD",
+    paymentStatus: "Waiting",
+    dueDate: "2026-07-15",
+    paidDate: "",
+    paymentMethod: "Bank transfer",
+    notes: "Balance payment to request before shipment release.",
+    createdAt: "2026-06-22T11:00:00",
+    updatedAt: "2026-06-26T09:00:00"
+  },
+  {
+    id: "finance-003",
+    financeCode: "FIN-2026-003",
+    type: "Supplier Payment",
+    customerName: "Graham",
+    supplierName: "Yiwu Stationery Supplier",
+    relatedOrder: "MOER-2026-003",
+    amount: "3100",
+    currency: "USD",
+    paymentStatus: "Partial",
+    dueDate: "2026-06-30",
+    paidDate: "",
+    paymentMethod: "Bank transfer",
+    notes: "Supplier deposit waiting after Graham confirms notebook designs.",
+    createdAt: "2026-06-23T16:20:00",
+    updatedAt: "2026-06-26T11:00:00"
+  },
+  {
+    id: "finance-004",
+    financeCode: "FIN-2026-004",
+    type: "Supplier Payment",
+    customerName: "Eddie",
+    supplierName: "Christmas Decoration Factory",
+    relatedOrder: "MOER-2026-002",
+    amount: "2940",
+    currency: "USD",
+    paymentStatus: "Waiting",
+    dueDate: "2026-07-05",
+    paidDate: "",
+    paymentMethod: "Bank transfer",
+    notes: "Supplier deposit can be arranged after Christmas quote is approved.",
+    createdAt: "2026-06-24T15:00:00",
+    updatedAt: "2026-06-26T10:20:00"
+  },
+  {
+    id: "finance-005",
+    financeCode: "FIN-2026-005",
+    type: "Expense",
+    customerName: "Nicholas",
+    supplierName: "",
+    relatedOrder: "MOER-2026-001",
+    amount: "280",
+    currency: "CNY",
+    paymentStatus: "Paid",
+    dueDate: "2026-06-26",
+    paidDate: "2026-06-26",
+    paymentMethod: "WeChat Pay",
+    notes: "Local warehouse handling expense for mixed container planning.",
+    createdAt: "2026-06-26T13:00:00",
+    updatedAt: "2026-06-26T13:00:00"
+  },
+  {
+    id: "finance-006",
+    financeCode: "FIN-2026-006",
+    type: "Refund",
+    customerName: "Eddie",
+    supplierName: "Christmas Decoration Factory",
+    relatedOrder: "MOER-2026-002",
+    amount: "120",
+    currency: "USD",
+    paymentStatus: "Waiting",
+    dueDate: "2026-07-02",
+    paidDate: "",
+    paymentMethod: "Bank transfer",
+    notes: "Small refund / price adjustment to confirm after sample cost review.",
+    createdAt: "2026-06-26T14:00:00",
+    updatedAt: "2026-06-26T14:00:00"
+  }
+];
+
 const editableLists = {
   focusTasks: [],
   peopleWaiting: [],
@@ -808,6 +918,8 @@ let shipments = [];
 let selectedShipmentId = "";
 let products = [];
 let selectedProductId = "";
+let financeRecords = [];
+let selectedFinanceId = "";
 
 const portalModules = [
   {
@@ -873,6 +985,14 @@ const portalModules = [
     purpose: "Simple product database for categories, keywords, suppliers, interested customers, prices, notes, and related work.",
     status: "Prototype",
     internalPage: "product-center"
+  },
+  {
+    id: "finance-center",
+    section: "today",
+    name: "Finance Center",
+    purpose: "Simple finance tracker for customer payments, supplier payments, expenses, refunds, due dates, and notes.",
+    status: "Prototype",
+    internalPage: "finance-center"
   },
   {
     id: "order-center-docs",
@@ -977,6 +1097,14 @@ const searchModules = [
     ]
   },
   {
+    name: "Finance",
+    items: [
+      { title: "Finance Center", type: "Prototype", description: "Open the local Finance Center prototype.", page: "finance-center" },
+      { title: "Customer payments", type: "Finance", description: "Track customer deposits, balances, due dates, and paid dates.", page: "finance-center" },
+      { title: "Supplier payments", type: "Finance", description: "Track supplier payment status, methods, due dates, and notes.", page: "finance-center" }
+    ]
+  },
+  {
     name: "Knowledge",
     items: [
       { title: "China sourcing process", type: "Knowledge", description: "How Moer helps buyers source, inspect, consolidate, and ship products.", page: "knowledge-center" },
@@ -1010,6 +1138,7 @@ const searchModules = [
       { title: "Quotation Center", type: "Prototype", description: "Open the local Quotation Center prototype.", page: "quotation-center" },
       { title: "Shipment Center", type: "Prototype", description: "Open the local Shipment Center prototype.", page: "shipment-center" },
       { title: "Product Center", type: "Prototype", description: "Open the local Product Center prototype.", page: "product-center" },
+      { title: "Finance Center", type: "Prototype", description: "Open the local Finance Center prototype.", page: "finance-center" },
       { title: "Order Center Architecture", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
@@ -1251,6 +1380,31 @@ const productList = document.querySelector("#productList");
 const productDetailTitle = document.querySelector("#productDetailTitle");
 const productDetail = document.querySelector("#productDetail");
 const productCategoryOptionsList = document.querySelector("#productCategoryOptions");
+const financeForm = document.querySelector("#financeForm");
+const financeFormTitle = document.querySelector("#financeFormTitle");
+const financeId = document.querySelector("#financeId");
+const financeCode = document.querySelector("#financeCode");
+const financeType = document.querySelector("#financeType");
+const financeCustomer = document.querySelector("#financeCustomer");
+const financeSupplier = document.querySelector("#financeSupplier");
+const financeRelatedOrder = document.querySelector("#financeRelatedOrder");
+const financeAmount = document.querySelector("#financeAmount");
+const financeCurrency = document.querySelector("#financeCurrency");
+const financePaymentStatus = document.querySelector("#financePaymentStatus");
+const financeDueDate = document.querySelector("#financeDueDate");
+const financePaidDate = document.querySelector("#financePaidDate");
+const financePaymentMethod = document.querySelector("#financePaymentMethod");
+const financeNotes = document.querySelector("#financeNotes");
+const resetFinanceForm = document.querySelector("#resetFinanceForm");
+const financeDashboard = document.querySelector("#financeDashboard");
+const financeSearchInput = document.querySelector("#financeSearchInput");
+const financeTypeFilter = document.querySelector("#financeTypeFilter");
+const financeStatusFilter = document.querySelector("#financeStatusFilter");
+const financeCustomerFilter = document.querySelector("#financeCustomerFilter");
+const financeSupplierFilter = document.querySelector("#financeSupplierFilter");
+const financeList = document.querySelector("#financeList");
+const financeDetailTitle = document.querySelector("#financeDetailTitle");
+const financeDetail = document.querySelector("#financeDetail");
 
 function showPage(pageId) {
   pages.forEach((page) => {
@@ -1511,6 +1665,7 @@ function saveOrderFromForm(event) {
   renderOrders();
   renderOrderSupplierOptions(order.supplierName);
   renderShipmentOrderOptions();
+  renderFinanceOrderOptions();
   selectOrder(order.id);
   refreshSelectedCustomerDetail();
   refreshSelectedSupplierDetail();
@@ -1697,6 +1852,7 @@ function deleteOrder(id) {
   renderOrders();
   renderOrderSupplierOptions();
   renderShipmentOrderOptions();
+  renderFinanceOrderOptions();
   refreshSelectedCustomerDetail();
   refreshSelectedSupplierDetail();
   clearOrderForm();
@@ -2031,9 +2187,11 @@ function saveCustomerFromForm(event) {
   renderQuotationCustomerOptions(customer.customerName);
   renderShipmentCustomerOptions(customer.customerName);
   renderProductCustomerOptions(customer.customerName);
+  renderFinanceCustomerOptions(customer.customerName);
   renderQuotationFilters();
   renderShipmentFilters();
   renderProductFilters();
+  renderFinanceFilters();
   selectCustomer(customer.id);
   clearCustomerForm();
 }
@@ -2245,9 +2403,11 @@ function deleteCustomer(id) {
   renderQuotationCustomerOptions();
   renderShipmentCustomerOptions();
   renderProductCustomerOptions();
+  renderFinanceCustomerOptions();
   renderQuotationFilters();
   renderShipmentFilters();
   renderProductFilters();
+  renderFinanceFilters();
   clearCustomerForm();
 
   if (selectedCustomerId) {
@@ -4371,6 +4531,465 @@ function setupProductCenter() {
   });
 }
 
+function loadFinanceRecords() {
+  const savedFinanceRecords = localStorage.getItem(storageKeys.financeRecords);
+  if (!savedFinanceRecords) {
+    financeRecords = financeSeedData.map(normalizeFinanceRecord);
+    saveFinanceRecords();
+    localStorage.setItem(storageKeys.financeRecordsSeededV1, "true");
+    return;
+  }
+
+  try {
+    const parsedFinanceRecords = JSON.parse(savedFinanceRecords);
+    financeRecords = Array.isArray(parsedFinanceRecords) ? parsedFinanceRecords.map(normalizeFinanceRecord) : financeSeedData.map(normalizeFinanceRecord);
+  } catch (error) {
+    financeRecords = financeSeedData.map(normalizeFinanceRecord);
+  }
+
+  if (localStorage.getItem(storageKeys.financeRecordsSeededV1) !== "true") {
+    const existingCodes = new Set(financeRecords.map((record) => record.financeCode.toLowerCase()));
+    const missingSamples = financeSeedData
+      .filter((record) => !existingCodes.has(record.financeCode.toLowerCase()))
+      .map(normalizeFinanceRecord);
+    financeRecords = [...missingSamples, ...financeRecords];
+    localStorage.setItem(storageKeys.financeRecordsSeededV1, "true");
+    saveFinanceRecords();
+  }
+}
+
+function saveFinanceRecords() {
+  localStorage.setItem(storageKeys.financeRecords, JSON.stringify(financeRecords));
+}
+
+function normalizeFinanceRecord(record) {
+  const now = new Date().toISOString();
+  return {
+    id: record.id || `finance-${Date.now()}`,
+    financeCode: record.financeCode || `FIN-${new Date().getFullYear()}-${Math.floor(Math.random() * 900 + 100)}`,
+    type: record.type || "Customer Payment",
+    customerName: record.customerName || "",
+    supplierName: record.supplierName || "",
+    relatedOrder: record.relatedOrder || "",
+    amount: String(record.amount || ""),
+    currency: record.currency || "USD",
+    paymentStatus: record.paymentStatus || "Waiting",
+    dueDate: record.dueDate || "",
+    paidDate: record.paidDate || "",
+    paymentMethod: record.paymentMethod || "",
+    notes: record.notes || "",
+    createdAt: record.createdAt || now,
+    updatedAt: record.updatedAt || now,
+    timeline: Array.isArray(record.timeline) ? record.timeline : []
+  };
+}
+
+function getFinanceFormData() {
+  const now = new Date().toISOString();
+  const existingRecord = financeRecords.find((record) => record.id === financeId.value);
+
+  return {
+    id: financeId.value || `finance-${Date.now()}`,
+    financeCode: financeCode.value.trim(),
+    type: financeType.value,
+    customerName: financeCustomer.value,
+    supplierName: financeSupplier.value.trim(),
+    relatedOrder: financeRelatedOrder.value,
+    amount: financeAmount.value.trim(),
+    currency: financeCurrency.value,
+    paymentStatus: financePaymentStatus.value,
+    dueDate: financeDueDate.value,
+    paidDate: financePaidDate.value,
+    paymentMethod: financePaymentMethod.value.trim(),
+    notes: financeNotes.value.trim(),
+    createdAt: existingRecord ? existingRecord.createdAt : now,
+    updatedAt: now,
+    timeline: existingRecord ? existingRecord.timeline : [{
+      id: `finance-timeline-${Date.now()}`,
+      date: now.slice(0, 10),
+      title: "Finance record created",
+      description: "Payment record was added to Finance Center.",
+      status: "Created"
+    }]
+  };
+}
+
+function saveFinanceFromForm(event) {
+  event.preventDefault();
+  const record = getFinanceFormData();
+  if (!record.financeCode || !record.type) {
+    return;
+  }
+
+  const existingIndex = financeRecords.findIndex((item) => item.id === record.id);
+  if (existingIndex >= 0) {
+    financeRecords[existingIndex] = record;
+  } else {
+    financeRecords.unshift(record);
+  }
+
+  selectedFinanceId = record.id;
+  saveFinanceRecords();
+  renderFinanceDashboard();
+  renderFinanceFilters();
+  renderFinanceRecords();
+  selectFinanceRecord(record.id);
+  clearFinanceForm();
+}
+
+function clearFinanceForm() {
+  financeForm.reset();
+  financeId.value = "";
+  renderFinanceCustomerOptions();
+  renderFinanceOrderOptions();
+  financeCurrency.value = "USD";
+  financePaymentStatus.value = "Waiting";
+  financeFormTitle.textContent = "New Finance Record";
+}
+
+function getFinanceFilterValues() {
+  return {
+    query: financeSearchInput.value.trim().toLowerCase(),
+    type: financeTypeFilter.value,
+    status: financeStatusFilter.value,
+    customer: financeCustomerFilter.value,
+    supplier: financeSupplierFilter.value
+  };
+}
+
+function getFilteredFinanceRecords() {
+  const filters = getFinanceFilterValues();
+  return financeRecords.filter((record) => {
+    const haystack = [
+      record.financeCode,
+      record.type,
+      record.customerName,
+      record.supplierName,
+      record.relatedOrder,
+      record.amount,
+      record.currency,
+      record.paymentStatus,
+      record.dueDate,
+      record.paidDate,
+      record.paymentMethod,
+      record.notes
+    ].join(" ").toLowerCase();
+
+    return (!filters.query || haystack.includes(filters.query))
+      && (!filters.type || record.type === filters.type)
+      && (!filters.status || record.paymentStatus === filters.status)
+      && (!filters.customer || record.customerName === filters.customer)
+      && (!filters.supplier || record.supplierName === filters.supplier);
+  });
+}
+
+function getFinanceAmount(record) {
+  const amount = Number(String(record.amount || "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(amount) ? amount : 0;
+}
+
+function formatFinanceMoney(record) {
+  const amount = getFinanceAmount(record);
+  const formatted = amount.toLocaleString("en-US", {
+    minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2
+  });
+  return `${record.currency || "USD"} ${formatted}`;
+}
+
+function summarizeFinanceByCurrency(records) {
+  const totals = records.reduce((summary, record) => {
+    const currency = record.currency || "USD";
+    summary[currency] = (summary[currency] || 0) + getFinanceAmount(record);
+    return summary;
+  }, {});
+  const entries = Object.entries(totals);
+
+  if (!entries.length) {
+    return "0";
+  }
+
+  return entries.map(([currency, amount]) => `${currency} ${amount.toLocaleString("en-US", {
+    minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2
+  })}`).join(" + ");
+}
+
+function renderFinanceDashboard() {
+  const activeRecords = financeRecords.filter((record) => record.paymentStatus !== "Cancelled");
+  const receivables = activeRecords.filter((record) => record.type === "Customer Payment");
+  const payables = activeRecords.filter((record) => ["Supplier Payment", "Expense", "Refund"].includes(record.type));
+  const waiting = activeRecords.filter((record) => ["Waiting", "Partial", "Overdue"].includes(record.paymentStatus));
+  const supplierPayments = activeRecords.filter((record) => record.type === "Supplier Payment");
+  const deposits = activeRecords.filter((record) => record.type === "Customer Payment" && record.notes.toLowerCase().includes("deposit"));
+  const balances = activeRecords.filter((record) => record.type === "Customer Payment" && record.notes.toLowerCase().includes("balance"));
+  const metrics = [
+    { label: "Total Receivables", value: summarizeFinanceByCurrency(receivables) },
+    { label: "Total Payables", value: summarizeFinanceByCurrency(payables) },
+    { label: "Payment Waiting", value: waiting.length },
+    { label: "Supplier Payments", value: summarizeFinanceByCurrency(supplierPayments) },
+    { label: "Customer Deposits", value: summarizeFinanceByCurrency(deposits) },
+    { label: "Balance Payments", value: summarizeFinanceByCurrency(balances) }
+  ];
+
+  financeDashboard.innerHTML = metrics.map((metric) => `
+    <article class="order-metric-card finance-metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${escapeHtml(metric.value)}</strong>
+    </article>
+  `).join("");
+}
+
+function renderFinanceFilters() {
+  const selected = {
+    type: financeTypeFilter.value,
+    status: financeStatusFilter.value,
+    customer: financeCustomerFilter.value,
+    supplier: financeSupplierFilter.value
+  };
+  const customerNames = [...new Set(financeRecords.map((record) => record.customerName).filter(Boolean))].sort();
+  const supplierNames = [...new Set(financeRecords.map((record) => record.supplierName).filter(Boolean))].sort();
+
+  financeTypeFilter.innerHTML = '<option value="">All types</option>' + financeTypeOptions.map((type) => `<option value="${escapeHtml(type)}">${escapeHtml(type)}</option>`).join("");
+  financeStatusFilter.innerHTML = '<option value="">All statuses</option>' + financePaymentStatusOptions.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+  financeCustomerFilter.innerHTML = '<option value="">All customers</option>' + customerNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  financeSupplierFilter.innerHTML = '<option value="">All suppliers</option>' + supplierNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+
+  financeTypeFilter.value = selected.type;
+  financeStatusFilter.value = selected.status;
+  financeCustomerFilter.value = selected.customer;
+  financeSupplierFilter.value = selected.supplier;
+}
+
+function renderFinanceRecords() {
+  const filteredRecords = getFilteredFinanceRecords();
+
+  if (!filteredRecords.length) {
+    financeList.innerHTML = '<p class="empty-state">No finance records found.</p>';
+    financeDetailTitle.textContent = "Select a finance record";
+    financeDetail.innerHTML = '<p class="empty-state">Create a finance record or adjust the filters.</p>';
+    return;
+  }
+
+  if (!selectedFinanceId || !filteredRecords.some((record) => record.id === selectedFinanceId)) {
+    selectedFinanceId = filteredRecords[0].id;
+  }
+
+  financeList.innerHTML = filteredRecords.map((record) => `
+    <button class="finance-list-card ${record.id === selectedFinanceId ? "active" : ""}" type="button" data-finance-id="${record.id}">
+      <h3>${escapeHtml(record.financeCode)}</h3>
+      <p>${escapeHtml(record.type)} · ${escapeHtml(record.customerName || "No customer")}</p>
+      <p>${escapeHtml(record.relatedOrder || "No order")} · ${escapeHtml(formatFinanceMoney(record))}</p>
+      <div class="order-list-meta">
+        <span class="order-pill status-${escapeHtml(record.paymentStatus.toLowerCase())}">${escapeHtml(record.paymentStatus)}</span>
+        <span class="order-pill">${escapeHtml(record.dueDate || "No due date")}</span>
+        <span class="order-pill">${escapeHtml(record.paymentMethod || "No method")}</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+function selectFinanceRecord(id) {
+  const record = financeRecords.find((item) => item.id === id);
+  if (!record) {
+    return;
+  }
+
+  selectedFinanceId = id;
+  renderFinanceRecords();
+  renderFinanceDetail(record);
+}
+
+function editFinanceRecord(id) {
+  const record = financeRecords.find((item) => item.id === id);
+  if (!record) {
+    return;
+  }
+
+  financeId.value = record.id;
+  financeCode.value = record.financeCode;
+  financeType.value = record.type;
+  renderFinanceCustomerOptions(record.customerName);
+  financeCustomer.value = record.customerName;
+  financeSupplier.value = record.supplierName;
+  renderFinanceOrderOptions(record.relatedOrder);
+  financeRelatedOrder.value = record.relatedOrder;
+  financeAmount.value = record.amount;
+  financeCurrency.value = record.currency;
+  financePaymentStatus.value = record.paymentStatus;
+  financeDueDate.value = record.dueDate;
+  financePaidDate.value = record.paidDate;
+  financePaymentMethod.value = record.paymentMethod;
+  financeNotes.value = record.notes;
+  financeFormTitle.textContent = "Edit Finance Record";
+  financeCode.focus();
+}
+
+function deleteFinanceRecord(id) {
+  const record = financeRecords.find((item) => item.id === id);
+  if (!record) {
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete finance record "${record.financeCode}"? Related records will stay safe.`);
+  if (!confirmed) {
+    return;
+  }
+
+  financeRecords = financeRecords.filter((item) => item.id !== id);
+  selectedFinanceId = financeRecords[0]?.id || "";
+  saveFinanceRecords();
+  renderFinanceDashboard();
+  renderFinanceFilters();
+  renderFinanceRecords();
+  clearFinanceForm();
+
+  if (selectedFinanceId) {
+    selectFinanceRecord(selectedFinanceId);
+  } else {
+    financeDetailTitle.textContent = "Select a finance record";
+    financeDetail.innerHTML = '<p class="empty-state">Create a finance record to view details.</p>';
+  }
+}
+
+function getRelatedFinanceOrder(record) {
+  return orders.find((order) => order.orderCode === record.relatedOrder || order.id === record.relatedOrder);
+}
+
+function renderFinanceDetail(record) {
+  const relatedOrder = getRelatedFinanceOrder(record);
+  financeDetailTitle.textContent = record.financeCode;
+  financeDetail.innerHTML = `
+    <div class="order-status-row">
+      <span class="order-pill">${escapeHtml(record.type)}</span>
+      <span class="order-pill status-${escapeHtml(record.paymentStatus.toLowerCase())}">${escapeHtml(record.paymentStatus)}</span>
+      <span class="order-pill">${escapeHtml(formatFinanceMoney(record))}</span>
+    </div>
+    <dl class="order-detail-grid">
+      ${renderDetailField("Record ID", record.financeCode)}
+      ${renderDetailField("Type", record.type)}
+      ${renderDetailField("Related Customer", record.customerName)}
+      ${renderDetailField("Related Supplier", record.supplierName)}
+      ${renderDetailField("Related Order", record.relatedOrder)}
+      ${renderDetailField("Amount", formatFinanceMoney(record))}
+      ${renderDetailField("Payment Status", record.paymentStatus)}
+      ${renderDetailField("Due Date", record.dueDate)}
+      ${renderDetailField("Paid Date", record.paidDate)}
+      ${renderDetailField("Payment Method", record.paymentMethod)}
+    </dl>
+    <div class="detail-text-block">
+      <strong>Related Order</strong>
+      ${relatedOrder ? `<p>${escapeHtml(relatedOrder.orderCode)} · ${escapeHtml(relatedOrder.orderName)} · ${escapeHtml(relatedOrder.status)}</p>` : '<p class="empty-state">No related order found yet.</p>'}
+    </div>
+    <div class="detail-text-block">
+      <strong>Timeline</strong>
+      <div class="finance-timeline">
+        ${renderFinanceTimeline(record)}
+      </div>
+    </div>
+    <div class="detail-text-block">
+      <strong>Notes</strong>
+      <p>${escapeHtml(record.notes || "No notes yet.")}</p>
+    </div>
+    <div class="order-detail-actions">
+      <button class="open-link secondary" type="button" data-finance-edit="${record.id}">Edit</button>
+      <button class="danger-button" type="button" data-finance-delete="${record.id}">Delete</button>
+    </div>
+  `;
+}
+
+function renderFinanceTimeline(record) {
+  const timelineItems = [
+    ...(record.timeline || []),
+    {
+      date: formatDateOnly(record.createdAt),
+      title: "Record created",
+      description: `${record.type} record was added to Finance Center.`,
+      status: "Created"
+    },
+    {
+      date: record.dueDate || "No due date",
+      title: "Payment due",
+      description: record.dueDate ? `${record.financeCode} is due on ${record.dueDate}.` : "No due date has been set.",
+      status: "Due"
+    },
+    {
+      date: record.paidDate || formatDateOnly(record.updatedAt),
+      title: `Current status: ${record.paymentStatus}`,
+      description: record.paidDate ? `Payment marked paid on ${record.paidDate}.` : (record.notes || "No payment note yet."),
+      status: record.paymentStatus
+    }
+  ].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+  return timelineItems.map((item) => `
+    <article class="order-timeline-item">
+      <span>${escapeHtml(item.date)}</span>
+      <div>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.status || "Note")}</small>
+        <p>${escapeHtml(item.description)}</p>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderFinanceCustomerOptions(selectedValue = "") {
+  const existingFinanceCustomerNames = financeRecords.map((record) => record.customerName).filter(Boolean);
+  const names = [...new Set([...customers.map((customer) => customer.customerName), ...existingFinanceCustomerNames])].sort();
+  const selectedCustomerName = selectedValue || financeCustomer.value;
+  financeCustomer.innerHTML = '<option value="">Select customer</option>' + names.map((name) => `
+    <option value="${escapeHtml(name)}">${escapeHtml(name)}</option>
+  `).join("");
+
+  if (selectedCustomerName && names.includes(selectedCustomerName)) {
+    financeCustomer.value = selectedCustomerName;
+  }
+}
+
+function renderFinanceOrderOptions(selectedValue = "") {
+  const existingFinanceOrders = financeRecords.map((record) => record.relatedOrder).filter(Boolean);
+  const orderCodes = [...new Set([...orders.map((order) => order.orderCode), ...existingFinanceOrders])].sort();
+  const selectedOrder = selectedValue || financeRelatedOrder.value;
+  financeRelatedOrder.innerHTML = '<option value="">Select order</option>' + orderCodes.map((code) => `
+    <option value="${escapeHtml(code)}">${escapeHtml(code)}</option>
+  `).join("");
+
+  if (selectedOrder && orderCodes.includes(selectedOrder)) {
+    financeRelatedOrder.value = selectedOrder;
+  }
+}
+
+function setupFinanceCenter() {
+  financeForm.addEventListener("submit", saveFinanceFromForm);
+  resetFinanceForm.addEventListener("click", clearFinanceForm);
+  [financeSearchInput, financeTypeFilter, financeStatusFilter, financeCustomerFilter, financeSupplierFilter].forEach((field) => {
+    field.addEventListener("input", renderFinanceRecords);
+    field.addEventListener("change", renderFinanceRecords);
+  });
+
+  financeList.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-finance-id]");
+    if (!card) {
+      return;
+    }
+
+    selectFinanceRecord(card.dataset.financeId);
+  });
+
+  financeDetail.addEventListener("click", (event) => {
+    const editButton = event.target.closest("[data-finance-edit]");
+    const deleteButton = event.target.closest("[data-finance-delete]");
+
+    if (editButton) {
+      editFinanceRecord(editButton.dataset.financeEdit);
+    }
+
+    if (deleteButton) {
+      deleteFinanceRecord(deleteButton.dataset.financeDelete);
+    }
+  });
+}
+
 function setupEditableLists() {
   document.querySelectorAll("[data-list-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
@@ -4580,6 +5199,22 @@ function appendProductSearchRecords(moduleRecords) {
   });
 }
 
+function appendFinanceSearchRecords(moduleRecords) {
+  const financeModule = moduleRecords.find((module) => module.name === "Finance");
+  if (!financeModule) {
+    return;
+  }
+
+  financeRecords.forEach((record) => {
+    financeModule.items.push({
+      title: `${record.financeCode} ${record.type}`,
+      type: "Finance",
+      description: `${record.customerName || "No customer"} · ${record.supplierName || "No supplier"} · ${record.relatedOrder || "No order"} · ${formatFinanceMoney(record)} · ${record.paymentStatus}`,
+      page: "finance-center"
+    });
+  });
+}
+
 function normalizeSearchText(value) {
   return value.toLowerCase().trim();
 }
@@ -4621,6 +5256,7 @@ function searchItems(query) {
   appendQuotationSearchRecords(records);
   appendShipmentSearchRecords(records);
   appendProductSearchRecords(records);
+  appendFinanceSearchRecords(records);
 
   return records.map((module) => {
     const results = module.items
@@ -4788,6 +5424,7 @@ function init() {
   loadQuotations();
   loadShipments();
   loadProducts();
+  loadFinanceRecords();
   setupEditableLists();
   setupOrderCenter();
   setupCustomerCenter();
@@ -4795,6 +5432,7 @@ function init() {
   setupQuotationCenter();
   setupShipmentCenter();
   setupProductCenter();
+  setupFinanceCenter();
   setupPortalCards();
   setupCommandPalette();
   renderAllEditableLists();
@@ -4821,6 +5459,11 @@ function init() {
   renderProducts();
   renderProductCustomerOptions();
   renderProductCategoryOptions();
+  renderFinanceDashboard();
+  renderFinanceFilters();
+  renderFinanceRecords();
+  renderFinanceCustomerOptions();
+  renderFinanceOrderOptions();
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();
@@ -4828,6 +5471,7 @@ function init() {
   clearQuotationForm();
   clearShipmentForm();
   clearProductForm();
+  clearFinanceForm();
 
   if (orders.length) {
     selectOrder(orders[0].id);
@@ -4851,6 +5495,10 @@ function init() {
 
   if (products.length) {
     selectProduct(products[0].id);
+  }
+
+  if (financeRecords.length) {
+    selectFinanceRecord(financeRecords[0].id);
   }
 
   restoreField(userName, storageKeys.userName);
