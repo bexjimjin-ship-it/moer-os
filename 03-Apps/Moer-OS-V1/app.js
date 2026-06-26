@@ -9,13 +9,15 @@ const storageKeys = {
   dinnerPlan: "moerOS.dinnerPlan",
   sonSleep: "moerOS.sonSleep",
   sonExercise: "moerOS.sonExercise",
-  sonMeal: "moerOS.sonMeal"
+  sonMeal: "moerOS.sonMeal",
+  mealPlanner: "moerOS.mealPlanner"
 };
 
 const editableLists = {
   focusTasks: [],
   peopleWaiting: [],
-  urgentItems: []
+  urgentItems: [],
+  mealPlanner: []
 };
 
 const portalModules = [
@@ -29,7 +31,7 @@ const portalModules = [
   },
   {
     id: "knowledge-center",
-    section: "knowledge",
+    section: "knowledge-center",
     name: "Knowledge Center",
     purpose: "Company knowledge brain for SOPs, SEO, prompts, business knowledge, and future AI retrieval.",
     status: "Prototype",
@@ -37,7 +39,7 @@ const portalModules = [
   },
   {
     id: "order-center",
-    section: "business",
+    section: "order-center",
     name: "Order Center",
     purpose: "Operational architecture for sourcing orders from inquiry to delivery.",
     status: "Architecture ready",
@@ -45,7 +47,7 @@ const portalModules = [
   },
   {
     id: "timeline-engine",
-    section: "core",
+    section: "timeline-engine",
     name: "Timeline Engine",
     purpose: "Reusable event history engine for orders, customers, suppliers, quotations, and shipping.",
     status: "Ready",
@@ -53,15 +55,15 @@ const portalModules = [
   },
   {
     id: "family-meal-planner",
-    section: "family",
+    section: "family-meal-planner",
     name: "Family Meal Planner",
-    purpose: "Planned family module for dinner, shopping, health, and meal routines.",
-    status: "Planned",
-    internalPage: "family"
+    purpose: "Simple local meal and shopping planner inside the Moer OS shell.",
+    status: "Prototype",
+    internalPage: "family-meal-planner"
   },
   {
     id: "focus-center",
-    section: "core",
+    section: "today",
     name: "Focus Center",
     purpose: "Architecture documents for focus, planning, and daily work control.",
     status: "Architecture ready",
@@ -84,56 +86,57 @@ const searchModules = [
     items: [
       { title: "Follow up with customers", type: "Task", description: "Check customers who need a reply today.", page: "today" },
       { title: "Review urgent orders", type: "Task", description: "Look at orders with deadline, payment, or shipment risk.", page: "today" },
-      { title: "Plan tomorrow", type: "Task", description: "Choose the next important work before the day ends.", page: "today" }
+      { title: "Plan tomorrow", type: "Task", description: "Choose the next important work before the day ends.", page: "today" },
+      { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" }
     ]
   },
   {
     name: "Meal Planner",
     items: [
       { title: "Dinner plan", type: "Family", description: "Save today's dinner idea.", page: "today" },
-      { title: "Shopping list", type: "Family", description: "Future area for simple family shopping notes.", page: "family" },
-      { title: "Weekly meal ideas", type: "Family", description: "Future meal planning module.", page: "family" }
+      { title: "Shopping list", type: "Family", description: "Open the family meal planner.", page: "family-meal-planner" },
+      { title: "Weekly meal ideas", type: "Family", description: "Open the family meal planner.", page: "family-meal-planner" }
     ]
   },
   {
     name: "Customers",
     items: [
-      { title: "Caribbean importer follow-up", type: "Customer", description: "Mock customer record for relationship-based sourcing support.", page: "business" },
-      { title: "African wholesaler inquiry", type: "Customer", description: "Mock customer record for price-sensitive mixed container sourcing.", page: "business" },
-      { title: "Amazon seller product request", type: "Customer", description: "Mock customer record for product sourcing and inspection.", page: "business" }
+      { title: "Caribbean importer follow-up", type: "Customer", description: "Mock customer record for relationship-based sourcing support.", page: "order-center" },
+      { title: "African wholesaler inquiry", type: "Customer", description: "Mock customer record for price-sensitive mixed container sourcing.", page: "order-center" },
+      { title: "Amazon seller product request", type: "Customer", description: "Mock customer record for product sourcing and inspection.", page: "order-center" }
     ]
   },
   {
     name: "Suppliers",
     items: [
-      { title: "Stationery supplier", type: "Supplier", description: "Mock supplier record for school and office products.", page: "business" },
-      { title: "Daily-use products supplier", type: "Supplier", description: "Mock supplier record for mixed container sourcing.", page: "business" },
-      { title: "Packaging factory", type: "Supplier", description: "Mock supplier record for private label and packaging support.", page: "business" }
+      { title: "Stationery supplier", type: "Supplier", description: "Mock supplier record for school and office products.", page: "order-center" },
+      { title: "Daily-use products supplier", type: "Supplier", description: "Mock supplier record for mixed container sourcing.", page: "order-center" },
+      { title: "Packaging factory", type: "Supplier", description: "Mock supplier record for private label and packaging support.", page: "order-center" }
     ]
   },
   {
     name: "Quotations",
     items: [
-      { title: "Mixed container quotation", type: "Quote", description: "Mock quotation for multiple product categories in one shipment.", page: "business" },
-      { title: "Sample cost quotation", type: "Quote", description: "Mock quotation for sample arrangement and courier fee.", page: "business" },
-      { title: "Inspection service quotation", type: "Quote", description: "Mock quotation for product checking before shipment.", page: "business" }
+      { title: "Mixed container quotation", type: "Quote", description: "Mock quotation for multiple product categories in one shipment.", page: "order-center" },
+      { title: "Sample cost quotation", type: "Quote", description: "Mock quotation for sample arrangement and courier fee.", page: "order-center" },
+      { title: "Inspection service quotation", type: "Quote", description: "Mock quotation for product checking before shipment.", page: "order-center" }
     ]
   },
   {
     name: "Knowledge",
     items: [
-      { title: "China sourcing process", type: "Knowledge", description: "How Moer helps buyers source, inspect, consolidate, and ship products.", page: "knowledge" },
-      { title: "Yiwu Market guide", type: "Knowledge", description: "Useful notes for buyers visiting Yiwu Market.", page: "knowledge" },
-      { title: "Quality inspection SOP", type: "Knowledge", description: "Future process page for checking products before shipment.", page: "knowledge" },
+      { title: "China sourcing process", type: "Knowledge", description: "How Moer helps buyers source, inspect, consolidate, and ship products.", page: "knowledge-center" },
+      { title: "Yiwu Market guide", type: "Knowledge", description: "Useful notes for buyers visiting Yiwu Market.", page: "knowledge-center" },
+      { title: "Quality inspection SOP", type: "Knowledge", description: "Future process page for checking products before shipment.", page: "knowledge-center" },
       { title: "Knowledge Center", type: "Module", description: "Open the Knowledge Center prototype.", href: "../Knowledge-Center/index.html" }
     ]
   },
   {
     name: "Videos",
     items: [
-      { title: "Yiwu market visit video", type: "Video", description: "Mock video idea showing real sourcing work in Yiwu.", page: "core" },
-      { title: "Container loading story", type: "Video", description: "Mock behind-the-scenes video about shipment preparation.", page: "core" },
-      { title: "Common sourcing mistakes", type: "Video", description: "Mock educational video for first-time importers.", page: "core" }
+      { title: "Yiwu market visit video", type: "Video", description: "Mock video idea showing real sourcing work in Yiwu.", page: "knowledge-center" },
+      { title: "Container loading story", type: "Video", description: "Mock behind-the-scenes video about shipment preparation.", page: "knowledge-center" },
+      { title: "Common sourcing mistakes", type: "Video", description: "Mock educational video for first-time importers.", page: "knowledge-center" }
     ]
   },
   {
@@ -150,7 +153,7 @@ const searchModules = [
       { title: "Order Center", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
-      { title: "Family Meal Planner", type: "Planned", description: "Open Family section placeholder.", page: "family" }
+      { title: "Family Meal Planner", type: "Prototype", description: "Open the local meal planner.", page: "family-meal-planner" }
     ]
   }
 ];
@@ -172,6 +175,9 @@ const dinnerPlan = document.querySelector("#dinnerPlan");
 const sonSleep = document.querySelector("#sonSleep");
 const sonExercise = document.querySelector("#sonExercise");
 const sonMeal = document.querySelector("#sonMeal");
+const mealForm = document.querySelector("#mealForm");
+const mealInput = document.querySelector("#mealInput");
+const mealList = document.querySelector("#mealList");
 
 function showPage(pageId) {
   pages.forEach((page) => {

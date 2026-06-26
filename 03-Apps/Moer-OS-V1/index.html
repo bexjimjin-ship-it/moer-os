@@ -24,10 +24,10 @@
 
       <nav class="nav-list">
         <button class="nav-item active" data-page="today" type="button">Today</button>
-        <button class="nav-item" data-page="business" type="button">Business</button>
-        <button class="nav-item" data-page="knowledge" type="button">Knowledge</button>
-        <button class="nav-item" data-page="family" type="button">Family</button>
-        <button class="nav-item" data-page="core" type="button">Core Engines</button>
+        <button class="nav-item" data-page="order-center" type="button">Order Center</button>
+        <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
+        <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
+        <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
         <button class="nav-item" data-page="settings" type="button">Settings</button>
       </nav>
     </aside>
@@ -118,40 +118,84 @@
         </div>
       </section>
 
-      <section class="page" id="business">
+      <section class="page" id="order-center">
         <header class="page-header">
-          <p class="eyebrow">Business</p>
-          <h1>Business Control Center</h1>
-          <p class="date-line">Keep customer work, sourcing, and shipping visible.</p>
+          <p class="eyebrow">Order Center</p>
+          <h1>Sourcing Operations</h1>
+          <p class="date-line">A working shell page for the future order system, connected to the current architecture documents.</p>
         </header>
-        <div class="module-grid" data-module-section="business"></div>
+        <div class="module-grid" data-module-section="order-center"></div>
+        <section class="portal-section">
+          <div class="section-heading">
+            <p class="eyebrow">Order Flow</p>
+            <h2>From inquiry to delivery</h2>
+          </div>
+          <div class="workflow-strip">
+            <span>Inquiry</span>
+            <span>Supplier Search</span>
+            <span>Quotation</span>
+            <span>Purchase Order</span>
+            <span>Production</span>
+            <span>Inspection</span>
+            <span>Warehouse</span>
+            <span>Shipment</span>
+          </div>
+        </section>
       </section>
 
-      <section class="page" id="knowledge">
+      <section class="page" id="knowledge-center">
         <header class="page-header">
-          <p class="eyebrow">Knowledge</p>
-          <h1>Knowledge Center</h1>
-          <p class="date-line">Company knowledge, SOPs, SEO, prompts, and reusable assets.</p>
+          <p class="eyebrow">Knowledge Center</p>
+          <h1>Company Knowledge Brain</h1>
+          <p class="date-line">Open the existing Knowledge Center prototype or use this shell as the launch point.</p>
         </header>
-        <div class="module-grid" data-module-section="knowledge"></div>
+        <div class="module-grid" data-module-section="knowledge-center"></div>
+        <div class="info-panel">
+          <p class="card-label">What this connects</p>
+          <p>Business knowledge, suppliers, customers, products, SOPs, SEO, website content, social media ideas, AI prompts, and personal/family knowledge.</p>
+        </div>
       </section>
 
-      <section class="page" id="family">
+      <section class="page" id="timeline-engine">
         <header class="page-header">
-          <p class="eyebrow">Family</p>
-          <h1>Family Life</h1>
-          <p class="date-line">Simple planning for meals, home, health, and family routines.</p>
+          <p class="eyebrow">Timeline Engine</p>
+          <h1>Reusable Event History</h1>
+          <p class="date-line">Open the existing Timeline Engine prototype or use this page as its Moer OS launch point.</p>
         </header>
-        <div class="module-grid" data-module-section="family"></div>
+        <div class="module-grid" data-module-section="timeline-engine"></div>
+        <div class="timeline-preview">
+          <article>
+            <span>09:15</span>
+            <strong>Customer inquiry received</strong>
+            <p>Order Center event</p>
+          </article>
+          <article>
+            <span>14:30</span>
+            <strong>Supplier quote received</strong>
+            <p>Supplier Center event</p>
+          </article>
+          <article>
+            <span>16:40</span>
+            <strong>Inspection reminder created</strong>
+            <p>Timeline Engine event</p>
+          </article>
+        </div>
       </section>
 
-      <section class="page" id="core">
+      <section class="page" id="family-meal-planner">
         <header class="page-header">
-          <p class="eyebrow">Core Engines</p>
-          <h1>Reusable Foundations</h1>
-          <p class="date-line">Core Moer OS infrastructure that future modules can share.</p>
+          <p class="eyebrow">Family Meal Planner</p>
+          <h1>Simple Meal Planning</h1>
+          <p class="date-line">A small local planner for dinner ideas, shopping reminders, and weekly meal notes.</p>
         </header>
-        <div class="module-grid" data-module-section="core"></div>
+        <div class="module-grid" data-module-section="family-meal-planner"></div>
+        <section class="meal-planner-card">
+          <form class="add-row" id="mealForm" data-list-form="mealPlanner">
+            <input id="mealInput" type="text" placeholder="Add a meal idea or shopping reminder">
+            <button type="submit">Add</button>
+          </form>
+          <div class="editable-list" id="mealList" data-list="mealPlanner"></div>
+        </section>
       </section>
 
       <section class="page" id="settings">
@@ -188,10 +232,10 @@
 
     <nav class="bottom-nav" aria-label="Mobile navigation">
       <button class="bottom-item active" data-page="today" type="button">Today</button>
-      <button class="bottom-item" data-page="business" type="button">Business</button>
-      <button class="bottom-item" data-page="knowledge" type="button">Knowledge</button>
-      <button class="bottom-item" data-page="family" type="button">Family</button>
-      <button class="bottom-item" data-page="core" type="button">Core</button>
+      <button class="bottom-item" data-page="order-center" type="button">Orders</button>
+      <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
+      <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
+      <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>
       <button class="bottom-item" data-page="settings" type="button">Settings</button>
     </nav>
   </div>

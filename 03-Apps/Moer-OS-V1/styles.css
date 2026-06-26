@@ -478,6 +478,75 @@ select {
   color: var(--text);
 }
 
+.info-panel,
+.meal-planner-card,
+.timeline-preview {
+  margin-top: 18px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.info-panel p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.workflow-strip {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.workflow-strip span {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  box-shadow: var(--shadow);
+}
+
+.timeline-preview {
+  display: grid;
+  gap: 12px;
+}
+
+.timeline-preview article {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 8px 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf9;
+}
+
+.timeline-preview span {
+  grid-row: span 2;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.timeline-preview strong {
+  color: var(--text);
+}
+
+.timeline-preview p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.meal-planner-card {
+  display: grid;
+  gap: 16px;
+}
+
 .settings-panel {
   display: grid;
   gap: 18px;

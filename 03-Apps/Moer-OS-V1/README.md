@@ -2,20 +2,23 @@
 
 Moer OS V1 is a simple static web app for Jim to manage business, family, knowledge, and future AI tools from one calm portal.
 
+Version 0.1 connects the main Moer OS areas into one clickable local shell.
+
 ## What Is Included
 
-- Today home page
-- Business page
-- Family page
-- Knowledge page
-- Core Engines page
+- Today page
+- Order Center page
+- Knowledge Center page
+- Timeline Engine page
+- Family Meal Planner page
 - Settings page
-- Module cards for Knowledge Center, Order Center, Timeline Engine, Family Meal Planner, and Focus Center
+- Module cards for Today, Knowledge Center, Order Center, Timeline Engine, Family Meal Planner, and Focus Center
 - Desktop sidebar navigation
 - Mobile bottom navigation
 - Universal Search command palette with Cmd + K or Ctrl + K
 - Editable Today lists for focus tasks, people waiting, and urgent items
-- Basic localStorage for Today data and settings
+- Editable local meal planner
+- Basic localStorage for Today data, meal ideas, and settings
 
 ## Universal Search
 
@@ -47,15 +50,12 @@ Clickable prototypes:
 
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`
+- Family Meal Planner: inside this shell
 
 Architecture documents:
 
 - Order Center: `../Order-Center/README.md`
 - Focus Center: `../Focus-Center/README.md`
-
-Planned inside the shell:
-
-- Family Meal Planner
 
 ## How To Publish To GitHub Pages
 
