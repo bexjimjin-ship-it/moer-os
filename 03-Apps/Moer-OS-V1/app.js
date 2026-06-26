@@ -15,10 +15,12 @@ const storageKeys = {
   customers: "moerOS.customers",
   suppliers: "moerOS.suppliers",
   quotations: "moerOS.quotations",
+  shipments: "moerOS.shipments",
   ordersSeededV1: "moerOS.ordersSeededV1",
   customersSeededV2: "moerOS.customersSeededV2",
   suppliersSeededV1: "moerOS.suppliersSeededV1",
-  quotationsSeededV1: "moerOS.quotationsSeededV1"
+  quotationsSeededV1: "moerOS.quotationsSeededV1",
+  shipmentsSeededV1: "moerOS.shipmentsSeededV1"
 };
 
 const orderStatusOptions = ["New Inquiry", "Quoting", "Waiting Supplier", "Waiting Customer", "Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered", "On Hold"];
@@ -30,6 +32,9 @@ const supplierReliabilityOptions = ["Unknown", "Reliable", "Needs Follow-up", "R
 const supplierStatusOptions = ["New", "Active", "Preferred", "Backup", "Paused"];
 const supplierPriorityOptions = ["Normal", "High", "Urgent", "Low"];
 const quotationStatusOptions = ["Draft", "Sent", "Waiting Customer", "Approved", "Rejected", "Expired"];
+const shipmentStatusOptions = ["Preparing", "Booked", "In Transit", "Arrived", "Delivered", "Delayed", "On Hold"];
+const shipmentDocumentStatusOptions = ["Not Started", "Pending", "Partial", "Ready", "Sent"];
+const shipmentDocumentNames = ["Commercial Invoice", "Packing List", "Bill of Lading", "Certificate of Origin", "Other documents"];
 
 const customerSeedData = [
   {
@@ -481,6 +486,127 @@ const quotationSeedData = [
   }
 ];
 
+const shipmentSeedData = [
+  {
+    id: "shipment-001",
+    shipmentCode: "SHP-2026-001",
+    customerName: "Nicholas",
+    country: "Trinidad and Tobago",
+    relatedOrder: "MOER-2026-001",
+    forwarder: "Ningbo Ocean Forwarding",
+    containerType: "40HQ",
+    containerNumber: "MSCU1234567",
+    pol: "Ningbo",
+    pod: "Port of Spain",
+    etd: "2026-07-18",
+    eta: "2026-08-19",
+    vessel: "COSCO Pacific",
+    status: "Preparing",
+    documentsStatus: "Pending",
+    nextAction: "Confirm final carton details before booking",
+    notes: "Mixed container for Trinidad. Watch CBM and keep Nicholas updated on loading plan.",
+    documents: {
+      "Commercial Invoice": true,
+      "Packing List": false,
+      "Bill of Lading": false,
+      "Certificate of Origin": false,
+      "Other documents": false
+    },
+    timeline: [
+      {
+        id: "shipment-timeline-001-a",
+        date: "2026-06-26",
+        title: "Shipment planning started",
+        description: "Container plan created for Nicholas Trinidad project.",
+        status: "Preparing"
+      }
+    ],
+    createdAt: "2026-06-26T12:00:00",
+    updatedAt: "2026-06-26T12:00:00"
+  },
+  {
+    id: "shipment-002",
+    shipmentCode: "SHP-2026-002",
+    customerName: "Eddie",
+    country: "UK",
+    relatedOrder: "MOER-2026-002",
+    forwarder: "Shanghai UK Consolidation",
+    containerType: "LCL",
+    containerNumber: "",
+    pol: "Shanghai",
+    pod: "Felixstowe",
+    etd: "2026-08-05",
+    eta: "2026-09-08",
+    vessel: "Pending booking",
+    status: "Booked",
+    documentsStatus: "Partial",
+    nextAction: "Confirm Christmas item packing list with supplier",
+    notes: "Seasonal shipment. Keep an eye on production timing and UK arrival window.",
+    documents: {
+      "Commercial Invoice": true,
+      "Packing List": true,
+      "Bill of Lading": false,
+      "Certificate of Origin": false,
+      "Other documents": false
+    },
+    timeline: [
+      {
+        id: "shipment-timeline-002-a",
+        date: "2026-06-26",
+        title: "Forwarder contacted",
+        description: "Asked forwarder for UK LCL sailing schedule.",
+        status: "Booked"
+      }
+    ],
+    createdAt: "2026-06-26T13:00:00",
+    updatedAt: "2026-06-26T13:00:00"
+  },
+  {
+    id: "shipment-003",
+    shipmentCode: "SHP-2026-003",
+    customerName: "Graham",
+    country: "Barbados",
+    relatedOrder: "MOER-2026-003",
+    forwarder: "Caribbean Sea Freight Partner",
+    containerType: "20GP",
+    containerNumber: "TGHU7654321",
+    pol: "Ningbo",
+    pod: "Bridgetown",
+    etd: "2026-07-28",
+    eta: "2026-08-24",
+    vessel: "Maersk Horizon",
+    status: "In Transit",
+    documentsStatus: "Ready",
+    nextAction: "Send document copy to Graham",
+    notes: "Stationery shipment for school season. Documents should be kept very clear.",
+    documents: {
+      "Commercial Invoice": true,
+      "Packing List": true,
+      "Bill of Lading": true,
+      "Certificate of Origin": true,
+      "Other documents": false
+    },
+    timeline: [
+      {
+        id: "shipment-timeline-003-a",
+        date: "2026-06-25",
+        title: "Documents prepared",
+        description: "Commercial invoice, packing list, and draft B/L prepared.",
+        status: "Documents"
+      },
+      {
+        id: "shipment-timeline-003-b",
+        date: "2026-06-26",
+        title: "Shipment moved to transit",
+        description: "Shipment status updated for Barbados stationery project.",
+        status: "In Transit"
+      }
+    ],
+    createdAt: "2026-06-24T15:00:00",
+    updatedAt: "2026-06-26T14:00:00"
+  }
+];
+
 const editableLists = {
   focusTasks: [],
   peopleWaiting: [],
@@ -496,6 +622,8 @@ let suppliers = [];
 let selectedSupplierId = "";
 let quotations = [];
 let selectedQuotationId = "";
+let shipments = [];
+let selectedShipmentId = "";
 
 const portalModules = [
   {
@@ -545,6 +673,14 @@ const portalModules = [
     purpose: "Local quotation prototype for customer quotes, supplier links, prices, validity, and next actions.",
     status: "Prototype",
     internalPage: "quotation-center"
+  },
+  {
+    id: "shipment-center",
+    section: "today",
+    name: "Shipment Center",
+    purpose: "Shipment and container tracking prototype for bookings, ETD, ETA, documents, and next actions.",
+    status: "Prototype",
+    internalPage: "shipment-center"
   },
   {
     id: "order-center-docs",
@@ -633,6 +769,14 @@ const searchModules = [
     ]
   },
   {
+    name: "Shipments",
+    items: [
+      { title: "Shipment Center", type: "Prototype", description: "Open the local Shipment Center prototype.", page: "shipment-center" },
+      { title: "Documents pending", type: "Shipment", description: "Review shipments where invoice, packing list, B/L, CO, or other documents still need attention.", page: "shipment-center" },
+      { title: "Container tracking", type: "Shipment", description: "Track ETD, ETA, vessel, POL, POD, and container number locally.", page: "shipment-center" }
+    ]
+  },
+  {
     name: "Knowledge",
     items: [
       { title: "China sourcing process", type: "Knowledge", description: "How Moer helps buyers source, inspect, consolidate, and ship products.", page: "knowledge-center" },
@@ -664,6 +808,7 @@ const searchModules = [
       { title: "Customer Center", type: "Prototype", description: "Open the local Customer Center prototype.", page: "customer-center" },
       { title: "Supplier Center", type: "Prototype", description: "Open the local Supplier Center prototype.", page: "supplier-center" },
       { title: "Quotation Center", type: "Prototype", description: "Open the local Quotation Center prototype.", page: "quotation-center" },
+      { title: "Shipment Center", type: "Prototype", description: "Open the local Shipment Center prototype.", page: "shipment-center" },
       { title: "Order Center Architecture", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
@@ -848,6 +993,40 @@ const quotationSupplierFilter = document.querySelector("#quotationSupplierFilter
 const quotationList = document.querySelector("#quotationList");
 const quotationDetailTitle = document.querySelector("#quotationDetailTitle");
 const quotationDetail = document.querySelector("#quotationDetail");
+const shipmentForm = document.querySelector("#shipmentForm");
+const shipmentFormTitle = document.querySelector("#shipmentFormTitle");
+const shipmentId = document.querySelector("#shipmentId");
+const shipmentCode = document.querySelector("#shipmentCode");
+const shipmentCustomer = document.querySelector("#shipmentCustomer");
+const shipmentCountry = document.querySelector("#shipmentCountry");
+const shipmentRelatedOrder = document.querySelector("#shipmentRelatedOrder");
+const shipmentForwarder = document.querySelector("#shipmentForwarder");
+const shipmentContainerType = document.querySelector("#shipmentContainerType");
+const shipmentContainerNumber = document.querySelector("#shipmentContainerNumber");
+const shipmentPol = document.querySelector("#shipmentPol");
+const shipmentPod = document.querySelector("#shipmentPod");
+const shipmentEtd = document.querySelector("#shipmentEtd");
+const shipmentEta = document.querySelector("#shipmentEta");
+const shipmentVessel = document.querySelector("#shipmentVessel");
+const shipmentStatus = document.querySelector("#shipmentStatus");
+const shipmentDocumentsStatus = document.querySelector("#shipmentDocumentsStatus");
+const shipmentDocCommercialInvoice = document.querySelector("#shipmentDocCommercialInvoice");
+const shipmentDocPackingList = document.querySelector("#shipmentDocPackingList");
+const shipmentDocBillOfLading = document.querySelector("#shipmentDocBillOfLading");
+const shipmentDocCertificateOrigin = document.querySelector("#shipmentDocCertificateOrigin");
+const shipmentDocOther = document.querySelector("#shipmentDocOther");
+const shipmentNextAction = document.querySelector("#shipmentNextAction");
+const shipmentNotes = document.querySelector("#shipmentNotes");
+const resetShipmentForm = document.querySelector("#resetShipmentForm");
+const shipmentDashboard = document.querySelector("#shipmentDashboard");
+const shipmentSearchInput = document.querySelector("#shipmentSearchInput");
+const shipmentStatusFilter = document.querySelector("#shipmentStatusFilter");
+const shipmentCustomerFilter = document.querySelector("#shipmentCustomerFilter");
+const shipmentDocumentsFilter = document.querySelector("#shipmentDocumentsFilter");
+const shipmentList = document.querySelector("#shipmentList");
+const shipmentDetailTitle = document.querySelector("#shipmentDetailTitle");
+const shipmentDetail = document.querySelector("#shipmentDetail");
+const shipmentTimeline = document.querySelector("#shipmentTimeline");
 
 function showPage(pageId) {
   pages.forEach((page) => {
@@ -1107,6 +1286,7 @@ function saveOrderFromForm(event) {
   renderOrderFilters();
   renderOrders();
   renderOrderSupplierOptions(order.supplierName);
+  renderShipmentOrderOptions();
   selectOrder(order.id);
   refreshSelectedCustomerDetail();
   refreshSelectedSupplierDetail();
@@ -1292,6 +1472,7 @@ function deleteOrder(id) {
   renderOrderFilters();
   renderOrders();
   renderOrderSupplierOptions();
+  renderShipmentOrderOptions();
   refreshSelectedCustomerDetail();
   refreshSelectedSupplierDetail();
   clearOrderForm();
@@ -1624,7 +1805,9 @@ function saveCustomerFromForm(event) {
   renderCustomers();
   renderOrderCustomerOptions(customer.customerName);
   renderQuotationCustomerOptions(customer.customerName);
+  renderShipmentCustomerOptions(customer.customerName);
   renderQuotationFilters();
+  renderShipmentFilters();
   selectCustomer(customer.id);
   clearCustomerForm();
 }
@@ -1834,7 +2017,9 @@ function deleteCustomer(id) {
   renderCustomers();
   renderOrderCustomerOptions();
   renderQuotationCustomerOptions();
+  renderShipmentCustomerOptions();
   renderQuotationFilters();
+  renderShipmentFilters();
   clearCustomerForm();
 
   if (selectedCustomerId) {
@@ -2991,6 +3176,523 @@ function setupQuotationCenter() {
   });
 }
 
+function loadShipments() {
+  const savedShipments = localStorage.getItem(storageKeys.shipments);
+  if (!savedShipments) {
+    shipments = shipmentSeedData.map(normalizeShipment);
+    saveShipments();
+    localStorage.setItem(storageKeys.shipmentsSeededV1, "true");
+    return;
+  }
+
+  try {
+    const parsedShipments = JSON.parse(savedShipments);
+    shipments = Array.isArray(parsedShipments) ? parsedShipments.map(normalizeShipment) : shipmentSeedData.map(normalizeShipment);
+  } catch (error) {
+    shipments = shipmentSeedData.map(normalizeShipment);
+  }
+
+  if (localStorage.getItem(storageKeys.shipmentsSeededV1) !== "true") {
+    const existingCodes = new Set(shipments.map((shipment) => shipment.shipmentCode.toLowerCase()));
+    const missingSamples = shipmentSeedData
+      .filter((shipment) => !existingCodes.has(shipment.shipmentCode.toLowerCase()))
+      .map(normalizeShipment);
+    shipments = [...missingSamples, ...shipments];
+    localStorage.setItem(storageKeys.shipmentsSeededV1, "true");
+    saveShipments();
+  }
+}
+
+function saveShipments() {
+  localStorage.setItem(storageKeys.shipments, JSON.stringify(shipments));
+}
+
+function normalizeShipment(shipment) {
+  const now = new Date().toISOString();
+  return {
+    id: shipment.id || `shipment-${Date.now()}`,
+    shipmentCode: shipment.shipmentCode || `SHP-${new Date().getFullYear()}-${Math.floor(Math.random() * 900 + 100)}`,
+    customerName: shipment.customerName || "",
+    country: shipment.country || "",
+    relatedOrder: shipment.relatedOrder || "",
+    forwarder: shipment.forwarder || "",
+    containerType: shipment.containerType || "",
+    containerNumber: shipment.containerNumber || "",
+    pol: shipment.pol || "",
+    pod: shipment.pod || "",
+    etd: shipment.etd || "",
+    eta: shipment.eta || "",
+    vessel: shipment.vessel || "",
+    status: shipment.status || "Preparing",
+    documentsStatus: shipment.documentsStatus || "Not Started",
+    nextAction: shipment.nextAction || "",
+    notes: shipment.notes || "",
+    documents: normalizeShipmentDocuments(shipment.documents),
+    timeline: Array.isArray(shipment.timeline) ? shipment.timeline : [],
+    createdAt: shipment.createdAt || now,
+    updatedAt: shipment.updatedAt || now
+  };
+}
+
+function normalizeShipmentDocuments(documents = {}) {
+  return shipmentDocumentNames.reduce((accumulator, name) => {
+    accumulator[name] = Boolean(documents[name]);
+    return accumulator;
+  }, {});
+}
+
+function getShipmentDocumentsFromForm() {
+  return {
+    "Commercial Invoice": shipmentDocCommercialInvoice.checked,
+    "Packing List": shipmentDocPackingList.checked,
+    "Bill of Lading": shipmentDocBillOfLading.checked,
+    "Certificate of Origin": shipmentDocCertificateOrigin.checked,
+    "Other documents": shipmentDocOther.checked
+  };
+}
+
+function setShipmentDocumentFields(documents) {
+  const normalizedDocuments = normalizeShipmentDocuments(documents);
+  shipmentDocCommercialInvoice.checked = normalizedDocuments["Commercial Invoice"];
+  shipmentDocPackingList.checked = normalizedDocuments["Packing List"];
+  shipmentDocBillOfLading.checked = normalizedDocuments["Bill of Lading"];
+  shipmentDocCertificateOrigin.checked = normalizedDocuments["Certificate of Origin"];
+  shipmentDocOther.checked = normalizedDocuments["Other documents"];
+}
+
+function getShipmentFormData() {
+  const now = new Date().toISOString();
+  const existingShipment = shipments.find((shipment) => shipment.id === shipmentId.value);
+  const documents = getShipmentDocumentsFromForm();
+
+  return {
+    id: shipmentId.value || `shipment-${Date.now()}`,
+    shipmentCode: shipmentCode.value.trim(),
+    customerName: shipmentCustomer.value.trim(),
+    country: shipmentCountry.value.trim(),
+    relatedOrder: shipmentRelatedOrder.value.trim(),
+    forwarder: shipmentForwarder.value.trim(),
+    containerType: shipmentContainerType.value.trim(),
+    containerNumber: shipmentContainerNumber.value.trim(),
+    pol: shipmentPol.value.trim(),
+    pod: shipmentPod.value.trim(),
+    etd: shipmentEtd.value,
+    eta: shipmentEta.value,
+    vessel: shipmentVessel.value.trim(),
+    status: shipmentStatus.value,
+    documentsStatus: shipmentDocumentsStatus.value,
+    nextAction: shipmentNextAction.value.trim(),
+    notes: shipmentNotes.value.trim(),
+    documents,
+    timeline: existingShipment ? existingShipment.timeline : [{
+      id: `shipment-timeline-${Date.now()}`,
+      date: now.slice(0, 10),
+      title: "Shipment created",
+      description: "Shipment was added to Shipment Center.",
+      status: shipmentStatus.value
+    }],
+    createdAt: existingShipment ? existingShipment.createdAt : now,
+    updatedAt: now
+  };
+}
+
+function saveShipmentFromForm(event) {
+  event.preventDefault();
+  const shipment = getShipmentFormData();
+  if (!shipment.shipmentCode || !shipment.customerName) {
+    return;
+  }
+
+  const existingIndex = shipments.findIndex((item) => item.id === shipment.id);
+  if (existingIndex >= 0) {
+    const previousShipment = shipments[existingIndex];
+    if (previousShipment.status !== shipment.status) {
+      shipment.timeline = [
+        {
+          id: `shipment-timeline-${Date.now()}`,
+          date: new Date().toISOString().slice(0, 10),
+          title: `Status changed to ${shipment.status}`,
+          description: shipment.nextAction || "Shipment status was updated.",
+          status: shipment.status
+        },
+        ...(shipment.timeline || [])
+      ];
+    }
+    shipments[existingIndex] = shipment;
+  } else {
+    shipments.unshift(shipment);
+  }
+
+  selectedShipmentId = shipment.id;
+  saveShipments();
+  renderShipmentDashboard();
+  renderShipmentFilters();
+  renderShipments();
+  selectShipment(shipment.id);
+  clearShipmentForm();
+}
+
+function clearShipmentForm() {
+  shipmentForm.reset();
+  shipmentId.value = "";
+  shipmentCode.value = `SHP-${new Date().getFullYear()}-${String(shipments.length + 1).padStart(3, "0")}`;
+  setShipmentDocumentFields({});
+  renderShipmentCustomerOptions();
+  renderShipmentOrderOptions();
+  shipmentFormTitle.textContent = "New Shipment";
+}
+
+function getShipmentFilterValues() {
+  return {
+    query: shipmentSearchInput.value.trim().toLowerCase(),
+    status: shipmentStatusFilter.value,
+    customer: shipmentCustomerFilter.value,
+    documentsStatus: shipmentDocumentsFilter.value
+  };
+}
+
+function getFilteredShipments() {
+  const filters = getShipmentFilterValues();
+  return shipments.filter((shipment) => {
+    const haystack = [
+      shipment.shipmentCode,
+      shipment.customerName,
+      shipment.country,
+      shipment.relatedOrder,
+      shipment.forwarder,
+      shipment.containerType,
+      shipment.containerNumber,
+      shipment.pol,
+      shipment.pod,
+      shipment.vessel,
+      shipment.status,
+      shipment.documentsStatus,
+      shipment.nextAction,
+      shipment.notes
+    ].join(" ").toLowerCase();
+
+    return (!filters.query || haystack.includes(filters.query))
+      && (!filters.status || shipment.status === filters.status)
+      && (!filters.customer || shipment.customerName === filters.customer)
+      && (!filters.documentsStatus || shipment.documentsStatus === filters.documentsStatus);
+  });
+}
+
+function renderShipmentDashboard() {
+  const metrics = [
+    { label: "Total Shipments", value: shipments.length },
+    { label: "Preparing", value: shipments.filter((shipment) => shipment.status === "Preparing").length },
+    { label: "Booked", value: shipments.filter((shipment) => shipment.status === "Booked").length },
+    { label: "In Transit", value: shipments.filter((shipment) => shipment.status === "In Transit").length },
+    { label: "Arrived", value: shipments.filter((shipment) => shipment.status === "Arrived").length },
+    { label: "Documents Pending", value: shipments.filter((shipment) => ["Not Started", "Pending", "Partial"].includes(shipment.documentsStatus)).length }
+  ];
+
+  shipmentDashboard.innerHTML = metrics.map((metric) => `
+    <article class="order-metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${metric.value}</strong>
+    </article>
+  `).join("");
+}
+
+function renderShipmentFilters() {
+  const selected = {
+    status: shipmentStatusFilter.value,
+    customer: shipmentCustomerFilter.value,
+    documentsStatus: shipmentDocumentsFilter.value
+  };
+  const customerNames = [...new Set(shipments.map((shipment) => shipment.customerName).filter(Boolean))].sort();
+
+  shipmentStatusFilter.innerHTML = '<option value="">All status</option>' + shipmentStatusOptions.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+  shipmentCustomerFilter.innerHTML = '<option value="">All customers</option>' + customerNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  shipmentDocumentsFilter.innerHTML = '<option value="">All documents</option>' + shipmentDocumentStatusOptions.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+
+  shipmentStatusFilter.value = selected.status;
+  shipmentCustomerFilter.value = selected.customer;
+  shipmentDocumentsFilter.value = selected.documentsStatus;
+}
+
+function renderShipments() {
+  const filteredShipments = getFilteredShipments();
+
+  if (!filteredShipments.length) {
+    shipmentList.innerHTML = '<p class="empty-state">No shipments found.</p>';
+    shipmentDetailTitle.textContent = "Select a shipment";
+    shipmentDetail.innerHTML = '<p class="empty-state">Create a shipment or adjust the filters.</p>';
+    shipmentTimeline.innerHTML = "";
+    return;
+  }
+
+  if (!selectedShipmentId || !filteredShipments.some((shipment) => shipment.id === selectedShipmentId)) {
+    selectedShipmentId = filteredShipments[0].id;
+  }
+
+  shipmentList.innerHTML = filteredShipments.map((shipment) => `
+    <button class="shipment-list-card ${shipment.id === selectedShipmentId ? "active" : ""}" type="button" data-shipment-id="${shipment.id}">
+      <h3>${escapeHtml(shipment.shipmentCode)}</h3>
+      <p>${escapeHtml(shipment.customerName)}${shipment.country ? ` · ${escapeHtml(shipment.country)}` : ""}</p>
+      <p>${escapeHtml(shipment.pol || "No POL")} to ${escapeHtml(shipment.pod || "No POD")}</p>
+      <div class="order-list-meta">
+        <span class="order-pill">${escapeHtml(shipment.status)}</span>
+        <span class="order-pill">${escapeHtml(shipment.containerType || "No container")}</span>
+        <span class="order-pill">${escapeHtml(shipment.documentsStatus)}</span>
+        <span class="order-pill">${escapeHtml(shipment.eta || "No ETA")}</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+function selectShipment(id) {
+  const shipment = shipments.find((item) => item.id === id);
+  if (!shipment) {
+    return;
+  }
+
+  selectedShipmentId = id;
+  renderShipments();
+  renderShipmentDetail(shipment);
+}
+
+function editShipment(id) {
+  const shipment = shipments.find((item) => item.id === id);
+  if (!shipment) {
+    return;
+  }
+
+  shipmentId.value = shipment.id;
+  shipmentCode.value = shipment.shipmentCode;
+  renderShipmentCustomerOptions(shipment.customerName);
+  renderShipmentOrderOptions(shipment.relatedOrder);
+  shipmentCustomer.value = shipment.customerName;
+  shipmentCountry.value = shipment.country;
+  shipmentRelatedOrder.value = shipment.relatedOrder;
+  shipmentForwarder.value = shipment.forwarder;
+  shipmentContainerType.value = shipment.containerType;
+  shipmentContainerNumber.value = shipment.containerNumber;
+  shipmentPol.value = shipment.pol;
+  shipmentPod.value = shipment.pod;
+  shipmentEtd.value = shipment.etd;
+  shipmentEta.value = shipment.eta;
+  shipmentVessel.value = shipment.vessel;
+  shipmentStatus.value = shipment.status;
+  shipmentDocumentsStatus.value = shipment.documentsStatus;
+  setShipmentDocumentFields(shipment.documents);
+  shipmentNextAction.value = shipment.nextAction;
+  shipmentNotes.value = shipment.notes;
+  shipmentFormTitle.textContent = "Edit Shipment";
+  shipmentCode.focus();
+}
+
+function deleteShipment(id) {
+  const shipment = shipments.find((item) => item.id === id);
+  if (!shipment) {
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete shipment "${shipment.shipmentCode}"? Related orders will stay safe.`);
+  if (!confirmed) {
+    return;
+  }
+
+  shipments = shipments.filter((item) => item.id !== id);
+  selectedShipmentId = shipments[0]?.id || "";
+  saveShipments();
+  renderShipmentDashboard();
+  renderShipmentFilters();
+  renderShipments();
+  clearShipmentForm();
+
+  if (selectedShipmentId) {
+    selectShipment(selectedShipmentId);
+  } else {
+    shipmentDetailTitle.textContent = "Select a shipment";
+    shipmentDetail.innerHTML = '<p class="empty-state">Create a shipment to view details.</p>';
+    shipmentTimeline.innerHTML = "";
+  }
+}
+
+function getRelatedShipmentOrder(orderCodeValue) {
+  return orders.find((order) => (order.orderCode || order.id).toLowerCase() === orderCodeValue.toLowerCase());
+}
+
+function renderShipmentDetail(shipment) {
+  const relatedOrder = shipment.relatedOrder ? getRelatedShipmentOrder(shipment.relatedOrder) : null;
+  shipmentDetailTitle.textContent = shipment.shipmentCode;
+  shipmentDetail.innerHTML = `
+    <div class="order-status-row">
+      <span class="order-pill">${escapeHtml(shipment.status)}</span>
+      <span class="order-pill">${escapeHtml(shipment.documentsStatus)}</span>
+      <span class="order-pill">${escapeHtml(shipment.containerType || "No container type")}</span>
+    </div>
+    <dl class="order-detail-grid">
+      ${renderDetailField("Shipment ID", shipment.shipmentCode)}
+      ${renderDetailField("Customer", shipment.customerName)}
+      ${renderDetailField("Country", shipment.country)}
+      ${renderDetailField("Related Order", shipment.relatedOrder)}
+      ${renderDetailField("Forwarder", shipment.forwarder)}
+      ${renderDetailField("Container Type", shipment.containerType)}
+      ${renderDetailField("Container Number", shipment.containerNumber)}
+      ${renderDetailField("POL", shipment.pol)}
+      ${renderDetailField("POD", shipment.pod)}
+      ${renderDetailField("ETD", shipment.etd)}
+      ${renderDetailField("ETA", shipment.eta)}
+      ${renderDetailField("Vessel", shipment.vessel)}
+      ${renderDetailField("Status", shipment.status)}
+      ${renderDetailField("Documents", shipment.documentsStatus)}
+    </dl>
+    <div class="detail-text-block">
+      <strong>Related Order</strong>
+      <p>${escapeHtml(relatedOrder ? `${relatedOrder.orderCode} · ${relatedOrder.orderName} · ${relatedOrder.status}` : "No saved order match yet.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Documents Checklist</strong>
+      <div class="document-checklist">
+        ${shipmentDocumentNames.map((name) => `
+          <div class="document-checklist-item ${shipment.documents[name] ? "ready" : ""}">
+            <span>${shipment.documents[name] ? "Ready" : "Pending"}</span>
+            <strong>${escapeHtml(name)}</strong>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+    <div class="detail-text-block">
+      <strong>Next Action</strong>
+      <p>${escapeHtml(shipment.nextAction || "No next action set.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Notes</strong>
+      <p>${escapeHtml(shipment.notes || "No notes yet.")}</p>
+    </div>
+    <div class="order-detail-actions">
+      <button class="open-link secondary" type="button" data-shipment-edit="${shipment.id}">Edit</button>
+      <button class="danger-button" type="button" data-shipment-delete="${shipment.id}">Delete</button>
+    </div>
+  `;
+  renderShipmentTimeline(shipment);
+}
+
+function renderShipmentTimeline(shipment) {
+  const timelineItems = [
+    ...(shipment.timeline || []),
+    {
+      date: shipment.etd || "No ETD",
+      title: "ETD",
+      description: shipment.etd ? `Planned departure from ${shipment.pol || "POL not set"}.` : "Add ETD when booking is confirmed.",
+      status: "Schedule"
+    },
+    {
+      date: shipment.eta || "No ETA",
+      title: "ETA",
+      description: shipment.eta ? `Planned arrival at ${shipment.pod || "POD not set"}.` : "Add ETA when forwarder confirms arrival plan.",
+      status: "Schedule"
+    },
+    {
+      date: formatDateOnly(shipment.updatedAt),
+      title: `Current status: ${shipment.status}`,
+      description: shipment.nextAction || "No next action has been set yet.",
+      status: shipment.status
+    }
+  ].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+  shipmentTimeline.innerHTML = `
+    <p class="card-label">Timeline</p>
+    ${timelineItems.map((item) => `
+      <article class="order-timeline-item">
+        <span>${escapeHtml(item.date)}</span>
+        <div>
+          <strong>${escapeHtml(item.title)}</strong>
+          <small>${escapeHtml(item.status || "Note")}</small>
+          <p>${escapeHtml(item.description)}</p>
+        </div>
+      </article>
+    `).join("")}
+  `;
+}
+
+function renderShipmentCustomerOptions(selectedValue = "") {
+  const existingShipmentCustomerNames = shipments.map((shipment) => shipment.customerName).filter(Boolean);
+  const names = [...new Set([...customers.map((customer) => customer.customerName), ...existingShipmentCustomerNames])].sort();
+  const selectedCustomerName = selectedValue || shipmentCustomer.value;
+  shipmentCustomer.innerHTML = '<option value="">Select customer</option>' + names.map((name) => `
+    <option value="${escapeHtml(name)}">${escapeHtml(name)}</option>
+  `).join("");
+
+  if (selectedCustomerName && names.includes(selectedCustomerName)) {
+    shipmentCustomer.value = selectedCustomerName;
+  }
+}
+
+function renderShipmentOrderOptions(selectedValue = "") {
+  const orderCodes = [...new Set(orders.map((order) => order.orderCode || order.id).filter(Boolean))].sort();
+  const selectedOrderCode = selectedValue || shipmentRelatedOrder.value;
+  shipmentRelatedOrder.innerHTML = '<option value="">Select order</option>' + orderCodes.map((code) => {
+    const order = orders.find((item) => (item.orderCode || item.id) === code);
+    const label = order ? `${code} · ${order.orderName}` : code;
+    return `<option value="${escapeHtml(code)}">${escapeHtml(label)}</option>`;
+  }).join("");
+
+  if (selectedOrderCode && orderCodes.includes(selectedOrderCode)) {
+    shipmentRelatedOrder.value = selectedOrderCode;
+  }
+}
+
+function setupShipmentCenter() {
+  shipmentForm.addEventListener("submit", saveShipmentFromForm);
+  resetShipmentForm.addEventListener("click", clearShipmentForm);
+  shipmentCustomer.addEventListener("change", () => {
+    const customer = getRelatedCustomer(shipmentCustomer.value);
+    if (customer && !shipmentCountry.value) {
+      shipmentCountry.value = customer.country;
+    }
+  });
+  shipmentRelatedOrder.addEventListener("change", () => {
+    const order = getRelatedShipmentOrder(shipmentRelatedOrder.value);
+    if (!order) {
+      return;
+    }
+    if (!shipmentCustomer.value) {
+      renderShipmentCustomerOptions(order.customerName);
+      shipmentCustomer.value = order.customerName;
+    }
+    if (!shipmentCountry.value) {
+      shipmentCountry.value = order.country;
+    }
+    if (!shipmentEtd.value) {
+      shipmentEtd.value = order.etd;
+    }
+    if (!shipmentEta.value) {
+      shipmentEta.value = order.eta;
+    }
+  });
+  [shipmentSearchInput, shipmentStatusFilter, shipmentCustomerFilter, shipmentDocumentsFilter].forEach((field) => {
+    field.addEventListener("input", renderShipments);
+    field.addEventListener("change", renderShipments);
+  });
+
+  shipmentList.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-shipment-id]");
+    if (!card) {
+      return;
+    }
+
+    selectShipment(card.dataset.shipmentId);
+  });
+
+  shipmentDetail.addEventListener("click", (event) => {
+    const editButton = event.target.closest("[data-shipment-edit]");
+    const deleteButton = event.target.closest("[data-shipment-delete]");
+
+    if (editButton) {
+      editShipment(editButton.dataset.shipmentEdit);
+    }
+
+    if (deleteButton) {
+      deleteShipment(deleteButton.dataset.shipmentDelete);
+    }
+  });
+}
+
 function setupEditableLists() {
   document.querySelectorAll("[data-list-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
@@ -3168,6 +3870,22 @@ function appendQuotationSearchRecords(moduleRecords) {
   });
 }
 
+function appendShipmentSearchRecords(moduleRecords) {
+  const shipmentModule = moduleRecords.find((module) => module.name === "Shipments");
+  if (!shipmentModule) {
+    return;
+  }
+
+  shipments.forEach((shipment) => {
+    shipmentModule.items.push({
+      title: `${shipment.shipmentCode} ${shipment.customerName}`,
+      type: "Shipment",
+      description: `${shipment.pol || "No POL"} to ${shipment.pod || "No POD"} · ${shipment.status} · ${shipment.documentsStatus} · ${shipment.nextAction || "No next action"}`,
+      page: "shipment-center"
+    });
+  });
+}
+
 function normalizeSearchText(value) {
   return value.toLowerCase().trim();
 }
@@ -3207,6 +3925,7 @@ function searchItems(query) {
   appendCustomerSearchRecords(records);
   appendSupplierSearchRecords(records);
   appendQuotationSearchRecords(records);
+  appendShipmentSearchRecords(records);
 
   return records.map((module) => {
     const results = module.items
@@ -3372,11 +4091,13 @@ function init() {
   loadSuppliers();
   loadOrders();
   loadQuotations();
+  loadShipments();
   setupEditableLists();
   setupOrderCenter();
   setupCustomerCenter();
   setupSupplierCenter();
   setupQuotationCenter();
+  setupShipmentCenter();
   setupPortalCards();
   setupCommandPalette();
   renderAllEditableLists();
@@ -3393,11 +4114,17 @@ function init() {
   renderQuotationFilters();
   renderQuotations();
   renderQuotationCustomerOptions();
+  renderShipmentDashboard();
+  renderShipmentFilters();
+  renderShipments();
+  renderShipmentCustomerOptions();
+  renderShipmentOrderOptions();
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();
   clearOrderForm();
   clearQuotationForm();
+  clearShipmentForm();
 
   if (orders.length) {
     selectOrder(orders[0].id);
@@ -3413,6 +4140,10 @@ function init() {
 
   if (quotations.length) {
     selectQuotation(quotations[0].id);
+  }
+
+  if (shipments.length) {
+    selectShipment(shipments[0].id);
   }
 
   restoreField(userName, storageKeys.userName);

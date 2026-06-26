@@ -560,11 +560,16 @@ select {
 
 .customer-dashboard,
 .supplier-dashboard,
-.quotation-dashboard {
+.quotation-dashboard,
+.shipment-dashboard {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 18px;
+}
+
+.shipment-dashboard {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .order-metric-card {
@@ -595,7 +600,8 @@ select {
 .order-center-layout,
 .customer-center-layout,
 .supplier-center-layout,
-.quotation-center-layout {
+.quotation-center-layout,
+.shipment-center-layout {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(280px, 0.8fr) minmax(340px, 1fr);
   gap: 18px;
@@ -605,7 +611,8 @@ select {
 .order-panel,
 .customer-panel,
 .supplier-panel,
-.quotation-panel {
+.quotation-panel,
+.shipment-panel {
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -616,7 +623,8 @@ select {
 .order-form,
 .customer-form,
 .supplier-form,
-.quotation-form {
+.quotation-form,
+.shipment-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
@@ -629,7 +637,9 @@ select {
 .supplier-form label,
 .supplier-panel label,
 .quotation-form label,
-.quotation-panel label {
+.quotation-panel label,
+.shipment-form label,
+.shipment-panel label {
   display: grid;
   gap: 7px;
   color: var(--muted);
@@ -641,14 +651,16 @@ select {
 .order-form-actions,
 .customer-form-actions,
 .supplier-form-actions,
-.quotation-form-actions {
+.quotation-form-actions,
+.shipment-form-actions {
   grid-column: 1 / -1;
 }
 
 .order-form-actions,
 .customer-form-actions,
 .supplier-form-actions,
-.quotation-form-actions {
+.quotation-form-actions,
+.shipment-form-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -658,9 +670,11 @@ select {
 .customer-list,
 .supplier-list,
 .quotation-list,
+.shipment-list,
 .related-orders,
 .customer-timeline,
-.supplier-timeline {
+.supplier-timeline,
+.shipment-timeline {
   display: grid;
   gap: 10px;
 }
@@ -674,7 +688,8 @@ select {
 
 .customer-filter-grid,
 .supplier-filter-grid,
-.quotation-filter-grid {
+.quotation-filter-grid,
+.shipment-filter-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
@@ -722,6 +737,7 @@ select {
 .customer-list-card,
 .supplier-list-card,
 .quotation-list-card,
+.shipment-list-card,
 .related-order-card {
   width: 100%;
   padding: 14px;
@@ -744,6 +760,9 @@ select {
 .quotation-list-card:hover,
 .quotation-list-card:focus,
 .quotation-list-card.active,
+.shipment-list-card:hover,
+.shipment-list-card:focus,
+.shipment-list-card.active,
 .related-order-card:hover,
 .related-order-card:focus {
   border-color: var(--accent);
@@ -754,6 +773,7 @@ select {
 .customer-list-card h3,
 .supplier-list-card h3,
 .quotation-list-card h3,
+.shipment-list-card h3,
 .related-order-card strong {
   margin: 0 0 6px;
   font-size: 18px;
@@ -763,6 +783,7 @@ select {
 .customer-list-card p,
 .supplier-list-card p,
 .quotation-list-card p,
+.shipment-list-card p,
 .related-order-card p {
   margin: 0;
   color: var(--muted);
@@ -806,7 +827,8 @@ select {
 .order-detail,
 .customer-detail,
 .supplier-detail,
-.quotation-detail {
+.quotation-detail,
+.shipment-detail {
   display: grid;
   gap: 14px;
 }
@@ -891,10 +913,61 @@ select {
 
 .order-timeline,
 .customer-timeline,
-.supplier-timeline {
+.supplier-timeline,
+.shipment-timeline {
   display: grid;
   gap: 10px;
   margin-top: 18px;
+}
+
+.shipment-documents-field {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf9;
+}
+
+.shipment-documents-field legend {
+  padding: 0 6px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.shipment-documents-field label,
+.document-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shipment-documents-field input {
+  width: auto;
+  min-height: auto;
+}
+
+.document-checklist {
+  display: grid;
+  gap: 8px;
+}
+
+.document-checklist-item {
+  min-height: 34px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf9;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.document-checklist-item.ready {
+  border-color: #a8d5b2;
+  background: #e7f1e9;
+  color: #3d6b4f;
 }
 
 .timeline-form {
@@ -1183,17 +1256,20 @@ select {
     .customer-dashboard,
     .supplier-dashboard,
     .quotation-dashboard,
+    .shipment-dashboard,
     .order-center-layout,
     .customer-center-layout,
     .supplier-center-layout,
     .quotation-center-layout,
+    .shipment-center-layout,
     .customer-followup-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .order-detail-panel,
   .customer-detail-panel,
-  .quotation-detail-panel {
+  .quotation-detail-panel,
+  .shipment-detail-panel {
     grid-column: 1 / -1;
   }
 
@@ -1204,8 +1280,9 @@ select {
     bottom: 0;
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(10, minmax(72px, 1fr));
     gap: 4px;
+    overflow-x: auto;
     padding: 8px;
     background: rgba(255, 253, 249, 0.96);
     border-top: 1px solid var(--line);
@@ -1216,6 +1293,7 @@ select {
     padding: 6px 4px;
     text-align: center;
     font-size: 12px;
+    white-space: nowrap;
   }
 
   .mobile-search-trigger {
@@ -1254,15 +1332,19 @@ select {
   .customer-dashboard,
   .supplier-dashboard,
   .quotation-dashboard,
+  .shipment-dashboard,
   .order-center-layout,
   .customer-center-layout,
   .supplier-center-layout,
   .quotation-center-layout,
+  .shipment-center-layout,
   .customer-followup-grid,
   .order-form,
   .customer-form,
   .supplier-form,
   .quotation-form,
+  .shipment-form,
+  .shipment-documents-field,
   .order-detail-grid,
   .status-progress,
   .timeline-form,

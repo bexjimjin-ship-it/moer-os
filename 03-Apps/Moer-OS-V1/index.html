@@ -28,6 +28,7 @@
         <button class="nav-item" data-page="customer-center" type="button">Customer Center</button>
         <button class="nav-item" data-page="supplier-center" type="button">Supplier Center</button>
         <button class="nav-item" data-page="quotation-center" type="button">Quotation Center</button>
+        <button class="nav-item" data-page="shipment-center" type="button">Shipment Center</button>
         <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
         <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
         <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
@@ -922,6 +923,164 @@
         </div>
       </section>
 
+      <section class="page" id="shipment-center">
+        <header class="page-header">
+          <p class="eyebrow">Shipment Center</p>
+          <h1>Shipment Center V1</h1>
+          <p class="date-line">Track containers, forwarders, ETD, ETA, shipment status, and document readiness.</p>
+        </header>
+
+        <section class="shipment-dashboard" id="shipmentDashboard"></section>
+
+        <div class="shipment-center-layout">
+          <section class="shipment-panel shipment-form-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Create / Edit</p>
+              <h2 id="shipmentFormTitle">New Shipment</h2>
+            </div>
+            <form id="shipmentForm" class="shipment-form">
+              <input id="shipmentId" type="hidden">
+              <label>
+                Shipment ID
+                <input id="shipmentCode" type="text" placeholder="SHP-2026-001" required>
+              </label>
+              <label>
+                Customer
+                <select id="shipmentCustomer" required></select>
+              </label>
+              <label>
+                Country
+                <input id="shipmentCountry" type="text" placeholder="Trinidad and Tobago">
+              </label>
+              <label>
+                Related order
+                <select id="shipmentRelatedOrder"></select>
+              </label>
+              <label>
+                Forwarder
+                <input id="shipmentForwarder" type="text" placeholder="Forwarder name">
+              </label>
+              <label>
+                Container type
+                <input id="shipmentContainerType" type="text" placeholder="20GP / 40HQ / LCL">
+              </label>
+              <label>
+                Container number
+                <input id="shipmentContainerNumber" type="text" placeholder="MSCU1234567">
+              </label>
+              <label>
+                POL
+                <input id="shipmentPol" type="text" placeholder="Ningbo">
+              </label>
+              <label>
+                POD
+                <input id="shipmentPod" type="text" placeholder="Port of Spain">
+              </label>
+              <label>
+                ETD
+                <input id="shipmentEtd" type="date">
+              </label>
+              <label>
+                ETA
+                <input id="shipmentEta" type="date">
+              </label>
+              <label>
+                Vessel
+                <input id="shipmentVessel" type="text" placeholder="Vessel name">
+              </label>
+              <label>
+                Status
+                <select id="shipmentStatus">
+                  <option>Preparing</option>
+                  <option>Booked</option>
+                  <option>In Transit</option>
+                  <option>Arrived</option>
+                  <option>Delivered</option>
+                  <option>Delayed</option>
+                  <option>On Hold</option>
+                </select>
+              </label>
+              <label>
+                Documents status
+                <select id="shipmentDocumentsStatus">
+                  <option>Not Started</option>
+                  <option>Pending</option>
+                  <option>Partial</option>
+                  <option>Ready</option>
+                  <option>Sent</option>
+                </select>
+              </label>
+              <fieldset class="shipment-documents-field full-field">
+                <legend>Documents checklist</legend>
+                <label>
+                  <input id="shipmentDocCommercialInvoice" type="checkbox">
+                  Commercial Invoice
+                </label>
+                <label>
+                  <input id="shipmentDocPackingList" type="checkbox">
+                  Packing List
+                </label>
+                <label>
+                  <input id="shipmentDocBillOfLading" type="checkbox">
+                  Bill of Lading
+                </label>
+                <label>
+                  <input id="shipmentDocCertificateOrigin" type="checkbox">
+                  Certificate of Origin
+                </label>
+                <label>
+                  <input id="shipmentDocOther" type="checkbox">
+                  Other documents
+                </label>
+              </fieldset>
+              <label class="full-field">
+                Next action
+                <input id="shipmentNextAction" type="text" placeholder="Confirm booking or send documents">
+              </label>
+              <label class="full-field">
+                Notes
+                <textarea id="shipmentNotes" placeholder="Forwarder notes, document reminders, container loading, or customer updates"></textarea>
+              </label>
+              <div class="shipment-form-actions">
+                <button class="open-link" type="submit">Save Shipment</button>
+                <button class="open-link secondary" id="resetShipmentForm" type="button">New Blank Shipment</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="shipment-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Shipments</p>
+              <h2>Shipment List</h2>
+            </div>
+            <div class="shipment-filter-grid">
+              <input id="shipmentSearchInput" type="search" placeholder="Search shipments">
+              <select id="shipmentStatusFilter">
+                <option value="">All status</option>
+              </select>
+              <select id="shipmentCustomerFilter">
+                <option value="">All customers</option>
+              </select>
+              <select id="shipmentDocumentsFilter">
+                <option value="">All documents</option>
+              </select>
+            </div>
+            <div class="shipment-list" id="shipmentList"></div>
+          </section>
+
+          <section class="shipment-panel shipment-detail-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Detail</p>
+              <h2 id="shipmentDetailTitle">Select a shipment</h2>
+            </div>
+            <div id="shipmentDetail" class="shipment-detail">
+              <p class="empty-state">Choose a shipment to view details, timeline, documents, and notes.</p>
+            </div>
+            <div id="shipmentTimeline" class="shipment-timeline"></div>
+          </section>
+        </div>
+      </section>
+
       <section class="page" id="knowledge-center">
         <header class="page-header">
           <p class="eyebrow">Knowledge Center</p>
@@ -1015,6 +1174,7 @@
       <button class="bottom-item" data-page="customer-center" type="button">Customers</button>
       <button class="bottom-item" data-page="supplier-center" type="button">Suppliers</button>
       <button class="bottom-item" data-page="quotation-center" type="button">Quotes</button>
+      <button class="bottom-item" data-page="shipment-center" type="button">Shipments</button>
       <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
       <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
       <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>

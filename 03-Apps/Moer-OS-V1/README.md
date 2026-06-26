@@ -11,6 +11,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Customer Center page
 - Supplier Center page
 - Quotation Center page
+- Shipment Center page
 - Knowledge Center page
 - Timeline Engine page
 - Family Meal Planner page
@@ -24,10 +25,13 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Customer Center V2 with dashboard cards, searchable customer memory, filters, follow-up system, related orders, and manual timeline events
 - Supplier Center V1 with dashboard cards, supplier memory, filters, reliability notes, related orders, and manual timeline events
 - Quotation Center V1 with dashboard cards, searchable quotation list, filters, create/edit/delete form, customer and supplier links, and detail view
+- Shipment Center V1 with dashboard cards, searchable shipment list, filters, create/edit/delete form, related orders, timeline, and documents checklist
 - Order customer selection from saved Customer Center records
 - Order supplier suggestions from saved Supplier Center records
 - Quotation customer selection from saved Customer Center records
 - Quotation supplier suggestions from saved Supplier Center records
+- Shipment customer selection from saved Customer Center records
+- Shipment related order selection from saved Order Center records
 - Editable local meal planner
 - Basic localStorage for Today data, customers, orders, meal ideas, and settings
 
@@ -35,7 +39,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 
 Open search with `Cmd + K` on Mac or `Ctrl + K` on Windows.
 
-The search uses mock module data plus current Today notes, customers, suppliers, quotations, and orders from localStorage. It does not connect to any database or external service.
+The search uses mock module data plus current Today notes, customers, suppliers, quotations, shipments, and orders from localStorage. It does not connect to any database or external service.
 
 ## Tech
 
@@ -63,6 +67,7 @@ Clickable prototypes:
 - Customer Center: inside this shell
 - Supplier Center: inside this shell
 - Quotation Center: inside this shell
+- Shipment Center: inside this shell
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`
 - Family Meal Planner: inside this shell
