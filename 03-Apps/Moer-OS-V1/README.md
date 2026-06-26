@@ -10,6 +10,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Order Center page
 - Customer Center page
 - Supplier Center page
+- Quotation Center page
 - Knowledge Center page
 - Timeline Engine page
 - Family Meal Planner page
@@ -22,8 +23,11 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Real Order Center V1 inside this shell with dashboard cards, local order list, create/edit/delete form, filters, detail view, status progress, and manual timeline events
 - Customer Center V2 with dashboard cards, searchable customer memory, filters, follow-up system, related orders, and manual timeline events
 - Supplier Center V1 with dashboard cards, supplier memory, filters, reliability notes, related orders, and manual timeline events
+- Quotation Center V1 with dashboard cards, searchable quotation list, filters, create/edit/delete form, customer and supplier links, and detail view
 - Order customer selection from saved Customer Center records
 - Order supplier suggestions from saved Supplier Center records
+- Quotation customer selection from saved Customer Center records
+- Quotation supplier suggestions from saved Supplier Center records
 - Editable local meal planner
 - Basic localStorage for Today data, customers, orders, meal ideas, and settings
 
@@ -31,7 +35,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 
 Open search with `Cmd + K` on Mac or `Ctrl + K` on Windows.
 
-The search uses mock module data plus current Today notes, customers, and orders from localStorage. It does not connect to any database or external service.
+The search uses mock module data plus current Today notes, customers, suppliers, quotations, and orders from localStorage. It does not connect to any database or external service.
 
 ## Tech
 
@@ -58,6 +62,7 @@ Clickable prototypes:
 - Order Center: inside this shell
 - Customer Center: inside this shell
 - Supplier Center: inside this shell
+- Quotation Center: inside this shell
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`
 - Family Meal Planner: inside this shell

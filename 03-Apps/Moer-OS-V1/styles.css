@@ -559,7 +559,8 @@ select {
 }
 
 .customer-dashboard,
-.supplier-dashboard {
+.supplier-dashboard,
+.quotation-dashboard {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
@@ -593,7 +594,8 @@ select {
 
 .order-center-layout,
 .customer-center-layout,
-.supplier-center-layout {
+.supplier-center-layout,
+.quotation-center-layout {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(280px, 0.8fr) minmax(340px, 1fr);
   gap: 18px;
@@ -602,7 +604,8 @@ select {
 
 .order-panel,
 .customer-panel,
-.supplier-panel {
+.supplier-panel,
+.quotation-panel {
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -612,7 +615,8 @@ select {
 
 .order-form,
 .customer-form,
-.supplier-form {
+.supplier-form,
+.quotation-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
@@ -623,7 +627,9 @@ select {
 .customer-form label,
 .customer-panel label,
 .supplier-form label,
-.supplier-panel label {
+.supplier-panel label,
+.quotation-form label,
+.quotation-panel label {
   display: grid;
   gap: 7px;
   color: var(--muted);
@@ -634,13 +640,15 @@ select {
 .full-field,
 .order-form-actions,
 .customer-form-actions,
-.supplier-form-actions {
+.supplier-form-actions,
+.quotation-form-actions {
   grid-column: 1 / -1;
 }
 
 .order-form-actions,
 .customer-form-actions,
-.supplier-form-actions {
+.supplier-form-actions,
+.quotation-form-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -649,6 +657,7 @@ select {
 .order-list,
 .customer-list,
 .supplier-list,
+.quotation-list,
 .related-orders,
 .customer-timeline,
 .supplier-timeline {
@@ -664,7 +673,8 @@ select {
 }
 
 .customer-filter-grid,
-.supplier-filter-grid {
+.supplier-filter-grid,
+.quotation-filter-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
@@ -711,6 +721,7 @@ select {
 .order-list-card,
 .customer-list-card,
 .supplier-list-card,
+.quotation-list-card,
 .related-order-card {
   width: 100%;
   padding: 14px;
@@ -730,6 +741,9 @@ select {
 .supplier-list-card:hover,
 .supplier-list-card:focus,
 .supplier-list-card.active,
+.quotation-list-card:hover,
+.quotation-list-card:focus,
+.quotation-list-card.active,
 .related-order-card:hover,
 .related-order-card:focus {
   border-color: var(--accent);
@@ -739,6 +753,7 @@ select {
 .order-list-card h3,
 .customer-list-card h3,
 .supplier-list-card h3,
+.quotation-list-card h3,
 .related-order-card strong {
   margin: 0 0 6px;
   font-size: 18px;
@@ -747,6 +762,7 @@ select {
 .order-list-card p,
 .customer-list-card p,
 .supplier-list-card p,
+.quotation-list-card p,
 .related-order-card p {
   margin: 0;
   color: var(--muted);
@@ -789,7 +805,8 @@ select {
 
 .order-detail,
 .customer-detail,
-.supplier-detail {
+.supplier-detail,
+.quotation-detail {
   display: grid;
   gap: 14px;
 }
@@ -1165,15 +1182,18 @@ select {
     .order-dashboard,
     .customer-dashboard,
     .supplier-dashboard,
+    .quotation-dashboard,
     .order-center-layout,
     .customer-center-layout,
     .supplier-center-layout,
+    .quotation-center-layout,
     .customer-followup-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .order-detail-panel,
-  .customer-detail-panel {
+  .customer-detail-panel,
+  .quotation-detail-panel {
     grid-column: 1 / -1;
   }
 
@@ -1184,7 +1204,7 @@ select {
     bottom: 0;
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(9, 1fr);
     gap: 4px;
     padding: 8px;
     background: rgba(255, 253, 249, 0.96);
@@ -1233,13 +1253,16 @@ select {
   .order-dashboard,
   .customer-dashboard,
   .supplier-dashboard,
+  .quotation-dashboard,
   .order-center-layout,
   .customer-center-layout,
   .supplier-center-layout,
+  .quotation-center-layout,
   .customer-followup-grid,
   .order-form,
   .customer-form,
   .supplier-form,
+  .quotation-form,
   .order-detail-grid,
   .status-progress,
   .timeline-form,

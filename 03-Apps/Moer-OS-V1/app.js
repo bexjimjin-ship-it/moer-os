@@ -14,9 +14,11 @@ const storageKeys = {
   orders: "moerOS.orders",
   customers: "moerOS.customers",
   suppliers: "moerOS.suppliers",
+  quotations: "moerOS.quotations",
   ordersSeededV1: "moerOS.ordersSeededV1",
   customersSeededV2: "moerOS.customersSeededV2",
-  suppliersSeededV1: "moerOS.suppliersSeededV1"
+  suppliersSeededV1: "moerOS.suppliersSeededV1",
+  quotationsSeededV1: "moerOS.quotationsSeededV1"
 };
 
 const orderStatusOptions = ["New Inquiry", "Quoting", "Waiting Supplier", "Waiting Customer", "Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered", "On Hold"];
@@ -27,6 +29,7 @@ const customerTypeOptions = ["Importer", "Wholesaler", "Distributor", "Retailer"
 const supplierReliabilityOptions = ["Unknown", "Reliable", "Needs Follow-up", "Risky"];
 const supplierStatusOptions = ["New", "Active", "Preferred", "Backup", "Paused"];
 const supplierPriorityOptions = ["Normal", "High", "Urgent", "Low"];
+const quotationStatusOptions = ["Draft", "Sent", "Waiting Customer", "Approved", "Rejected", "Expired"];
 
 const customerSeedData = [
   {
@@ -421,6 +424,63 @@ const orderSeedData = [
   }
 ];
 
+const quotationSeedData = [
+  {
+    id: "quotation-001",
+    quotationCode: "QT-2026-001",
+    customerName: "Nicholas",
+    country: "Trinidad and Tobago",
+    productSummary: "Mixed container with stationery, household items, and daily-use products",
+    supplierName: "Yiwu Stationery Supplier",
+    quantity: "1x40HQ mixed container",
+    unitPrice: "Mixed by item",
+    totalAmount: "18600",
+    currency: "USD",
+    status: "Sent",
+    validUntil: "2026-07-05",
+    nextAction: "Confirm carton volume and selected SKUs",
+    notes: "Keep the quotation practical. Nicholas needs clear options for mixed container planning.",
+    createdAt: "2026-06-25T09:00:00",
+    updatedAt: "2026-06-25T11:30:00"
+  },
+  {
+    id: "quotation-002",
+    quotationCode: "QT-2026-002",
+    customerName: "Eddie",
+    country: "UK",
+    productSummary: "Christmas decorations, ornaments, gift bags, and seasonal display items",
+    supplierName: "Christmas Decoration Factory",
+    quantity: "Assorted SKUs",
+    unitPrice: "Pending by SKU",
+    totalAmount: "9800",
+    currency: "USD",
+    status: "Draft",
+    validUntil: "2026-07-10",
+    nextAction: "Wait for factory MOQ and packing details",
+    notes: "Seasonal timing matters. Send only clear products with photos, MOQ, packing, and lead time.",
+    createdAt: "2026-06-24T14:00:00",
+    updatedAt: "2026-06-26T10:20:00"
+  },
+  {
+    id: "quotation-003",
+    quotationCode: "QT-2026-003",
+    customerName: "Graham",
+    country: "Barbados",
+    productSummary: "Notebooks, pens, pencil cases, rulers, and school stationery sets",
+    supplierName: "Yiwu Stationery Supplier",
+    quantity: "8,000 pcs mixed stationery",
+    unitPrice: "0.78 average",
+    totalAmount: "6200",
+    currency: "USD",
+    status: "Waiting Customer",
+    validUntil: "2026-07-03",
+    nextAction: "Follow up on notebook cover design confirmation",
+    notes: "Customer is focused on school season timing and stable quality.",
+    createdAt: "2026-06-23T16:00:00",
+    updatedAt: "2026-06-26T11:05:00"
+  }
+];
+
 const editableLists = {
   focusTasks: [],
   peopleWaiting: [],
@@ -434,6 +494,8 @@ let customers = [];
 let selectedCustomerId = "";
 let suppliers = [];
 let selectedSupplierId = "";
+let quotations = [];
+let selectedQuotationId = "";
 
 const portalModules = [
   {
@@ -475,6 +537,14 @@ const portalModules = [
     purpose: "Supplier memory center for products, reliability, linked orders, timelines, and next actions.",
     status: "Prototype",
     internalPage: "supplier-center"
+  },
+  {
+    id: "quotation-center",
+    section: "today",
+    name: "Quotation Center",
+    purpose: "Local quotation prototype for customer quotes, supplier links, prices, validity, and next actions.",
+    status: "Prototype",
+    internalPage: "quotation-center"
   },
   {
     id: "order-center-docs",
@@ -557,9 +627,9 @@ const searchModules = [
   {
     name: "Quotations",
     items: [
-      { title: "Mixed container quotation", type: "Quote", description: "Mock quotation for multiple product categories in one shipment.", page: "order-center" },
-      { title: "Sample cost quotation", type: "Quote", description: "Mock quotation for sample arrangement and courier fee.", page: "order-center" },
-      { title: "Inspection service quotation", type: "Quote", description: "Mock quotation for product checking before shipment.", page: "order-center" }
+      { title: "Quotation Center", type: "Prototype", description: "Open the local Quotation Center prototype.", page: "quotation-center" },
+      { title: "Draft quotations", type: "Quote", description: "Review quotations that still need supplier details or customer pricing.", page: "quotation-center" },
+      { title: "Waiting customer quotations", type: "Quote", description: "Track sent quotes waiting for customer confirmation.", page: "quotation-center" }
     ]
   },
   {
@@ -593,6 +663,7 @@ const searchModules = [
       { title: "Order Center", type: "Prototype", description: "Open the local Order Center prototype.", page: "order-center" },
       { title: "Customer Center", type: "Prototype", description: "Open the local Customer Center prototype.", page: "customer-center" },
       { title: "Supplier Center", type: "Prototype", description: "Open the local Supplier Center prototype.", page: "supplier-center" },
+      { title: "Quotation Center", type: "Prototype", description: "Open the local Quotation Center prototype.", page: "quotation-center" },
       { title: "Order Center Architecture", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
@@ -752,6 +823,31 @@ const supplierTimelineStatus = document.querySelector("#supplierTimelineStatus")
 const supplierTimelineNextAction = document.querySelector("#supplierTimelineNextAction");
 const supplierTimeline = document.querySelector("#supplierTimeline");
 const supplierOptions = document.querySelector("#supplierOptions");
+const quotationForm = document.querySelector("#quotationForm");
+const quotationFormTitle = document.querySelector("#quotationFormTitle");
+const quotationId = document.querySelector("#quotationId");
+const quotationCode = document.querySelector("#quotationCode");
+const quotationCustomer = document.querySelector("#quotationCustomer");
+const quotationCountry = document.querySelector("#quotationCountry");
+const quotationProductSummary = document.querySelector("#quotationProductSummary");
+const quotationSupplier = document.querySelector("#quotationSupplier");
+const quotationQuantity = document.querySelector("#quotationQuantity");
+const quotationUnitPrice = document.querySelector("#quotationUnitPrice");
+const quotationTotalAmount = document.querySelector("#quotationTotalAmount");
+const quotationCurrency = document.querySelector("#quotationCurrency");
+const quotationStatus = document.querySelector("#quotationStatus");
+const quotationValidUntil = document.querySelector("#quotationValidUntil");
+const quotationNextAction = document.querySelector("#quotationNextAction");
+const quotationNotes = document.querySelector("#quotationNotes");
+const resetQuotationForm = document.querySelector("#resetQuotationForm");
+const quotationDashboard = document.querySelector("#quotationDashboard");
+const quotationSearchInput = document.querySelector("#quotationSearchInput");
+const quotationStatusFilter = document.querySelector("#quotationStatusFilter");
+const quotationCustomerFilter = document.querySelector("#quotationCustomerFilter");
+const quotationSupplierFilter = document.querySelector("#quotationSupplierFilter");
+const quotationList = document.querySelector("#quotationList");
+const quotationDetailTitle = document.querySelector("#quotationDetailTitle");
+const quotationDetail = document.querySelector("#quotationDetail");
 
 function showPage(pageId) {
   pages.forEach((page) => {
@@ -1527,6 +1623,8 @@ function saveCustomerFromForm(event) {
   renderCustomerFollowups();
   renderCustomers();
   renderOrderCustomerOptions(customer.customerName);
+  renderQuotationCustomerOptions(customer.customerName);
+  renderQuotationFilters();
   selectCustomer(customer.id);
   clearCustomerForm();
 }
@@ -1735,6 +1833,8 @@ function deleteCustomer(id) {
   renderCustomerFollowups();
   renderCustomers();
   renderOrderCustomerOptions();
+  renderQuotationCustomerOptions();
+  renderQuotationFilters();
   clearCustomerForm();
 
   if (selectedCustomerId) {
@@ -2116,6 +2216,7 @@ function saveSupplierFromForm(event) {
   renderSupplierFilters();
   renderSuppliers();
   renderOrderSupplierOptions(supplier.supplierName);
+  renderQuotationFilters();
   selectSupplier(supplier.id);
   clearSupplierForm();
 }
@@ -2300,6 +2401,7 @@ function deleteSupplier(id) {
   renderSupplierFilters();
   renderSuppliers();
   renderOrderSupplierOptions();
+  renderQuotationFilters();
   clearSupplierForm();
 
   if (selectedSupplierId) {
@@ -2410,7 +2512,8 @@ function renderSupplierTimeline(supplier, relatedOrders) {
 
 function renderOrderSupplierOptions(selectedValue = "") {
   const existingOrderSupplierNames = orders.map((order) => order.supplierName).filter(Boolean);
-  const names = [...new Set([...suppliers.map((supplier) => supplier.supplierName), ...existingOrderSupplierNames])].sort();
+  const existingQuotationSupplierNames = quotations.map((quotation) => quotation.supplierName).filter(Boolean);
+  const names = [...new Set([...suppliers.map((supplier) => supplier.supplierName), ...existingOrderSupplierNames, ...existingQuotationSupplierNames])].sort();
   supplierOptions.innerHTML = names.map((name) => `<option value="${escapeHtml(name)}"></option>`).join("");
   if (selectedValue) {
     orderSupplier.value = selectedValue;
@@ -2505,6 +2608,387 @@ function addSupplierTimelineEvent() {
   supplierTimelineNextAction.value = "";
   supplierTimelineEventType.value = "First contact";
   supplierTimelineStatus.value = "Open";
+}
+
+function loadQuotations() {
+  const savedQuotations = localStorage.getItem(storageKeys.quotations);
+  if (!savedQuotations) {
+    quotations = quotationSeedData.map(normalizeQuotation);
+    saveQuotations();
+    localStorage.setItem(storageKeys.quotationsSeededV1, "true");
+    return;
+  }
+
+  try {
+    const parsedQuotations = JSON.parse(savedQuotations);
+    quotations = Array.isArray(parsedQuotations) ? parsedQuotations.map(normalizeQuotation) : quotationSeedData.map(normalizeQuotation);
+  } catch (error) {
+    quotations = quotationSeedData.map(normalizeQuotation);
+  }
+
+  if (localStorage.getItem(storageKeys.quotationsSeededV1) !== "true") {
+    const existingCodes = new Set(quotations.map((quotation) => quotation.quotationCode.toLowerCase()));
+    const missingSamples = quotationSeedData
+      .filter((quotation) => !existingCodes.has(quotation.quotationCode.toLowerCase()))
+      .map(normalizeQuotation);
+    quotations = [...missingSamples, ...quotations];
+    localStorage.setItem(storageKeys.quotationsSeededV1, "true");
+    saveQuotations();
+  }
+}
+
+function saveQuotations() {
+  localStorage.setItem(storageKeys.quotations, JSON.stringify(quotations));
+}
+
+function normalizeQuotation(quotation) {
+  const now = new Date().toISOString();
+  return {
+    id: quotation.id || `quotation-${Date.now()}`,
+    quotationCode: quotation.quotationCode || `QT-${new Date().getFullYear()}-${Math.floor(Math.random() * 900 + 100)}`,
+    customerName: quotation.customerName || "",
+    country: quotation.country || "",
+    productSummary: quotation.productSummary || "",
+    supplierName: quotation.supplierName || "",
+    quantity: quotation.quantity || "",
+    unitPrice: quotation.unitPrice || "",
+    totalAmount: quotation.totalAmount || "",
+    currency: quotation.currency || "USD",
+    status: quotation.status || "Draft",
+    validUntil: quotation.validUntil || "",
+    nextAction: quotation.nextAction || "",
+    notes: quotation.notes || "",
+    createdAt: quotation.createdAt || now,
+    updatedAt: quotation.updatedAt || now
+  };
+}
+
+function getQuotationFormData() {
+  const now = new Date().toISOString();
+  const existingQuotation = quotations.find((quotation) => quotation.id === quotationId.value);
+
+  return {
+    id: quotationId.value || `quotation-${Date.now()}`,
+    quotationCode: quotationCode.value.trim(),
+    customerName: quotationCustomer.value.trim(),
+    country: quotationCountry.value.trim(),
+    productSummary: quotationProductSummary.value.trim(),
+    supplierName: quotationSupplier.value.trim(),
+    quantity: quotationQuantity.value.trim(),
+    unitPrice: quotationUnitPrice.value.trim(),
+    totalAmount: quotationTotalAmount.value.trim(),
+    currency: quotationCurrency.value,
+    status: quotationStatus.value,
+    validUntil: quotationValidUntil.value,
+    nextAction: quotationNextAction.value.trim(),
+    notes: quotationNotes.value.trim(),
+    createdAt: existingQuotation ? existingQuotation.createdAt : now,
+    updatedAt: now
+  };
+}
+
+function saveQuotationFromForm(event) {
+  event.preventDefault();
+  const quotation = getQuotationFormData();
+  if (!quotation.quotationCode || !quotation.customerName) {
+    return;
+  }
+
+  const existingIndex = quotations.findIndex((item) => item.id === quotation.id);
+  if (existingIndex >= 0) {
+    quotations[existingIndex] = quotation;
+  } else {
+    quotations.unshift(quotation);
+  }
+
+  selectedQuotationId = quotation.id;
+  saveQuotations();
+  renderQuotationDashboard();
+  renderQuotationFilters();
+  renderQuotations();
+  renderOrderSupplierOptions(quotation.supplierName);
+  selectQuotation(quotation.id);
+  clearQuotationForm();
+}
+
+function clearQuotationForm() {
+  quotationForm.reset();
+  quotationId.value = "";
+  quotationCode.value = `QT-${new Date().getFullYear()}-${String(quotations.length + 1).padStart(3, "0")}`;
+  renderQuotationCustomerOptions();
+  quotationFormTitle.textContent = "New Quotation";
+}
+
+function getQuotationFilterValues() {
+  return {
+    query: quotationSearchInput.value.trim().toLowerCase(),
+    status: quotationStatusFilter.value,
+    customer: quotationCustomerFilter.value,
+    supplier: quotationSupplierFilter.value
+  };
+}
+
+function getFilteredQuotations() {
+  const filters = getQuotationFilterValues();
+  return quotations.filter((quotation) => {
+    const haystack = [
+      quotation.quotationCode,
+      quotation.customerName,
+      quotation.country,
+      quotation.productSummary,
+      quotation.supplierName,
+      quotation.quantity,
+      quotation.unitPrice,
+      quotation.totalAmount,
+      quotation.currency,
+      quotation.status,
+      quotation.nextAction,
+      quotation.notes
+    ].join(" ").toLowerCase();
+
+    return (!filters.query || haystack.includes(filters.query))
+      && (!filters.status || quotation.status === filters.status)
+      && (!filters.customer || quotation.customerName === filters.customer)
+      && (!filters.supplier || quotation.supplierName === filters.supplier);
+  });
+}
+
+function renderQuotationFilters() {
+  const selected = {
+    status: quotationStatusFilter.value,
+    customer: quotationCustomerFilter.value,
+    supplier: quotationSupplierFilter.value
+  };
+  const customerNames = [...new Set(quotations.map((quotation) => quotation.customerName).filter(Boolean))].sort();
+  const supplierNames = [...new Set(quotations.map((quotation) => quotation.supplierName).filter(Boolean))].sort();
+
+  quotationStatusFilter.innerHTML = '<option value="">All status</option>' + quotationStatusOptions.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+  quotationCustomerFilter.innerHTML = '<option value="">All customers</option>' + customerNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  quotationSupplierFilter.innerHTML = '<option value="">All suppliers</option>' + supplierNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+
+  quotationStatusFilter.value = selected.status;
+  quotationCustomerFilter.value = selected.customer;
+  quotationSupplierFilter.value = selected.supplier;
+}
+
+function renderQuotationDashboard() {
+  const metrics = [
+    { label: "Total Quotations", value: quotations.length },
+    { label: "Drafts", value: quotations.filter((quotation) => quotation.status === "Draft").length },
+    { label: "Sent", value: quotations.filter((quotation) => quotation.status === "Sent").length },
+    { label: "Waiting Customer", value: quotations.filter((quotation) => quotation.status === "Waiting Customer").length },
+    { label: "Approved", value: quotations.filter((quotation) => quotation.status === "Approved").length }
+  ];
+
+  quotationDashboard.innerHTML = metrics.map((metric) => `
+    <article class="order-metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${metric.value}</strong>
+    </article>
+  `).join("");
+}
+
+function renderQuotations() {
+  const filteredQuotations = getFilteredQuotations();
+
+  if (!filteredQuotations.length) {
+    quotationList.innerHTML = '<p class="empty-state">No quotations found.</p>';
+    quotationDetailTitle.textContent = "Select a quotation";
+    quotationDetail.innerHTML = '<p class="empty-state">Create a quotation or adjust the filters.</p>';
+    return;
+  }
+
+  if (!selectedQuotationId || !filteredQuotations.some((quotation) => quotation.id === selectedQuotationId)) {
+    selectedQuotationId = filteredQuotations[0].id;
+  }
+
+  quotationList.innerHTML = filteredQuotations.map((quotation) => `
+    <button class="quotation-list-card ${quotation.id === selectedQuotationId ? "active" : ""}" type="button" data-quotation-id="${quotation.id}">
+      <h3>${escapeHtml(quotation.quotationCode)}</h3>
+      <p>${escapeHtml(quotation.customerName)}${quotation.country ? ` · ${escapeHtml(quotation.country)}` : ""}</p>
+      <p>${escapeHtml(quotation.productSummary || "No product summary")}</p>
+      <div class="order-list-meta">
+        <span class="order-pill">${escapeHtml(quotation.status)}</span>
+        <span class="order-pill">${escapeHtml(quotation.currency)} ${escapeHtml(quotation.totalAmount || "0")}</span>
+        <span class="order-pill">${escapeHtml(quotation.supplierName || "No supplier")}</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+function selectQuotation(id) {
+  const quotation = quotations.find((item) => item.id === id);
+  if (!quotation) {
+    return;
+  }
+
+  selectedQuotationId = id;
+  renderQuotations();
+  renderQuotationDetail(quotation);
+}
+
+function editQuotation(id) {
+  const quotation = quotations.find((item) => item.id === id);
+  if (!quotation) {
+    return;
+  }
+
+  quotationId.value = quotation.id;
+  quotationCode.value = quotation.quotationCode;
+  renderQuotationCustomerOptions(quotation.customerName);
+  quotationCustomer.value = quotation.customerName;
+  quotationCountry.value = quotation.country;
+  quotationProductSummary.value = quotation.productSummary;
+  quotationSupplier.value = quotation.supplierName;
+  quotationQuantity.value = quotation.quantity;
+  quotationUnitPrice.value = quotation.unitPrice;
+  quotationTotalAmount.value = quotation.totalAmount;
+  quotationCurrency.value = quotation.currency;
+  quotationStatus.value = quotation.status;
+  quotationValidUntil.value = quotation.validUntil;
+  quotationNextAction.value = quotation.nextAction;
+  quotationNotes.value = quotation.notes;
+  quotationFormTitle.textContent = "Edit Quotation";
+  quotationCode.focus();
+}
+
+function deleteQuotation(id) {
+  const quotation = quotations.find((item) => item.id === id);
+  if (!quotation) {
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete quotation "${quotation.quotationCode}"?`);
+  if (!confirmed) {
+    return;
+  }
+
+  quotations = quotations.filter((item) => item.id !== id);
+  selectedQuotationId = quotations[0]?.id || "";
+  saveQuotations();
+  renderQuotationDashboard();
+  renderQuotationFilters();
+  renderQuotations();
+  renderOrderSupplierOptions();
+  clearQuotationForm();
+
+  if (selectedQuotationId) {
+    selectQuotation(selectedQuotationId);
+  } else {
+    quotationDetailTitle.textContent = "Select a quotation";
+    quotationDetail.innerHTML = '<p class="empty-state">Create a quotation to view details.</p>';
+  }
+}
+
+function getRelatedCustomer(customerNameValue) {
+  return customers.find((customer) => customer.customerName.toLowerCase() === customerNameValue.toLowerCase());
+}
+
+function getRelatedSupplier(supplierNameValue) {
+  return suppliers.find((supplier) => supplier.supplierName.toLowerCase() === supplierNameValue.toLowerCase());
+}
+
+function renderQuotationDetail(quotation) {
+  const relatedCustomer = getRelatedCustomer(quotation.customerName);
+  const relatedSupplier = quotation.supplierName ? getRelatedSupplier(quotation.supplierName) : null;
+  quotationDetailTitle.textContent = quotation.quotationCode;
+  quotationDetail.innerHTML = `
+    <div class="order-status-row">
+      <span class="order-pill">${escapeHtml(quotation.status)}</span>
+      <span class="order-pill">${escapeHtml(quotation.currency)} ${escapeHtml(quotation.totalAmount || "0")}</span>
+      <span class="order-pill">${escapeHtml(quotation.validUntil || "No validity date")}</span>
+    </div>
+    <dl class="order-detail-grid">
+      ${renderDetailField("Quotation ID", quotation.quotationCode)}
+      ${renderDetailField("Customer", quotation.customerName)}
+      ${renderDetailField("Country", quotation.country)}
+      ${renderDetailField("Supplier", quotation.supplierName)}
+      ${renderDetailField("Quantity", quotation.quantity)}
+      ${renderDetailField("Unit Price", quotation.unitPrice)}
+      ${renderDetailField("Total Amount", `${quotation.currency} ${quotation.totalAmount}`)}
+      ${renderDetailField("Valid Until", quotation.validUntil)}
+      ${renderDetailField("Status", quotation.status)}
+      ${renderDetailField("Updated", formatDateOnly(quotation.updatedAt))}
+    </dl>
+    <div class="detail-text-block">
+      <strong>Product Items</strong>
+      <p>${escapeHtml(quotation.productSummary || "No product items yet.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Related Customer</strong>
+      <p>${escapeHtml(relatedCustomer ? `${relatedCustomer.customerName} · ${relatedCustomer.country || "No country"} · ${relatedCustomer.status}` : "No saved customer match yet.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Related Supplier</strong>
+      <p>${escapeHtml(relatedSupplier ? `${relatedSupplier.supplierName} · ${relatedSupplier.productCategory || "No category"} · ${relatedSupplier.reliabilityRating}` : "No saved supplier match yet.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Related Order</strong>
+      <p>Placeholder for future quote-to-order conversion.</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Next Action</strong>
+      <p>${escapeHtml(quotation.nextAction || "No next action set.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Notes</strong>
+      <p>${escapeHtml(quotation.notes || "No notes yet.")}</p>
+    </div>
+    <div class="order-detail-actions">
+      <button class="open-link secondary" type="button" data-quotation-edit="${quotation.id}">Edit</button>
+      <button class="danger-button" type="button" data-quotation-delete="${quotation.id}">Delete</button>
+    </div>
+  `;
+}
+
+function renderQuotationCustomerOptions(selectedValue = "") {
+  const existingQuotationCustomerNames = quotations.map((quotation) => quotation.customerName).filter(Boolean);
+  const names = [...new Set([...customers.map((customer) => customer.customerName), ...existingQuotationCustomerNames])].sort();
+  const selectedCustomerName = selectedValue || quotationCustomer.value;
+  quotationCustomer.innerHTML = '<option value="">Select customer</option>' + names.map((name) => `
+    <option value="${escapeHtml(name)}">${escapeHtml(name)}</option>
+  `).join("");
+
+  if (selectedCustomerName && names.includes(selectedCustomerName)) {
+    quotationCustomer.value = selectedCustomerName;
+  }
+}
+
+function setupQuotationCenter() {
+  quotationForm.addEventListener("submit", saveQuotationFromForm);
+  resetQuotationForm.addEventListener("click", clearQuotationForm);
+  quotationCustomer.addEventListener("change", () => {
+    const customer = getRelatedCustomer(quotationCustomer.value);
+    if (customer && !quotationCountry.value) {
+      quotationCountry.value = customer.country;
+    }
+  });
+  [quotationSearchInput, quotationStatusFilter, quotationCustomerFilter, quotationSupplierFilter].forEach((field) => {
+    field.addEventListener("input", renderQuotations);
+    field.addEventListener("change", renderQuotations);
+  });
+
+  quotationList.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-quotation-id]");
+    if (!card) {
+      return;
+    }
+
+    selectQuotation(card.dataset.quotationId);
+  });
+
+  quotationDetail.addEventListener("click", (event) => {
+    const editButton = event.target.closest("[data-quotation-edit]");
+    const deleteButton = event.target.closest("[data-quotation-delete]");
+
+    if (editButton) {
+      editQuotation(editButton.dataset.quotationEdit);
+    }
+
+    if (deleteButton) {
+      deleteQuotation(deleteButton.dataset.quotationDelete);
+    }
+  });
 }
 
 function setupEditableLists() {
@@ -2668,6 +3152,22 @@ function appendSupplierSearchRecords(moduleRecords) {
   });
 }
 
+function appendQuotationSearchRecords(moduleRecords) {
+  const quotationModule = moduleRecords.find((module) => module.name === "Quotations");
+  if (!quotationModule) {
+    return;
+  }
+
+  quotations.forEach((quotation) => {
+    quotationModule.items.push({
+      title: `${quotation.quotationCode} ${quotation.customerName}`,
+      type: "Quotation",
+      description: `${quotation.productSummary || "No product summary"} · ${quotation.currency} ${quotation.totalAmount || "0"} · ${quotation.status} · ${quotation.nextAction || "No next action"}`,
+      page: "quotation-center"
+    });
+  });
+}
+
 function normalizeSearchText(value) {
   return value.toLowerCase().trim();
 }
@@ -2706,6 +3206,7 @@ function searchItems(query) {
   appendOrderSearchRecords(records);
   appendCustomerSearchRecords(records);
   appendSupplierSearchRecords(records);
+  appendQuotationSearchRecords(records);
 
   return records.map((module) => {
     const results = module.items
@@ -2870,10 +3371,12 @@ function init() {
   loadCustomers();
   loadSuppliers();
   loadOrders();
+  loadQuotations();
   setupEditableLists();
   setupOrderCenter();
   setupCustomerCenter();
   setupSupplierCenter();
+  setupQuotationCenter();
   setupPortalCards();
   setupCommandPalette();
   renderAllEditableLists();
@@ -2886,10 +3389,15 @@ function init() {
   renderSupplierFilters();
   renderSuppliers();
   renderOrderSupplierOptions();
+  renderQuotationDashboard();
+  renderQuotationFilters();
+  renderQuotations();
+  renderQuotationCustomerOptions();
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();
   clearOrderForm();
+  clearQuotationForm();
 
   if (orders.length) {
     selectOrder(orders[0].id);
@@ -2901,6 +3409,10 @@ function init() {
 
   if (suppliers.length) {
     selectSupplier(suppliers[0].id);
+  }
+
+  if (quotations.length) {
+    selectQuotation(quotations[0].id);
   }
 
   restoreField(userName, storageKeys.userName);

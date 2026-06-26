@@ -27,6 +27,7 @@
         <button class="nav-item" data-page="order-center" type="button">Order Center</button>
         <button class="nav-item" data-page="customer-center" type="button">Customer Center</button>
         <button class="nav-item" data-page="supplier-center" type="button">Supplier Center</button>
+        <button class="nav-item" data-page="quotation-center" type="button">Quotation Center</button>
         <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
         <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
         <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
@@ -801,6 +802,126 @@
         </div>
       </section>
 
+      <section class="page" id="quotation-center">
+        <header class="page-header">
+          <p class="eyebrow">Quotation Center</p>
+          <h1>Quotation Center V1</h1>
+          <p class="date-line">Create, track, and remember customer quotations before they become orders.</p>
+        </header>
+
+        <section class="quotation-dashboard" id="quotationDashboard"></section>
+
+        <div class="quotation-center-layout">
+          <section class="quotation-panel quotation-form-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Create / Edit</p>
+              <h2 id="quotationFormTitle">New Quotation</h2>
+            </div>
+            <form id="quotationForm" class="quotation-form">
+              <input id="quotationId" type="hidden">
+              <label>
+                Quotation ID
+                <input id="quotationCode" type="text" placeholder="QT-2026-001" required>
+              </label>
+              <label>
+                Customer
+                <select id="quotationCustomer" required></select>
+              </label>
+              <label>
+                Country
+                <input id="quotationCountry" type="text" placeholder="Trinidad and Tobago">
+              </label>
+              <label>
+                Supplier
+                <input id="quotationSupplier" type="text" placeholder="Supplier name" list="supplierOptions">
+              </label>
+              <label class="full-field">
+                Product summary
+                <textarea id="quotationProductSummary" placeholder="Products, categories, or SKU group"></textarea>
+              </label>
+              <label>
+                Quantity
+                <input id="quotationQuantity" type="text" placeholder="8,000 pcs / 1x40HQ">
+              </label>
+              <label>
+                Unit price
+                <input id="quotationUnitPrice" type="text" placeholder="0.78 average">
+              </label>
+              <label>
+                Total amount
+                <input id="quotationTotalAmount" type="text" placeholder="6200">
+              </label>
+              <label>
+                Currency
+                <select id="quotationCurrency">
+                  <option>USD</option>
+                  <option>CNY</option>
+                  <option>EUR</option>
+                  <option>GBP</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="quotationStatus">
+                  <option>Draft</option>
+                  <option>Sent</option>
+                  <option>Waiting Customer</option>
+                  <option>Approved</option>
+                  <option>Rejected</option>
+                  <option>Expired</option>
+                </select>
+              </label>
+              <label>
+                Valid until
+                <input id="quotationValidUntil" type="date">
+              </label>
+              <label class="full-field">
+                Next action
+                <input id="quotationNextAction" type="text" placeholder="Follow up customer confirmation">
+              </label>
+              <label class="full-field">
+                Notes
+                <textarea id="quotationNotes" placeholder="Price notes, supplier remarks, customer expectation, and risks"></textarea>
+              </label>
+              <div class="quotation-form-actions">
+                <button class="open-link" type="submit">Save Quotation</button>
+                <button class="open-link secondary" id="resetQuotationForm" type="button">New Blank Quotation</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="quotation-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Quotations</p>
+              <h2>Quotation List</h2>
+            </div>
+            <div class="quotation-filter-grid">
+              <input id="quotationSearchInput" type="search" placeholder="Search quotations">
+              <select id="quotationStatusFilter">
+                <option value="">All status</option>
+              </select>
+              <select id="quotationCustomerFilter">
+                <option value="">All customers</option>
+              </select>
+              <select id="quotationSupplierFilter">
+                <option value="">All suppliers</option>
+              </select>
+            </div>
+            <div class="quotation-list" id="quotationList"></div>
+          </section>
+
+          <section class="quotation-panel quotation-detail-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Detail</p>
+              <h2 id="quotationDetailTitle">Select a quotation</h2>
+            </div>
+            <div id="quotationDetail" class="quotation-detail">
+              <p class="empty-state">Choose a quotation to view details, customer, supplier, and notes.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section class="page" id="knowledge-center">
         <header class="page-header">
           <p class="eyebrow">Knowledge Center</p>
@@ -893,6 +1014,7 @@
       <button class="bottom-item" data-page="order-center" type="button">Orders</button>
       <button class="bottom-item" data-page="customer-center" type="button">Customers</button>
       <button class="bottom-item" data-page="supplier-center" type="button">Suppliers</button>
+      <button class="bottom-item" data-page="quotation-center" type="button">Quotes</button>
       <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
       <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
       <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>
