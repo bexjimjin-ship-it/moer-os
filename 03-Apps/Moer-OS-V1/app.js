@@ -1150,6 +1150,7 @@ const searchModules = [
 const pageButtons = document.querySelectorAll("[data-page]");
 const pages = document.querySelectorAll(".page");
 const todayDate = document.querySelector("#todayDate");
+const todayDashboard = document.querySelector("#todayDashboard");
 const greeting = document.querySelector("#greeting");
 const searchTrigger = document.querySelector("#searchTrigger");
 const mobileSearchTrigger = document.querySelector("#mobileSearchTrigger");
@@ -1544,6 +1545,192 @@ function deleteListItem(listName, id) {
   renderEditableList(listName);
 }
 
+function getTodayValue() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getDateOffsetValue(days) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function isDateInRange(value, start, end) {
+  return Boolean(value && value >= start && value <= end);
+}
+
+function getSortedByDate(records, fieldName) {
+  return [...records].sort((first, second) => String(second[fieldName] || "").localeCompare(String(first[fieldName] || "")));
+}
+
+function renderTodayDashboardItem(item) {
+  return `
+    <button class="today-overview-item" type="button" data-page="${escapeHtml(item.page)}">
+      <strong>${escapeHtml(item.title)}</strong>
+      <span>${escapeHtml(item.meta || "Open")}</span>
+    </button>
+  `;
+}
+
+function renderTodayDashboardCard(card) {
+  return `
+    <article class="today-overview-card">
+      <div class="today-overview-card-header">
+        <p class="card-label">${escapeHtml(card.module)}</p>
+        <h3>${escapeHtml(card.title)}</h3>
+        <strong>${card.items.length}</strong>
+      </div>
+      <div class="today-overview-list">
+        ${card.items.length ? card.items.slice(0, 3).map(renderTodayDashboardItem).join("") : `<p class="empty-state">${escapeHtml(card.empty)}</p>`}
+      </div>
+    </article>
+  `;
+}
+
+function renderTodayDashboard() {
+  if (!todayDashboard) {
+    return;
+  }
+
+  const today = getTodayValue();
+  const weekEnd = getDateOffsetValue(7);
+  const attentionStatuses = ["Waiting Supplier", "Waiting Customer", "Inspection", "On Hold"];
+  const ordersNeedingAttention = orders.filter((order) => {
+    return attentionStatuses.includes(order.status)
+      || order.productionStatus === "Delayed"
+      || order.qcStatus === "Issue Found"
+      || isDateInRange(order.dueDate, today, weekEnd);
+  });
+  const ordersWithNextAction = orders.filter((order) => order.nextAction);
+  const ordersDueSoon = orders.filter((order) => isDateInRange(order.dueDate, today, weekEnd));
+  const customersNeedingFollowup = customers.filter((customer) => customer.nextFollowUpDate && customer.nextFollowUpDate <= today);
+  const highPriorityCustomers = customers.filter((customer) => ["High", "Urgent"].includes(customer.priority));
+  const suppliersNeedingFollowup = suppliers.filter((supplier) => supplier.reliabilityRating === "Needs Follow-up" || supplier.nextAction);
+  const activeSupplierIssues = suppliers.filter((supplier) => {
+    const hasIssueEvent = (supplier.timeline || []).some((event) => ["Delay", "Quality issue"].includes(event.eventType) || ["Delay", "Issue"].includes(event.status));
+    return supplier.reliabilityRating === "Risky" || supplier.reliabilityRating === "Needs Follow-up" || hasIssueEvent;
+  });
+  const quotationsWaitingCustomer = quotations.filter((quotation) => quotation.status === "Waiting Customer");
+  const approvedQuotations = quotations.filter((quotation) => quotation.status === "Approved");
+  const shipmentsThisWeek = shipments.filter((shipment) => isDateInRange(shipment.etd, today, weekEnd) || isDateInRange(shipment.eta, today, weekEnd));
+  const documentsPending = shipments.filter((shipment) => ["Not Started", "Pending", "Partial"].includes(shipment.documentsStatus));
+  const paymentWaiting = financeRecords.filter((record) => ["Waiting", "Partial", "Overdue"].includes(record.paymentStatus));
+  const balancePaymentsDue = financeRecords.filter((record) => {
+    return record.type === "Customer Payment"
+      && record.notes.toLowerCase().includes("balance")
+      && ["Waiting", "Partial", "Overdue"].includes(record.paymentStatus);
+  });
+  const recentProducts = getSortedByDate(products, "updatedAt").slice(0, 6);
+  const highInterestProducts = products.filter((product) => product.customerInterested);
+  const familyItems = [
+    dinnerPlan.value ? { title: dinnerPlan.value, meta: "Dinner", page: "today" } : null,
+    sonSleep.value ? { title: sonSleep.value, meta: "Sleep", page: "today" } : null,
+    sonExercise.value ? { title: sonExercise.value, meta: "Exercise", page: "today" } : null,
+    sonMeal.value ? { title: sonMeal.value, meta: "Meal", page: "today" } : null
+  ].filter(Boolean);
+
+  const cards = [
+    {
+      module: "Orders",
+      title: "Needs Attention",
+      items: ordersNeedingAttention.map((order) => ({ title: order.orderName, meta: `${order.status} · ${order.dueDate || order.nextAction || "No due date"}`, page: "order-center" })),
+      empty: "No urgent order attention needed."
+    },
+    {
+      module: "Orders",
+      title: "Next Actions",
+      items: ordersWithNextAction.map((order) => ({ title: order.nextAction, meta: `${order.orderCode} · ${order.customerName}`, page: "order-center" })),
+      empty: "No order next actions yet."
+    },
+    {
+      module: "Orders",
+      title: "Due Soon",
+      items: ordersDueSoon.map((order) => ({ title: order.orderName, meta: `Due ${order.dueDate} · ${order.status}`, page: "order-center" })),
+      empty: "No orders due in the next 7 days."
+    },
+    {
+      module: "Customers",
+      title: "Need Follow-up",
+      items: customersNeedingFollowup.map((customer) => ({ title: customer.customerName, meta: `${customer.nextFollowUpDate} · ${customer.nextAction || customer.followUpNotes || "Follow up"}`, page: "customer-center" })),
+      empty: "No customer follow-ups due today."
+    },
+    {
+      module: "Customers",
+      title: "High Priority",
+      items: highPriorityCustomers.map((customer) => ({ title: customer.customerName, meta: `${customer.priority} · ${customer.country || "No country"}`, page: "customer-center" })),
+      empty: "No high priority customers."
+    },
+    {
+      module: "Suppliers",
+      title: "Need Follow-up",
+      items: suppliersNeedingFollowup.map((supplier) => ({ title: supplier.supplierName, meta: `${supplier.reliabilityRating} · ${supplier.nextAction || "Review supplier"}`, page: "supplier-center" })),
+      empty: "No supplier follow-ups."
+    },
+    {
+      module: "Suppliers",
+      title: "Active Issues",
+      items: activeSupplierIssues.map((supplier) => ({ title: supplier.supplierName, meta: `${supplier.reliabilityRating} · ${supplier.productCategory || "No category"}`, page: "supplier-center" })),
+      empty: "No active supplier issues."
+    },
+    {
+      module: "Quotations",
+      title: "Waiting Customer",
+      items: quotationsWaitingCustomer.map((quotation) => ({ title: quotation.quotationCode, meta: `${quotation.customerName} · ${quotation.productSummary || "No product summary"}`, page: "quotation-center" })),
+      empty: "No quotations waiting customer."
+    },
+    {
+      module: "Quotations",
+      title: "Approved",
+      items: approvedQuotations.map((quotation) => ({ title: quotation.quotationCode, meta: `${quotation.customerName} · ${quotation.currency} ${quotation.totalAmount || "0"}`, page: "quotation-center" })),
+      empty: "No approved quotations yet."
+    },
+    {
+      module: "Shipments",
+      title: "This Week",
+      items: shipmentsThisWeek.map((shipment) => ({ title: shipment.shipmentCode, meta: `${shipment.status} · ETD ${shipment.etd || "not set"} · ETA ${shipment.eta || "not set"}`, page: "shipment-center" })),
+      empty: "No shipments this week."
+    },
+    {
+      module: "Shipments",
+      title: "Documents Pending",
+      items: documentsPending.map((shipment) => ({ title: shipment.shipmentCode, meta: `${shipment.documentsStatus} · ${shipment.customerName}`, page: "shipment-center" })),
+      empty: "No pending shipment documents."
+    },
+    {
+      module: "Finance",
+      title: "Payment Waiting",
+      items: paymentWaiting.map((record) => ({ title: record.financeCode, meta: `${record.type} · ${formatFinanceMoney(record)} · ${record.dueDate || "No due date"}`, page: "finance-center" })),
+      empty: "No waiting payments."
+    },
+    {
+      module: "Finance",
+      title: "Balance Due",
+      items: balancePaymentsDue.map((record) => ({ title: record.financeCode, meta: `${record.customerName || "No customer"} · ${formatFinanceMoney(record)} · ${record.dueDate || "No due date"}`, page: "finance-center" })),
+      empty: "No balance payments due."
+    },
+    {
+      module: "Products",
+      title: "Recent Products",
+      items: recentProducts.map((product) => ({ title: product.productName, meta: `${product.category} · ${product.price || "No price"}`, page: "product-center" })),
+      empty: "No products yet."
+    },
+    {
+      module: "Products",
+      title: "High Interest",
+      items: highInterestProducts.map((product) => ({ title: product.productName, meta: `${product.customerInterested} · ${product.category}`, page: "product-center" })),
+      empty: "No customer product interest yet."
+    },
+    {
+      module: "Family",
+      title: "Today",
+      items: familyItems,
+      empty: "No dinner or son reminder saved yet."
+    }
+  ];
+
+  todayDashboard.innerHTML = cards.map(renderTodayDashboardCard).join("");
+}
+
 function loadOrders() {
   const savedOrders = localStorage.getItem(storageKeys.orders);
   if (!savedOrders) {
@@ -1669,6 +1856,7 @@ function saveOrderFromForm(event) {
   selectOrder(order.id);
   refreshSelectedCustomerDetail();
   refreshSelectedSupplierDetail();
+  renderTodayDashboard();
   clearOrderForm();
 }
 
@@ -1855,6 +2043,7 @@ function deleteOrder(id) {
   renderFinanceOrderOptions();
   refreshSelectedCustomerDetail();
   refreshSelectedSupplierDetail();
+  renderTodayDashboard();
   clearOrderForm();
 
   if (selectedOrderId) {
@@ -2054,6 +2243,7 @@ function addTimelineEvent() {
   renderOrders();
   renderOrderDetail(order);
   refreshSelectedCustomerDetail();
+  renderTodayDashboard();
   timelineTitle.value = "";
   timelineDescription.value = "";
   timelineStatus.value = "Note";
@@ -2193,6 +2383,7 @@ function saveCustomerFromForm(event) {
   renderProductFilters();
   renderFinanceFilters();
   selectCustomer(customer.id);
+  renderTodayDashboard();
   clearCustomerForm();
 }
 
@@ -2408,6 +2599,7 @@ function deleteCustomer(id) {
   renderShipmentFilters();
   renderProductFilters();
   renderFinanceFilters();
+  renderTodayDashboard();
   clearCustomerForm();
 
   if (selectedCustomerId) {
@@ -2628,6 +2820,7 @@ function saveCustomerFollowup() {
   renderCustomerFollowups();
   renderCustomers();
   renderCustomerDetail(customer);
+  renderTodayDashboard();
 }
 
 function addCustomerTimelineEvent() {
@@ -2656,6 +2849,7 @@ function addCustomerTimelineEvent() {
   renderCustomerFollowups();
   renderCustomers();
   renderCustomerDetail(customer);
+  renderTodayDashboard();
   customerTimelineTitle.value = "";
   customerTimelineDescription.value = "";
   customerTimelineOrderId.value = "";
@@ -2792,6 +2986,7 @@ function saveSupplierFromForm(event) {
   renderQuotationFilters();
   renderProductFilters();
   selectSupplier(supplier.id);
+  renderTodayDashboard();
   clearSupplierForm();
 }
 
@@ -2977,6 +3172,7 @@ function deleteSupplier(id) {
   renderOrderSupplierOptions();
   renderQuotationFilters();
   renderProductFilters();
+  renderTodayDashboard();
   clearSupplierForm();
 
   if (selectedSupplierId) {
@@ -3178,6 +3374,7 @@ function addSupplierTimelineEvent() {
   renderSupplierFilters();
   renderSuppliers();
   renderSupplierDetail(supplier);
+  renderTodayDashboard();
   supplierTimelineTitle.value = "";
   supplierTimelineDescription.value = "";
   supplierTimelineOrderId.value = "";
@@ -3284,6 +3481,7 @@ function saveQuotationFromForm(event) {
   renderQuotations();
   renderOrderSupplierOptions(quotation.supplierName);
   selectQuotation(quotation.id);
+  renderTodayDashboard();
   clearQuotationForm();
 }
 
@@ -3446,6 +3644,7 @@ function deleteQuotation(id) {
   renderQuotationFilters();
   renderQuotations();
   renderOrderSupplierOptions();
+  renderTodayDashboard();
   clearQuotationForm();
 
   if (selectedQuotationId) {
@@ -3720,6 +3919,7 @@ function saveShipmentFromForm(event) {
   renderShipmentFilters();
   renderShipments();
   selectShipment(shipment.id);
+  renderTodayDashboard();
   clearShipmentForm();
 }
 
@@ -3892,6 +4092,7 @@ function deleteShipment(id) {
   renderShipmentDashboard();
   renderShipmentFilters();
   renderShipments();
+  renderTodayDashboard();
   clearShipmentForm();
 
   if (selectedShipmentId) {
@@ -4185,6 +4386,7 @@ function saveProductFromForm(event) {
   renderProducts();
   renderOrderSupplierOptions(product.supplierName);
   selectProduct(product.id);
+  renderTodayDashboard();
   clearProductForm();
 }
 
@@ -4350,6 +4552,7 @@ function deleteProduct(id) {
   renderProductCategoryOptions();
   renderProducts();
   renderOrderSupplierOptions();
+  renderTodayDashboard();
   clearProductForm();
 
   if (selectedProductId) {
@@ -4634,6 +4837,7 @@ function saveFinanceFromForm(event) {
   renderFinanceFilters();
   renderFinanceRecords();
   selectFinanceRecord(record.id);
+  renderTodayDashboard();
   clearFinanceForm();
 }
 
@@ -4842,6 +5046,7 @@ function deleteFinanceRecord(id) {
   renderFinanceDashboard();
   renderFinanceFilters();
   renderFinanceRecords();
+  renderTodayDashboard();
   clearFinanceForm();
 
   if (selectedFinanceId) {
@@ -5414,6 +5619,56 @@ function setupPortalCards() {
   });
 }
 
+function openNewCenterRecord(pageId, resetHandler, focusField) {
+  openInternalPage(pageId);
+  if (resetHandler) {
+    resetHandler();
+  }
+  if (focusField) {
+    window.setTimeout(() => focusField.focus(), 0);
+  }
+}
+
+function setupTodayDashboardActions() {
+  document.addEventListener("click", (event) => {
+    const dashboardItem = event.target.closest(".today-overview-item[data-page]");
+    if (dashboardItem) {
+      openInternalPage(dashboardItem.dataset.page);
+      return;
+    }
+
+    const actionButton = event.target.closest("[data-quick-action]");
+    if (!actionButton) {
+      return;
+    }
+
+    const action = actionButton.dataset.quickAction;
+    if (action === "new-order") {
+      openNewCenterRecord("order-center", clearOrderForm, orderName);
+    }
+    if (action === "new-customer") {
+      openNewCenterRecord("customer-center", clearCustomerForm, customerName);
+    }
+    if (action === "new-supplier") {
+      openNewCenterRecord("supplier-center", clearSupplierForm, supplierName);
+    }
+    if (action === "new-quotation") {
+      openNewCenterRecord("quotation-center", clearQuotationForm, quotationCode);
+    }
+    if (action === "new-shipment") {
+      openNewCenterRecord("shipment-center", clearShipmentForm, shipmentCode);
+    }
+    if (action === "new-finance") {
+      openNewCenterRecord("finance-center", clearFinanceForm, financeCode);
+    }
+    if (action === "search-knowledge") {
+      openCommandPalette();
+      commandSearchInput.value = "knowledge";
+      renderSearchResults("knowledge");
+    }
+  });
+}
+
 function init() {
   buildCards();
   renderPortalModules();
@@ -5434,6 +5689,7 @@ function init() {
   setupProductCenter();
   setupFinanceCenter();
   setupPortalCards();
+  setupTodayDashboardActions();
   setupCommandPalette();
   renderAllEditableLists();
   renderCustomerDashboard();
@@ -5509,15 +5765,16 @@ function init() {
   restoreField(sonSleep, storageKeys.sonSleep);
   restoreField(sonExercise, storageKeys.sonExercise);
   restoreField(sonMeal, storageKeys.sonMeal);
+  renderTodayDashboard();
 
   saveField(userName, storageKeys.userName, setGreeting);
   saveField(companyName, storageKeys.companyName);
   saveField(themeOption, storageKeys.themeOption);
   saveField(contentPlan, storageKeys.contentPlan);
-  saveField(dinnerPlan, storageKeys.dinnerPlan);
-  saveField(sonSleep, storageKeys.sonSleep);
-  saveField(sonExercise, storageKeys.sonExercise);
-  saveField(sonMeal, storageKeys.sonMeal);
+  saveField(dinnerPlan, storageKeys.dinnerPlan, renderTodayDashboard);
+  saveField(sonSleep, storageKeys.sonSleep, renderTodayDashboard);
+  saveField(sonExercise, storageKeys.sonExercise, renderTodayDashboard);
+  saveField(sonMeal, storageKeys.sonMeal, renderTodayDashboard);
 
   pageButtons.forEach((button) => {
     button.addEventListener("click", () => showPage(button.dataset.page));

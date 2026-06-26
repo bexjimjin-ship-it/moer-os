@@ -208,6 +208,96 @@ h2 {
   gap: 18px;
 }
 
+.today-overview-section {
+  padding-top: 4px;
+}
+
+.today-quick-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.today-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.today-overview-card {
+  display: grid;
+  gap: 14px;
+  min-height: 198px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.today-overview-card-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  align-items: start;
+}
+
+.today-overview-card-header .card-label {
+  grid-column: 1 / -1;
+}
+
+.today-overview-card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.today-overview-card-header strong {
+  display: grid;
+  min-width: 34px;
+  min-height: 34px;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-size: 18px;
+}
+
+.today-overview-list {
+  display: grid;
+  gap: 8px;
+}
+
+.today-overview-item {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  min-height: 58px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf9;
+  color: var(--text);
+  text-align: left;
+}
+
+.today-overview-item:hover,
+.today-overview-item:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.today-overview-item strong {
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.today-overview-item span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .focus-card,
 .card,
 .app-card,
@@ -1308,6 +1398,10 @@ select {
     font-size: 32px;
   }
 
+  .today-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .dashboard-grid,
   .card-grid,
     .module-grid,
@@ -1388,6 +1482,15 @@ select {
 
   .date-line {
     font-size: 16px;
+  }
+
+  .today-overview-grid,
+  .today-quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .today-quick-actions {
+    display: grid;
   }
 
   .dashboard-grid,

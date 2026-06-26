@@ -22,6 +22,8 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Desktop sidebar navigation
 - Mobile bottom navigation
 - Universal Search command palette with Cmd + K or Ctrl + K
+- Today Dashboard Integration V1 with daily overview cards from orders, customers, suppliers, quotations, shipments, finance records, products, and family reminders
+- Quick action buttons for new order, customer, supplier, quotation, shipment, finance record, and knowledge search
 - Editable Today lists for focus tasks, people waiting, and urgent items
 - Real Order Center V1 inside this shell with dashboard cards, local order list, create/edit/delete form, filters, detail view, status progress, and manual timeline events
 - Customer Center V2 with dashboard cards, searchable customer memory, filters, follow-up system, related orders, and manual timeline events

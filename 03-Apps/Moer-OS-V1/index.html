@@ -54,6 +54,23 @@
           <div class="module-grid" data-module-section="today"></div>
         </section>
 
+        <section class="portal-section today-overview-section">
+          <div class="section-heading">
+            <p class="eyebrow">Daily Overview</p>
+            <h2>What needs attention</h2>
+          </div>
+          <div class="today-quick-actions">
+            <button class="open-link" data-quick-action="new-order" type="button">New Order</button>
+            <button class="open-link secondary" data-quick-action="new-customer" type="button">New Customer</button>
+            <button class="open-link secondary" data-quick-action="new-supplier" type="button">New Supplier</button>
+            <button class="open-link secondary" data-quick-action="new-quotation" type="button">New Quotation</button>
+            <button class="open-link secondary" data-quick-action="new-shipment" type="button">New Shipment</button>
+            <button class="open-link secondary" data-quick-action="new-finance" type="button">New Finance Record</button>
+            <button class="open-link secondary" data-quick-action="search-knowledge" type="button">Search Knowledge</button>
+          </div>
+          <div class="today-overview-grid" id="todayDashboard"></div>
+        </section>
+
         <section class="portal-section">
           <div class="section-heading">
             <p class="eyebrow">Daily Notes</p>
@@ -115,10 +132,10 @@
           <article class="card actions-card">
             <p class="card-label">Quick Actions</p>
             <div class="quick-actions">
-              <button type="button">Add Task</button>
-              <button type="button">Add Customer Note</button>
-              <button type="button">Plan Content</button>
-              <button type="button">Review Day</button>
+              <button type="button" data-quick-action="new-order">New Order</button>
+              <button type="button" data-quick-action="new-customer">New Customer</button>
+              <button type="button" data-quick-action="new-finance">New Finance Record</button>
+              <button type="button" data-quick-action="search-knowledge">Search Knowledge</button>
             </div>
           </article>
         </div>
