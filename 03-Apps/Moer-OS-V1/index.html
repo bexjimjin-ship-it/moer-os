@@ -29,6 +29,7 @@
         <button class="nav-item" data-page="supplier-center" type="button">Supplier Center</button>
         <button class="nav-item" data-page="quotation-center" type="button">Quotation Center</button>
         <button class="nav-item" data-page="shipment-center" type="button">Shipment Center</button>
+        <button class="nav-item" data-page="product-center" type="button">Product Center</button>
         <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
         <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
         <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
@@ -1081,6 +1082,103 @@
         </div>
       </section>
 
+      <section class="page" id="product-center">
+        <header class="page-header">
+          <p class="eyebrow">Product Center</p>
+          <h1>Product Center V1</h1>
+          <p class="date-line">A simple product database for sourcing ideas, supplier options, customer interest, prices, and notes.</p>
+        </header>
+
+        <section class="product-dashboard" id="productDashboard"></section>
+
+        <div class="product-center-layout">
+          <section class="product-panel product-form-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Create / Edit</p>
+              <h2 id="productFormTitle">New Product</h2>
+            </div>
+            <form id="productForm" class="product-form">
+              <input id="productId" type="hidden">
+              <label>
+                Product name
+                <input id="productName" type="text" placeholder="School Notebook Set" required>
+              </label>
+              <label>
+                Category
+                <input id="productCategory" type="text" placeholder="Stationery" list="productCategoryOptions" required>
+                <datalist id="productCategoryOptions"></datalist>
+              </label>
+              <label class="full-field">
+                Keywords
+                <input id="productKeywords" type="text" placeholder="notebook, school, stationery">
+              </label>
+              <label>
+                Supplier
+                <input id="productSupplier" type="text" placeholder="Supplier name" list="supplierOptions">
+              </label>
+              <label>
+                Customer interested
+                <select id="productCustomer"></select>
+              </label>
+              <label>
+                MOQ
+                <input id="productMoq" type="text" placeholder="3,000">
+              </label>
+              <label>
+                Unit
+                <input id="productUnit" type="text" placeholder="pcs / sets / cartons">
+              </label>
+              <label>
+                Price
+                <input id="productPrice" type="text" placeholder="USD 0.78">
+              </label>
+              <label class="full-field">
+                Photos placeholder
+                <input id="productPhotos" type="text" placeholder="Front photo, packing photo, size photo">
+              </label>
+              <label class="full-field">
+                Notes
+                <textarea id="productNotes" placeholder="Quality notes, packing details, customer fit, risk, or next check"></textarea>
+              </label>
+              <div class="product-form-actions">
+                <button class="open-link" type="submit">Save Product</button>
+                <button class="open-link secondary" id="resetProductForm" type="button">New Blank Product</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="product-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Products</p>
+              <h2>Product List</h2>
+            </div>
+            <div class="product-filter-grid">
+              <input id="productSearchInput" type="search" placeholder="Search products">
+              <select id="productCategoryFilter">
+                <option value="">All categories</option>
+              </select>
+              <select id="productSupplierFilter">
+                <option value="">All suppliers</option>
+              </select>
+              <select id="productCustomerFilter">
+                <option value="">All customers</option>
+              </select>
+            </div>
+            <div class="product-list" id="productList"></div>
+          </section>
+
+          <section class="product-panel product-detail-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Detail</p>
+              <h2 id="productDetailTitle">Select a product</h2>
+            </div>
+            <div id="productDetail" class="product-detail">
+              <p class="empty-state">Choose a product to view related suppliers, customers, quotations, orders, and timeline.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section class="page" id="knowledge-center">
         <header class="page-header">
           <p class="eyebrow">Knowledge Center</p>
@@ -1175,6 +1273,7 @@
       <button class="bottom-item" data-page="supplier-center" type="button">Suppliers</button>
       <button class="bottom-item" data-page="quotation-center" type="button">Quotes</button>
       <button class="bottom-item" data-page="shipment-center" type="button">Shipments</button>
+      <button class="bottom-item" data-page="product-center" type="button">Products</button>
       <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
       <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
       <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>

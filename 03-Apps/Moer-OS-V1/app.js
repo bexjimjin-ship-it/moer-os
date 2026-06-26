@@ -16,11 +16,13 @@ const storageKeys = {
   suppliers: "moerOS.suppliers",
   quotations: "moerOS.quotations",
   shipments: "moerOS.shipments",
+  products: "moerOS.products",
   ordersSeededV1: "moerOS.ordersSeededV1",
   customersSeededV2: "moerOS.customersSeededV2",
   suppliersSeededV1: "moerOS.suppliersSeededV1",
   quotationsSeededV1: "moerOS.quotationsSeededV1",
-  shipmentsSeededV1: "moerOS.shipmentsSeededV1"
+  shipmentsSeededV1: "moerOS.shipmentsSeededV1",
+  productsSeededV1: "moerOS.productsSeededV1"
 };
 
 const orderStatusOptions = ["New Inquiry", "Quoting", "Waiting Supplier", "Waiting Customer", "Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered", "On Hold"];
@@ -35,6 +37,7 @@ const quotationStatusOptions = ["Draft", "Sent", "Waiting Customer", "Approved",
 const shipmentStatusOptions = ["Preparing", "Booked", "In Transit", "Arrived", "Delivered", "Delayed", "On Hold"];
 const shipmentDocumentStatusOptions = ["Not Started", "Pending", "Partial", "Ready", "Sent"];
 const shipmentDocumentNames = ["Commercial Invoice", "Packing List", "Bill of Lading", "Certificate of Origin", "Other documents"];
+const productCategoryOptions = ["Stationery", "Christmas Items", "Daily-use Products", "Toys", "Packaging", "Household", "Kitchenware", "Gift Items", "Bags", "Personal Care"];
 
 const customerSeedData = [
   {
@@ -607,6 +610,185 @@ const shipmentSeedData = [
   }
 ];
 
+const productSeedData = [
+  {
+    id: "product-001",
+    productName: "School Notebook Set",
+    category: "Stationery",
+    keywords: "notebook, school, stationery, back to school",
+    supplierName: "Yiwu Stationery Supplier",
+    customerInterested: "Graham",
+    moq: "3,000",
+    unit: "sets",
+    price: "USD 0.78",
+    photosPlaceholder: "Notebook cover, inside pages, packing photo",
+    notes: "Good fit for Barbados school season. Confirm cover designs and paper GSM.",
+    createdAt: "2026-06-20T09:00:00",
+    updatedAt: "2026-06-26T09:00:00",
+    timeline: [
+      {
+        id: "product-timeline-001-a",
+        date: "2026-06-23",
+        title: "Added from Graham stationery request",
+        description: "Notebook set added after customer asked for school stationery options.",
+        status: "Customer Interest"
+      }
+    ]
+  },
+  {
+    id: "product-002",
+    productName: "Ball Pen Mixed Pack",
+    category: "Stationery",
+    keywords: "pen, stationery, school, office",
+    supplierName: "Yiwu Stationery Supplier",
+    customerInterested: "Graham",
+    moq: "10,000",
+    unit: "pcs",
+    price: "USD 0.09",
+    photosPlaceholder: "Pen body, ink test, carton packing",
+    notes: "Check ink quality and color mix before confirming.",
+    createdAt: "2026-06-21T10:00:00",
+    updatedAt: "2026-06-26T09:15:00",
+    timeline: []
+  },
+  {
+    id: "product-003",
+    productName: "Christmas Hanging Ornament",
+    category: "Christmas Items",
+    keywords: "christmas, ornament, decoration, seasonal",
+    supplierName: "Christmas Decoration Factory",
+    customerInterested: "Eddie",
+    moq: "2,000",
+    unit: "pcs",
+    price: "USD 0.42",
+    photosPlaceholder: "Front photo, size photo, packaging photo",
+    notes: "Seasonal item. Confirm production lead time early for UK shipment.",
+    createdAt: "2026-06-22T11:00:00",
+    updatedAt: "2026-06-26T09:30:00",
+    timeline: [
+      {
+        id: "product-timeline-003-a",
+        date: "2026-06-24",
+        title: "Included in Eddie Christmas quote",
+        description: "Added to draft quotation for UK Christmas items.",
+        status: "Quotation"
+      }
+    ]
+  },
+  {
+    id: "product-004",
+    productName: "Christmas Gift Bag",
+    category: "Christmas Items",
+    keywords: "christmas, gift bag, packaging, seasonal",
+    supplierName: "Christmas Decoration Factory",
+    customerInterested: "Eddie",
+    moq: "5,000",
+    unit: "pcs",
+    price: "USD 0.18",
+    photosPlaceholder: "Design options, handle detail, carton photo",
+    notes: "Useful add-on product. Confirm paper thickness and print quality.",
+    createdAt: "2026-06-22T11:30:00",
+    updatedAt: "2026-06-26T09:45:00",
+    timeline: []
+  },
+  {
+    id: "product-005",
+    productName: "Household Storage Basket",
+    category: "Household",
+    keywords: "storage, basket, household, plastic",
+    supplierName: "Yiwu Mixed Goods Supplier A",
+    customerInterested: "Nicholas",
+    moq: "1,200",
+    unit: "pcs",
+    price: "USD 1.35",
+    photosPlaceholder: "Product size, material, stack view",
+    notes: "Good mixed container item for Caribbean market. Watch carton volume.",
+    createdAt: "2026-06-23T10:00:00",
+    updatedAt: "2026-06-26T10:00:00",
+    timeline: []
+  },
+  {
+    id: "product-006",
+    productName: "Kitchen Sponge Pack",
+    category: "Daily-use Products",
+    keywords: "sponge, kitchen, cleaning, daily-use",
+    supplierName: "Yiwu Mixed Goods Supplier A",
+    customerInterested: "Nicholas",
+    moq: "3,000",
+    unit: "packs",
+    price: "USD 0.32",
+    photosPlaceholder: "Pack photo, material close-up, carton mark",
+    notes: "Low price daily-use product. Good for mixed container filler.",
+    createdAt: "2026-06-23T10:30:00",
+    updatedAt: "2026-06-26T10:15:00",
+    timeline: []
+  },
+  {
+    id: "product-007",
+    productName: "Educational Puzzle Toy",
+    category: "Toys",
+    keywords: "toy, puzzle, educational, kids",
+    supplierName: "Yiwu Toy Supplier",
+    customerInterested: "Nicholas",
+    moq: "1,000",
+    unit: "pcs",
+    price: "USD 1.10",
+    photosPlaceholder: "Product photo, age label, packaging photo",
+    notes: "Check safety labeling before EU or UK customers.",
+    createdAt: "2026-06-24T10:00:00",
+    updatedAt: "2026-06-26T10:30:00",
+    timeline: []
+  },
+  {
+    id: "product-008",
+    productName: "Gift Box Set",
+    category: "Packaging",
+    keywords: "gift box, packaging, paper box, private label",
+    supplierName: "Packaging Supplier",
+    customerInterested: "Eddie",
+    moq: "2,000",
+    unit: "sets",
+    price: "USD 0.65",
+    photosPlaceholder: "Open box, closed box, print sample",
+    notes: "Useful for seasonal gift packaging. Confirm print files and paper thickness.",
+    createdAt: "2026-06-24T11:00:00",
+    updatedAt: "2026-06-26T10:45:00",
+    timeline: []
+  },
+  {
+    id: "product-009",
+    productName: "Reusable Shopping Bag",
+    category: "Bags",
+    keywords: "shopping bag, reusable, non woven, supermarket",
+    supplierName: "Packaging Supplier",
+    customerInterested: "Nicholas",
+    moq: "3,000",
+    unit: "pcs",
+    price: "USD 0.38",
+    photosPlaceholder: "Bag size, handle strength, print area",
+    notes: "Good for supermarket buyers. Check handle strength and printing cost.",
+    createdAt: "2026-06-25T09:00:00",
+    updatedAt: "2026-06-26T11:00:00",
+    timeline: []
+  },
+  {
+    id: "product-010",
+    productName: "Personal Care Travel Bottle Set",
+    category: "Personal Care",
+    keywords: "travel bottle, personal care, toiletry, bottle set",
+    supplierName: "Yiwu Mixed Goods Supplier A",
+    customerInterested: "Nicholas",
+    moq: "2,000",
+    unit: "sets",
+    price: "USD 0.95",
+    photosPlaceholder: "Bottle set, capacity label, bag packing",
+    notes: "Check material, leakage, and packaging before recommending.",
+    createdAt: "2026-06-25T10:00:00",
+    updatedAt: "2026-06-26T11:15:00",
+    timeline: []
+  }
+];
+
 const editableLists = {
   focusTasks: [],
   peopleWaiting: [],
@@ -624,6 +806,8 @@ let quotations = [];
 let selectedQuotationId = "";
 let shipments = [];
 let selectedShipmentId = "";
+let products = [];
+let selectedProductId = "";
 
 const portalModules = [
   {
@@ -681,6 +865,14 @@ const portalModules = [
     purpose: "Shipment and container tracking prototype for bookings, ETD, ETA, documents, and next actions.",
     status: "Prototype",
     internalPage: "shipment-center"
+  },
+  {
+    id: "product-center",
+    section: "today",
+    name: "Product Center",
+    purpose: "Simple product database for categories, keywords, suppliers, interested customers, prices, notes, and related work.",
+    status: "Prototype",
+    internalPage: "product-center"
   },
   {
     id: "order-center-docs",
@@ -777,6 +969,14 @@ const searchModules = [
     ]
   },
   {
+    name: "Products",
+    items: [
+      { title: "Product Center", type: "Prototype", description: "Open the local Product Center prototype.", page: "product-center" },
+      { title: "Product categories", type: "Product", description: "Search products by category, supplier, customer interest, and keyword.", page: "product-center" },
+      { title: "Product sourcing memory", type: "Product", description: "Track product notes, MOQ, unit, price, photo placeholders, and related work.", page: "product-center" }
+    ]
+  },
+  {
     name: "Knowledge",
     items: [
       { title: "China sourcing process", type: "Knowledge", description: "How Moer helps buyers source, inspect, consolidate, and ship products.", page: "knowledge-center" },
@@ -809,6 +1009,7 @@ const searchModules = [
       { title: "Supplier Center", type: "Prototype", description: "Open the local Supplier Center prototype.", page: "supplier-center" },
       { title: "Quotation Center", type: "Prototype", description: "Open the local Quotation Center prototype.", page: "quotation-center" },
       { title: "Shipment Center", type: "Prototype", description: "Open the local Shipment Center prototype.", page: "shipment-center" },
+      { title: "Product Center", type: "Prototype", description: "Open the local Product Center prototype.", page: "product-center" },
       { title: "Order Center Architecture", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
@@ -1027,6 +1228,29 @@ const shipmentList = document.querySelector("#shipmentList");
 const shipmentDetailTitle = document.querySelector("#shipmentDetailTitle");
 const shipmentDetail = document.querySelector("#shipmentDetail");
 const shipmentTimeline = document.querySelector("#shipmentTimeline");
+const productForm = document.querySelector("#productForm");
+const productFormTitle = document.querySelector("#productFormTitle");
+const productId = document.querySelector("#productId");
+const productName = document.querySelector("#productName");
+const productCategory = document.querySelector("#productCategory");
+const productKeywords = document.querySelector("#productKeywords");
+const productSupplier = document.querySelector("#productSupplier");
+const productCustomer = document.querySelector("#productCustomer");
+const productMoq = document.querySelector("#productMoq");
+const productUnit = document.querySelector("#productUnit");
+const productPrice = document.querySelector("#productPrice");
+const productPhotos = document.querySelector("#productPhotos");
+const productNotes = document.querySelector("#productNotes");
+const resetProductForm = document.querySelector("#resetProductForm");
+const productDashboard = document.querySelector("#productDashboard");
+const productSearchInput = document.querySelector("#productSearchInput");
+const productCategoryFilter = document.querySelector("#productCategoryFilter");
+const productSupplierFilter = document.querySelector("#productSupplierFilter");
+const productCustomerFilter = document.querySelector("#productCustomerFilter");
+const productList = document.querySelector("#productList");
+const productDetailTitle = document.querySelector("#productDetailTitle");
+const productDetail = document.querySelector("#productDetail");
+const productCategoryOptionsList = document.querySelector("#productCategoryOptions");
 
 function showPage(pageId) {
   pages.forEach((page) => {
@@ -1806,8 +2030,10 @@ function saveCustomerFromForm(event) {
   renderOrderCustomerOptions(customer.customerName);
   renderQuotationCustomerOptions(customer.customerName);
   renderShipmentCustomerOptions(customer.customerName);
+  renderProductCustomerOptions(customer.customerName);
   renderQuotationFilters();
   renderShipmentFilters();
+  renderProductFilters();
   selectCustomer(customer.id);
   clearCustomerForm();
 }
@@ -2018,8 +2244,10 @@ function deleteCustomer(id) {
   renderOrderCustomerOptions();
   renderQuotationCustomerOptions();
   renderShipmentCustomerOptions();
+  renderProductCustomerOptions();
   renderQuotationFilters();
   renderShipmentFilters();
+  renderProductFilters();
   clearCustomerForm();
 
   if (selectedCustomerId) {
@@ -2402,6 +2630,7 @@ function saveSupplierFromForm(event) {
   renderSuppliers();
   renderOrderSupplierOptions(supplier.supplierName);
   renderQuotationFilters();
+  renderProductFilters();
   selectSupplier(supplier.id);
   clearSupplierForm();
 }
@@ -2587,6 +2816,7 @@ function deleteSupplier(id) {
   renderSuppliers();
   renderOrderSupplierOptions();
   renderQuotationFilters();
+  renderProductFilters();
   clearSupplierForm();
 
   if (selectedSupplierId) {
@@ -2698,7 +2928,8 @@ function renderSupplierTimeline(supplier, relatedOrders) {
 function renderOrderSupplierOptions(selectedValue = "") {
   const existingOrderSupplierNames = orders.map((order) => order.supplierName).filter(Boolean);
   const existingQuotationSupplierNames = quotations.map((quotation) => quotation.supplierName).filter(Boolean);
-  const names = [...new Set([...suppliers.map((supplier) => supplier.supplierName), ...existingOrderSupplierNames, ...existingQuotationSupplierNames])].sort();
+  const existingProductSupplierNames = products.map((product) => product.supplierName).filter(Boolean);
+  const names = [...new Set([...suppliers.map((supplier) => supplier.supplierName), ...existingOrderSupplierNames, ...existingQuotationSupplierNames, ...existingProductSupplierNames])].sort();
   supplierOptions.innerHTML = names.map((name) => `<option value="${escapeHtml(name)}"></option>`).join("");
   if (selectedValue) {
     orderSupplier.value = selectedValue;
@@ -3693,6 +3924,453 @@ function setupShipmentCenter() {
   });
 }
 
+function loadProducts() {
+  const savedProducts = localStorage.getItem(storageKeys.products);
+  if (!savedProducts) {
+    products = productSeedData.map(normalizeProduct);
+    saveProducts();
+    localStorage.setItem(storageKeys.productsSeededV1, "true");
+    return;
+  }
+
+  try {
+    const parsedProducts = JSON.parse(savedProducts);
+    products = Array.isArray(parsedProducts) ? parsedProducts.map(normalizeProduct) : productSeedData.map(normalizeProduct);
+  } catch (error) {
+    products = productSeedData.map(normalizeProduct);
+  }
+
+  if (localStorage.getItem(storageKeys.productsSeededV1) !== "true") {
+    const existingNames = new Set(products.map((product) => product.productName.toLowerCase()));
+    const missingSamples = productSeedData
+      .filter((product) => !existingNames.has(product.productName.toLowerCase()))
+      .map(normalizeProduct);
+    products = [...missingSamples, ...products];
+    localStorage.setItem(storageKeys.productsSeededV1, "true");
+    saveProducts();
+  }
+}
+
+function saveProducts() {
+  localStorage.setItem(storageKeys.products, JSON.stringify(products));
+}
+
+function normalizeProduct(product) {
+  const now = new Date().toISOString();
+  return {
+    id: product.id || `product-${Date.now()}`,
+    productName: product.productName || "",
+    category: product.category || "",
+    keywords: product.keywords || "",
+    supplierName: product.supplierName || "",
+    customerInterested: product.customerInterested || "",
+    moq: product.moq || "",
+    unit: product.unit || "",
+    price: product.price || "",
+    photosPlaceholder: product.photosPlaceholder || "",
+    notes: product.notes || "",
+    createdAt: product.createdAt || now,
+    updatedAt: product.updatedAt || now,
+    timeline: Array.isArray(product.timeline) ? product.timeline : []
+  };
+}
+
+function getProductFormData() {
+  const now = new Date().toISOString();
+  const existingProduct = products.find((product) => product.id === productId.value);
+
+  return {
+    id: productId.value || `product-${Date.now()}`,
+    productName: productName.value.trim(),
+    category: productCategory.value.trim(),
+    keywords: productKeywords.value.trim(),
+    supplierName: productSupplier.value.trim(),
+    customerInterested: productCustomer.value.trim(),
+    moq: productMoq.value.trim(),
+    unit: productUnit.value.trim(),
+    price: productPrice.value.trim(),
+    photosPlaceholder: productPhotos.value.trim(),
+    notes: productNotes.value.trim(),
+    createdAt: existingProduct ? existingProduct.createdAt : now,
+    updatedAt: now,
+    timeline: existingProduct ? existingProduct.timeline : [{
+      id: `product-timeline-${Date.now()}`,
+      date: now.slice(0, 10),
+      title: "Product created",
+      description: "Product was added to Product Center.",
+      status: "Created"
+    }]
+  };
+}
+
+function saveProductFromForm(event) {
+  event.preventDefault();
+  const product = getProductFormData();
+  if (!product.productName || !product.category) {
+    return;
+  }
+
+  const existingIndex = products.findIndex((item) => item.id === product.id);
+  if (existingIndex >= 0) {
+    products[existingIndex] = product;
+  } else {
+    products.unshift(product);
+  }
+
+  selectedProductId = product.id;
+  saveProducts();
+  renderProductDashboard();
+  renderProductFilters();
+  renderProductCategoryOptions();
+  renderProducts();
+  renderOrderSupplierOptions(product.supplierName);
+  selectProduct(product.id);
+  clearProductForm();
+}
+
+function clearProductForm() {
+  productForm.reset();
+  productId.value = "";
+  renderProductCustomerOptions();
+  renderProductCategoryOptions();
+  productFormTitle.textContent = "New Product";
+}
+
+function getProductFilterValues() {
+  return {
+    query: productSearchInput.value.trim().toLowerCase(),
+    category: productCategoryFilter.value,
+    supplier: productSupplierFilter.value,
+    customer: productCustomerFilter.value
+  };
+}
+
+function getFilteredProducts() {
+  const filters = getProductFilterValues();
+  return products.filter((product) => {
+    const haystack = [
+      product.productName,
+      product.category,
+      product.keywords,
+      product.supplierName,
+      product.customerInterested,
+      product.moq,
+      product.unit,
+      product.price,
+      product.photosPlaceholder,
+      product.notes
+    ].join(" ").toLowerCase();
+
+    return (!filters.query || haystack.includes(filters.query))
+      && (!filters.category || product.category === filters.category)
+      && (!filters.supplier || product.supplierName === filters.supplier)
+      && (!filters.customer || product.customerInterested === filters.customer);
+  });
+}
+
+function renderProductDashboard() {
+  const categories = new Set(products.map((product) => product.category).filter(Boolean));
+  const suppliersWithProducts = new Set(products.map((product) => product.supplierName).filter(Boolean));
+  const customerInterest = products.filter((product) => product.customerInterested).length;
+  const quotedProducts = products.filter((product) => getRelatedProductQuotations(product).length).length;
+  const orderedProducts = products.filter((product) => getRelatedProductOrders(product).length).length;
+  const metrics = [
+    { label: "Total Products", value: products.length },
+    { label: "Categories", value: categories.size },
+    { label: "Supplier Linked", value: suppliersWithProducts.size },
+    { label: "Customer Interest", value: customerInterest },
+    { label: "Quoted Products", value: quotedProducts },
+    { label: "Ordered Products", value: orderedProducts }
+  ];
+
+  productDashboard.innerHTML = metrics.map((metric) => `
+    <article class="order-metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${metric.value}</strong>
+    </article>
+  `).join("");
+}
+
+function renderProductFilters() {
+  const selected = {
+    category: productCategoryFilter.value,
+    supplier: productSupplierFilter.value,
+    customer: productCustomerFilter.value
+  };
+  const categories = [...new Set(products.map((product) => product.category).filter(Boolean))].sort();
+  const supplierNames = [...new Set(products.map((product) => product.supplierName).filter(Boolean))].sort();
+  const customerNames = [...new Set(products.map((product) => product.customerInterested).filter(Boolean))].sort();
+
+  productCategoryFilter.innerHTML = '<option value="">All categories</option>' + categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("");
+  productSupplierFilter.innerHTML = '<option value="">All suppliers</option>' + supplierNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  productCustomerFilter.innerHTML = '<option value="">All customers</option>' + customerNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+
+  productCategoryFilter.value = selected.category;
+  productSupplierFilter.value = selected.supplier;
+  productCustomerFilter.value = selected.customer;
+}
+
+function renderProducts() {
+  const filteredProducts = getFilteredProducts();
+
+  if (!filteredProducts.length) {
+    productList.innerHTML = '<p class="empty-state">No products found.</p>';
+    productDetailTitle.textContent = "Select a product";
+    productDetail.innerHTML = '<p class="empty-state">Create a product or adjust the filters.</p>';
+    return;
+  }
+
+  if (!selectedProductId || !filteredProducts.some((product) => product.id === selectedProductId)) {
+    selectedProductId = filteredProducts[0].id;
+  }
+
+  productList.innerHTML = filteredProducts.map((product) => `
+    <button class="product-list-card ${product.id === selectedProductId ? "active" : ""}" type="button" data-product-id="${product.id}">
+      <h3>${escapeHtml(product.productName)}</h3>
+      <p>${escapeHtml(product.category)}${product.supplierName ? ` · ${escapeHtml(product.supplierName)}` : ""}</p>
+      <p>${escapeHtml(product.keywords || "No keywords")}</p>
+      <div class="order-list-meta">
+        <span class="order-pill">${escapeHtml(product.moq || "No MOQ")}</span>
+        <span class="order-pill">${escapeHtml(product.unit || "No unit")}</span>
+        <span class="order-pill">${escapeHtml(product.price || "No price")}</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+function selectProduct(id) {
+  const product = products.find((item) => item.id === id);
+  if (!product) {
+    return;
+  }
+
+  selectedProductId = id;
+  renderProducts();
+  renderProductDetail(product);
+}
+
+function editProduct(id) {
+  const product = products.find((item) => item.id === id);
+  if (!product) {
+    return;
+  }
+
+  productId.value = product.id;
+  productName.value = product.productName;
+  productCategory.value = product.category;
+  productKeywords.value = product.keywords;
+  productSupplier.value = product.supplierName;
+  renderProductCustomerOptions(product.customerInterested);
+  productCustomer.value = product.customerInterested;
+  productMoq.value = product.moq;
+  productUnit.value = product.unit;
+  productPrice.value = product.price;
+  productPhotos.value = product.photosPlaceholder;
+  productNotes.value = product.notes;
+  productFormTitle.textContent = "Edit Product";
+  productName.focus();
+}
+
+function deleteProduct(id) {
+  const product = products.find((item) => item.id === id);
+  if (!product) {
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete product "${product.productName}"? Related records will stay safe.`);
+  if (!confirmed) {
+    return;
+  }
+
+  products = products.filter((item) => item.id !== id);
+  selectedProductId = products[0]?.id || "";
+  saveProducts();
+  renderProductDashboard();
+  renderProductFilters();
+  renderProductCategoryOptions();
+  renderProducts();
+  renderOrderSupplierOptions();
+  clearProductForm();
+
+  if (selectedProductId) {
+    selectProduct(selectedProductId);
+  } else {
+    productDetailTitle.textContent = "Select a product";
+    productDetail.innerHTML = '<p class="empty-state">Create a product to view details.</p>';
+  }
+}
+
+function normalizeWords(value) {
+  return String(value || "").toLowerCase();
+}
+
+function productMatchesText(product, value) {
+  const productWords = getSearchWords(`${product.productName} ${product.category} ${product.keywords}`);
+  const valueWords = getSearchWords(value);
+  return productWords.some((productWord) => {
+    return valueWords.some((valueWord) => productWord.includes(valueWord) || valueWord.includes(productWord));
+  });
+}
+
+function getSearchWords(value) {
+  return normalizeWords(value)
+    .split(/[^a-z0-9]+/)
+    .filter((word) => word.length > 2)
+    .map((word) => word.endsWith("s") ? word.slice(0, -1) : word);
+}
+
+function getRelatedProductSuppliers(product) {
+  return suppliers.filter((supplier) => {
+    return supplier.supplierName.toLowerCase() === product.supplierName.toLowerCase()
+      || normalizeWords(supplier.productCategory).includes(normalizeWords(product.category))
+      || productMatchesText(product, supplier.mainProducts);
+  });
+}
+
+function getRelatedProductCustomers(product) {
+  return customers.filter((customer) => {
+    return customer.customerName.toLowerCase() === product.customerInterested.toLowerCase()
+      || productMatchesText(product, customer.mainProductInterest);
+  });
+}
+
+function getRelatedProductQuotations(product) {
+  return quotations.filter((quotation) => productMatchesText(product, quotation.productSummary));
+}
+
+function getRelatedProductOrders(product) {
+  return orders.filter((order) => productMatchesText(product, order.productsSummary));
+}
+
+function renderProductDetail(product) {
+  const relatedSuppliers = getRelatedProductSuppliers(product);
+  const relatedCustomers = getRelatedProductCustomers(product);
+  const relatedQuotations = getRelatedProductQuotations(product);
+  const relatedOrders = getRelatedProductOrders(product);
+  productDetailTitle.textContent = product.productName;
+  productDetail.innerHTML = `
+    <div class="order-status-row">
+      <span class="order-pill">${escapeHtml(product.category)}</span>
+      <span class="order-pill">${escapeHtml(product.price || "No price")}</span>
+      <span class="order-pill">${escapeHtml(product.moq || "No MOQ")}</span>
+    </div>
+    <div class="product-photo-placeholder">
+      ${escapeHtml(product.photosPlaceholder || "Photos placeholder")}
+    </div>
+    <dl class="order-detail-grid">
+      ${renderDetailField("Product", product.productName)}
+      ${renderDetailField("Category", product.category)}
+      ${renderDetailField("Keywords", product.keywords)}
+      ${renderDetailField("Supplier", product.supplierName)}
+      ${renderDetailField("Customer Interested", product.customerInterested)}
+      ${renderDetailField("MOQ", product.moq)}
+      ${renderDetailField("Unit", product.unit)}
+      ${renderDetailField("Price", product.price)}
+    </dl>
+    <div class="detail-text-block">
+      <strong>Notes</strong>
+      <p>${escapeHtml(product.notes || "No notes yet.")}</p>
+    </div>
+    ${renderProductRelatedSection("Related Suppliers", relatedSuppliers.map((supplier) => `${supplier.supplierName} · ${supplier.productCategory || "No category"} · ${supplier.reliabilityRating || "Unknown"}`))}
+    ${renderProductRelatedSection("Related Customers", relatedCustomers.map((customer) => `${customer.customerName} · ${customer.country || "No country"} · ${customer.mainProductInterest || "No interest"}`))}
+    ${renderProductRelatedSection("Related Quotations", relatedQuotations.map((quotation) => `${quotation.quotationCode} · ${quotation.customerName} · ${quotation.status}`))}
+    ${renderProductRelatedSection("Related Orders", relatedOrders.map((order) => `${order.orderCode} · ${order.orderName} · ${order.status}`))}
+    <div class="detail-text-block">
+      <strong>Timeline</strong>
+      <div class="product-related-grid">
+        ${renderProductTimeline(product)}
+      </div>
+    </div>
+    <div class="order-detail-actions">
+      <button class="open-link secondary" type="button" data-product-edit="${product.id}">Edit</button>
+      <button class="danger-button" type="button" data-product-delete="${product.id}">Delete</button>
+    </div>
+  `;
+}
+
+function renderProductRelatedSection(title, items) {
+  return `
+    <div class="detail-text-block">
+      <strong>${escapeHtml(title)}</strong>
+      <div class="product-related-grid">
+        ${items.length ? items.map((item) => `<p>${escapeHtml(item)}</p>`).join("") : '<p class="empty-state">No related records yet.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function renderProductTimeline(product) {
+  const timelineItems = [
+    ...(product.timeline || []),
+    {
+      date: formatDateOnly(product.updatedAt),
+      title: "Product updated",
+      description: product.notes || "Product record was updated.",
+      status: "Updated"
+    }
+  ].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+  return timelineItems.map((item) => `
+    <article class="order-timeline-item">
+      <span>${escapeHtml(item.date)}</span>
+      <div>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.status || "Note")}</small>
+        <p>${escapeHtml(item.description)}</p>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderProductCustomerOptions(selectedValue = "") {
+  const existingProductCustomerNames = products.map((product) => product.customerInterested).filter(Boolean);
+  const names = [...new Set([...customers.map((customer) => customer.customerName), ...existingProductCustomerNames])].sort();
+  const selectedCustomerName = selectedValue || productCustomer.value;
+  productCustomer.innerHTML = '<option value="">Select customer</option>' + names.map((name) => `
+    <option value="${escapeHtml(name)}">${escapeHtml(name)}</option>
+  `).join("");
+
+  if (selectedCustomerName && names.includes(selectedCustomerName)) {
+    productCustomer.value = selectedCustomerName;
+  }
+}
+
+function renderProductCategoryOptions() {
+  const categories = [...new Set([...productCategoryOptions, ...products.map((product) => product.category).filter(Boolean)])].sort();
+  productCategoryOptionsList.innerHTML = categories.map((category) => `<option value="${escapeHtml(category)}"></option>`).join("");
+}
+
+function setupProductCenter() {
+  productForm.addEventListener("submit", saveProductFromForm);
+  resetProductForm.addEventListener("click", clearProductForm);
+  [productSearchInput, productCategoryFilter, productSupplierFilter, productCustomerFilter].forEach((field) => {
+    field.addEventListener("input", renderProducts);
+    field.addEventListener("change", renderProducts);
+  });
+
+  productList.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-product-id]");
+    if (!card) {
+      return;
+    }
+
+    selectProduct(card.dataset.productId);
+  });
+
+  productDetail.addEventListener("click", (event) => {
+    const editButton = event.target.closest("[data-product-edit]");
+    const deleteButton = event.target.closest("[data-product-delete]");
+
+    if (editButton) {
+      editProduct(editButton.dataset.productEdit);
+    }
+
+    if (deleteButton) {
+      deleteProduct(deleteButton.dataset.productDelete);
+    }
+  });
+}
+
 function setupEditableLists() {
   document.querySelectorAll("[data-list-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
@@ -3886,6 +4564,22 @@ function appendShipmentSearchRecords(moduleRecords) {
   });
 }
 
+function appendProductSearchRecords(moduleRecords) {
+  const productModule = moduleRecords.find((module) => module.name === "Products");
+  if (!productModule) {
+    return;
+  }
+
+  products.forEach((product) => {
+    productModule.items.push({
+      title: product.productName,
+      type: "Product",
+      description: `${product.category || "No category"} · ${product.supplierName || "No supplier"} · ${product.customerInterested || "No customer"} · ${product.price || "No price"}`,
+      page: "product-center"
+    });
+  });
+}
+
 function normalizeSearchText(value) {
   return value.toLowerCase().trim();
 }
@@ -3926,6 +4620,7 @@ function searchItems(query) {
   appendSupplierSearchRecords(records);
   appendQuotationSearchRecords(records);
   appendShipmentSearchRecords(records);
+  appendProductSearchRecords(records);
 
   return records.map((module) => {
     const results = module.items
@@ -4092,12 +4787,14 @@ function init() {
   loadOrders();
   loadQuotations();
   loadShipments();
+  loadProducts();
   setupEditableLists();
   setupOrderCenter();
   setupCustomerCenter();
   setupSupplierCenter();
   setupQuotationCenter();
   setupShipmentCenter();
+  setupProductCenter();
   setupPortalCards();
   setupCommandPalette();
   renderAllEditableLists();
@@ -4119,12 +4816,18 @@ function init() {
   renderShipments();
   renderShipmentCustomerOptions();
   renderShipmentOrderOptions();
+  renderProductDashboard();
+  renderProductFilters();
+  renderProducts();
+  renderProductCustomerOptions();
+  renderProductCategoryOptions();
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();
   clearOrderForm();
   clearQuotationForm();
   clearShipmentForm();
+  clearProductForm();
 
   if (orders.length) {
     selectOrder(orders[0].id);
@@ -4144,6 +4847,10 @@ function init() {
 
   if (shipments.length) {
     selectShipment(shipments[0].id);
+  }
+
+  if (products.length) {
+    selectProduct(products[0].id);
   }
 
   restoreField(userName, storageKeys.userName);
