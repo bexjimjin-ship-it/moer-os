@@ -122,10 +122,159 @@
         <header class="page-header">
           <p class="eyebrow">Order Center</p>
           <h1>Sourcing Operations</h1>
-          <p class="date-line">A working shell page for the future order system, connected to the current architecture documents.</p>
+          <p class="date-line">Track sourcing orders from inquiry to shipment, locally in this browser.</p>
         </header>
-        <div class="module-grid" data-module-section="order-center"></div>
-        <section class="portal-section">
+
+        <div class="order-center-layout">
+          <section class="order-panel order-form-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Create / Edit</p>
+              <h2 id="orderFormTitle">New Order</h2>
+            </div>
+            <form id="orderForm" class="order-form">
+              <input id="orderId" type="hidden">
+              <label>
+                Order name
+                <input id="orderName" type="text" placeholder="Stationery mixed container" required>
+              </label>
+              <label>
+                Customer name
+                <input id="orderCustomer" type="text" placeholder="Customer or company" required>
+              </label>
+              <label>
+                Country
+                <input id="orderCountry" type="text" placeholder="Trinidad and Tobago">
+              </label>
+              <label>
+                Supplier name
+                <input id="orderSupplier" type="text" placeholder="Yiwu supplier name">
+              </label>
+              <label>
+                Status
+                <select id="orderStatus">
+                  <option>New Inquiry</option>
+                  <option>Quoting</option>
+                  <option>Order Confirmed</option>
+                  <option>In Production</option>
+                  <option>Inspection</option>
+                  <option>In Warehouse</option>
+                  <option>Shipping</option>
+                  <option>Delivered</option>
+                  <option>On Hold</option>
+                </select>
+              </label>
+              <label>
+                Priority
+                <select id="orderPriority">
+                  <option>Normal</option>
+                  <option>High</option>
+                  <option>Urgent</option>
+                  <option>Low</option>
+                </select>
+              </label>
+              <label>
+                Order value
+                <input id="orderValue" type="text" placeholder="USD 8,500">
+              </label>
+              <label>
+                Due date
+                <input id="orderDueDate" type="date">
+              </label>
+              <label>
+                Deposit status
+                <select id="depositStatus">
+                  <option>Not Requested</option>
+                  <option>Requested</option>
+                  <option>Paid</option>
+                  <option>Partial</option>
+                </select>
+              </label>
+              <label>
+                Production status
+                <select id="productionStatus">
+                  <option>Not Started</option>
+                  <option>In Progress</option>
+                  <option>Delayed</option>
+                  <option>Completed</option>
+                </select>
+              </label>
+              <label>
+                Inspection status
+                <select id="inspectionStatus">
+                  <option>Not Needed</option>
+                  <option>Planned</option>
+                  <option>Passed</option>
+                  <option>Issue Found</option>
+                </select>
+              </label>
+              <label>
+                Warehouse status
+                <select id="warehouseStatus">
+                  <option>Not Arrived</option>
+                  <option>Partially Received</option>
+                  <option>Received</option>
+                  <option>Ready for Consolidation</option>
+                </select>
+              </label>
+              <label>
+                Shipping status
+                <select id="shippingStatus">
+                  <option>Not Planned</option>
+                  <option>Planning</option>
+                  <option>Booked</option>
+                  <option>Shipped</option>
+                  <option>Delivered</option>
+                </select>
+              </label>
+              <label>
+                Payment status
+                <select id="paymentStatus">
+                  <option>Unpaid</option>
+                  <option>Deposit Paid</option>
+                  <option>Balance Due</option>
+                  <option>Paid</option>
+                </select>
+              </label>
+              <label class="full-field">
+                Products summary
+                <textarea id="productsSummary" placeholder="Notebooks, pens, pencil cases, school bags"></textarea>
+              </label>
+              <label class="full-field">
+                Next action
+                <input id="nextAction" type="text" placeholder="Ask supplier for packing details">
+              </label>
+              <label class="full-field">
+                Notes
+                <textarea id="orderNotes" placeholder="Important customer, supplier, quality, payment, or shipping notes"></textarea>
+              </label>
+              <div class="order-form-actions">
+                <button class="open-link" type="submit">Save Order</button>
+                <button class="open-link secondary" id="resetOrderForm" type="button">New Blank Order</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="order-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Orders</p>
+              <h2>Order List</h2>
+            </div>
+            <div class="order-list" id="orderList"></div>
+          </section>
+
+          <section class="order-panel order-detail-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Detail</p>
+              <h2 id="orderDetailTitle">Select an order</h2>
+            </div>
+            <div id="orderDetail" class="order-detail">
+              <p class="empty-state">Choose an order to view details and timeline.</p>
+            </div>
+            <div id="orderTimeline" class="order-timeline"></div>
+          </section>
+        </div>
+
+        <section class="portal-section order-flow-section">
           <div class="section-heading">
             <p class="eyebrow">Order Flow</p>
             <h2>From inquiry to delivery</h2>

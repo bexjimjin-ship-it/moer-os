@@ -10,8 +10,56 @@ const storageKeys = {
   sonSleep: "moerOS.sonSleep",
   sonExercise: "moerOS.sonExercise",
   sonMeal: "moerOS.sonMeal",
-  mealPlanner: "moerOS.mealPlanner"
+  mealPlanner: "moerOS.mealPlanner",
+  orders: "moerOS.orders"
 };
+
+const orderSeedData = [
+  {
+    id: "order-001",
+    orderName: "Stationery Mixed Container",
+    customerName: "Caribbean Wholesale Ltd",
+    country: "Trinidad and Tobago",
+    status: "In Production",
+    priority: "High",
+    productsSummary: "Notebooks, pens, pencil cases, school bags",
+    supplierName: "Yiwu Stationery Supplier A",
+    orderValue: "USD 8,500",
+    depositStatus: "Paid",
+    productionStatus: "In Progress",
+    inspectionStatus: "Planned",
+    warehouseStatus: "Not Arrived",
+    shippingStatus: "Planning",
+    paymentStatus: "Deposit Paid",
+    nextAction: "Confirm final packing details with supplier",
+    dueDate: "2026-07-08",
+    notes: "Customer wants practical products for back-to-school season. Watch carton volume for mixed container planning.",
+    createdAt: "2026-06-20T09:15:00",
+    updatedAt: "2026-06-26T10:30:00"
+  },
+  {
+    id: "order-002",
+    orderName: "Daily-Use Product Reorder",
+    customerName: "Accra Market Distributor",
+    country: "Ghana",
+    status: "Quoting",
+    priority: "Normal",
+    productsSummary: "Storage boxes, kitchen tools, cleaning brushes",
+    supplierName: "Yiwu Daily Goods Supplier B",
+    orderValue: "Pending quote",
+    depositStatus: "Not Requested",
+    productionStatus: "Not Started",
+    inspectionStatus: "Not Needed",
+    warehouseStatus: "Not Arrived",
+    shippingStatus: "Not Planned",
+    paymentStatus: "Unpaid",
+    nextAction: "Compare supplier prices and MOQ",
+    dueDate: "2026-07-12",
+    notes: "Customer is price conscious. Need clear supplier comparison before recommending.",
+    createdAt: "2026-06-24T14:20:00",
+    updatedAt: "2026-06-25T16:00:00"
+  }
+];
 
 const editableLists = {
   focusTasks: [],
@@ -19,6 +67,9 @@ const editableLists = {
   urgentItems: [],
   mealPlanner: []
 };
+
+let orders = [];
+let selectedOrderId = "";
 
 const portalModules = [
   {
@@ -39,11 +90,20 @@ const portalModules = [
   },
   {
     id: "order-center",
-    section: "order-center",
+    section: "today",
     name: "Order Center",
-    purpose: "Operational architecture for sourcing orders from inquiry to delivery.",
+    purpose: "Local prototype for tracking sourcing orders from inquiry to shipment.",
+    status: "Prototype",
+    internalPage: "order-center"
+  },
+  {
+    id: "order-center-docs",
+    section: "order-center",
+    name: "Order Center Architecture",
+    purpose: "Long-term architecture documents for the full sourcing management system.",
     status: "Architecture ready",
-    href: "../Order-Center/README.md"
+    href: "../Order-Center/README.md",
+    showOnToday: false
   },
   {
     id: "timeline-engine",
@@ -150,7 +210,8 @@ const searchModules = [
   {
     name: "Moer OS Modules",
     items: [
-      { title: "Order Center", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
+      { title: "Order Center", type: "Prototype", description: "Open the local Order Center prototype.", page: "order-center" },
+      { title: "Order Center Architecture", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
       { title: "Family Meal Planner", type: "Prototype", description: "Open the local meal planner.", page: "family-meal-planner" }
@@ -178,6 +239,31 @@ const sonMeal = document.querySelector("#sonMeal");
 const mealForm = document.querySelector("#mealForm");
 const mealInput = document.querySelector("#mealInput");
 const mealList = document.querySelector("#mealList");
+const orderForm = document.querySelector("#orderForm");
+const orderFormTitle = document.querySelector("#orderFormTitle");
+const orderId = document.querySelector("#orderId");
+const orderName = document.querySelector("#orderName");
+const orderCustomer = document.querySelector("#orderCustomer");
+const orderCountry = document.querySelector("#orderCountry");
+const orderSupplier = document.querySelector("#orderSupplier");
+const orderStatus = document.querySelector("#orderStatus");
+const orderPriority = document.querySelector("#orderPriority");
+const orderValue = document.querySelector("#orderValue");
+const orderDueDate = document.querySelector("#orderDueDate");
+const depositStatus = document.querySelector("#depositStatus");
+const productionStatus = document.querySelector("#productionStatus");
+const inspectionStatus = document.querySelector("#inspectionStatus");
+const warehouseStatus = document.querySelector("#warehouseStatus");
+const shippingStatus = document.querySelector("#shippingStatus");
+const paymentStatus = document.querySelector("#paymentStatus");
+const productsSummary = document.querySelector("#productsSummary");
+const nextAction = document.querySelector("#nextAction");
+const orderNotes = document.querySelector("#orderNotes");
+const resetOrderForm = document.querySelector("#resetOrderForm");
+const orderList = document.querySelector("#orderList");
+const orderDetailTitle = document.querySelector("#orderDetailTitle");
+const orderDetail = document.querySelector("#orderDetail");
+const orderTimeline = document.querySelector("#orderTimeline");
 
 function showPage(pageId) {
   pages.forEach((page) => {
@@ -317,6 +403,291 @@ function deleteListItem(listName, id) {
   renderEditableList(listName);
 }
 
+function loadOrders() {
+  const savedOrders = localStorage.getItem(storageKeys.orders);
+  if (!savedOrders) {
+    orders = orderSeedData;
+    saveOrders();
+    return;
+  }
+
+  try {
+    const parsedOrders = JSON.parse(savedOrders);
+    orders = Array.isArray(parsedOrders) ? parsedOrders : orderSeedData;
+  } catch (error) {
+    orders = orderSeedData;
+  }
+}
+
+function saveOrders() {
+  localStorage.setItem(storageKeys.orders, JSON.stringify(orders));
+}
+
+function getOrderFormData() {
+  const now = new Date().toISOString();
+  const existingOrder = orders.find((order) => order.id === orderId.value);
+
+  return {
+    id: orderId.value || `order-${Date.now()}`,
+    orderName: orderName.value.trim(),
+    customerName: orderCustomer.value.trim(),
+    country: orderCountry.value.trim(),
+    status: orderStatus.value,
+    priority: orderPriority.value,
+    productsSummary: productsSummary.value.trim(),
+    supplierName: orderSupplier.value.trim(),
+    orderValue: orderValue.value.trim(),
+    depositStatus: depositStatus.value,
+    productionStatus: productionStatus.value,
+    inspectionStatus: inspectionStatus.value,
+    warehouseStatus: warehouseStatus.value,
+    shippingStatus: shippingStatus.value,
+    paymentStatus: paymentStatus.value,
+    nextAction: nextAction.value.trim(),
+    dueDate: orderDueDate.value,
+    notes: orderNotes.value.trim(),
+    createdAt: existingOrder ? existingOrder.createdAt : now,
+    updatedAt: now
+  };
+}
+
+function saveOrderFromForm(event) {
+  event.preventDefault();
+  const order = getOrderFormData();
+
+  if (!order.orderName || !order.customerName) {
+    return;
+  }
+
+  const existingIndex = orders.findIndex((item) => item.id === order.id);
+  if (existingIndex >= 0) {
+    orders[existingIndex] = order;
+  } else {
+    orders.unshift(order);
+  }
+
+  selectedOrderId = order.id;
+  saveOrders();
+  renderOrders();
+  selectOrder(order.id);
+  clearOrderForm();
+}
+
+function clearOrderForm() {
+  orderForm.reset();
+  orderId.value = "";
+  orderFormTitle.textContent = "New Order";
+}
+
+function renderOrders() {
+  if (!orders.length) {
+    orderList.innerHTML = '<p class="empty-state">No orders yet.</p>';
+    orderDetailTitle.textContent = "Select an order";
+    orderDetail.innerHTML = '<p class="empty-state">Create an order to view details.</p>';
+    orderTimeline.innerHTML = "";
+    return;
+  }
+
+  orderList.innerHTML = orders.map((order) => `
+    <button class="order-list-card ${order.id === selectedOrderId ? "active" : ""}" type="button" data-order-id="${order.id}">
+      <h3>${escapeHtml(order.orderName)}</h3>
+      <p>${escapeHtml(order.customerName)}${order.country ? ` · ${escapeHtml(order.country)}` : ""}</p>
+      <div class="order-list-meta">
+        <span class="order-pill">${escapeHtml(order.status)}</span>
+        <span class="order-pill priority-${escapeHtml(order.priority.toLowerCase())}">${escapeHtml(order.priority)}</span>
+        <span class="order-pill">${escapeHtml(order.dueDate || "No due date")}</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+function selectOrder(id) {
+  const order = orders.find((item) => item.id === id);
+  if (!order) {
+    return;
+  }
+
+  selectedOrderId = id;
+  renderOrders();
+  renderOrderDetail(order);
+}
+
+function editOrder(id) {
+  const order = orders.find((item) => item.id === id);
+  if (!order) {
+    return;
+  }
+
+  orderId.value = order.id;
+  orderName.value = order.orderName;
+  orderCustomer.value = order.customerName;
+  orderCountry.value = order.country;
+  orderSupplier.value = order.supplierName;
+  orderStatus.value = order.status;
+  orderPriority.value = order.priority;
+  orderValue.value = order.orderValue;
+  orderDueDate.value = order.dueDate;
+  depositStatus.value = order.depositStatus;
+  productionStatus.value = order.productionStatus;
+  inspectionStatus.value = order.inspectionStatus;
+  warehouseStatus.value = order.warehouseStatus;
+  shippingStatus.value = order.shippingStatus;
+  paymentStatus.value = order.paymentStatus;
+  productsSummary.value = order.productsSummary;
+  nextAction.value = order.nextAction;
+  orderNotes.value = order.notes;
+  orderFormTitle.textContent = "Edit Order";
+  orderName.focus();
+}
+
+function deleteOrder(id) {
+  const order = orders.find((item) => item.id === id);
+  if (!order) {
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete order "${order.orderName}"?`);
+  if (!confirmed) {
+    return;
+  }
+
+  orders = orders.filter((item) => item.id !== id);
+  selectedOrderId = orders[0]?.id || "";
+  saveOrders();
+  renderOrders();
+  clearOrderForm();
+
+  if (selectedOrderId) {
+    selectOrder(selectedOrderId);
+  } else {
+    orderDetailTitle.textContent = "Select an order";
+    orderDetail.innerHTML = '<p class="empty-state">Create an order to view details.</p>';
+    orderTimeline.innerHTML = "";
+  }
+}
+
+function renderOrderDetail(order) {
+  orderDetailTitle.textContent = order.orderName;
+  orderDetail.innerHTML = `
+    <div class="order-status-row">
+      <span class="order-pill">${escapeHtml(order.status)}</span>
+      <span class="order-pill priority-${escapeHtml(order.priority.toLowerCase())}">${escapeHtml(order.priority)}</span>
+      <span class="order-pill status-${escapeHtml(order.paymentStatus.toLowerCase().replaceAll(" ", "-"))}">${escapeHtml(order.paymentStatus)}</span>
+    </div>
+    <dl class="order-detail-grid">
+      ${renderDetailField("Customer", order.customerName)}
+      ${renderDetailField("Country", order.country)}
+      ${renderDetailField("Supplier", order.supplierName)}
+      ${renderDetailField("Order Value", order.orderValue)}
+      ${renderDetailField("Deposit", order.depositStatus)}
+      ${renderDetailField("Production", order.productionStatus)}
+      ${renderDetailField("Inspection", order.inspectionStatus)}
+      ${renderDetailField("Warehouse", order.warehouseStatus)}
+      ${renderDetailField("Shipping", order.shippingStatus)}
+      ${renderDetailField("Due Date", order.dueDate)}
+    </dl>
+    <div class="detail-text-block">
+      <strong>Products</strong>
+      <p>${escapeHtml(order.productsSummary || "No product summary yet.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Next Action</strong>
+      <p>${escapeHtml(order.nextAction || "No next action set.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Notes</strong>
+      <p>${escapeHtml(order.notes || "No notes yet.")}</p>
+    </div>
+    <div class="order-detail-actions">
+      <button class="open-link secondary" type="button" data-order-edit="${order.id}">Edit</button>
+      <button class="danger-button" type="button" data-order-delete="${order.id}">Delete</button>
+    </div>
+  `;
+  renderOrderTimeline(order);
+}
+
+function renderDetailField(label, value) {
+  return `
+    <div class="detail-field">
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value || "Not set")}</dd>
+    </div>
+  `;
+}
+
+function renderOrderTimeline(order) {
+  const timelineItems = buildOrderTimeline(order);
+  orderTimeline.innerHTML = `
+    <p class="card-label">Timeline</p>
+    ${timelineItems.map((item) => `
+      <article class="order-timeline-item">
+        <span>${escapeHtml(item.date)}</span>
+        <div>
+          <strong>${escapeHtml(item.title)}</strong>
+          <p>${escapeHtml(item.description)}</p>
+        </div>
+      </article>
+    `).join("")}
+  `;
+}
+
+function buildOrderTimeline(order) {
+  const createdDate = formatDateOnly(order.createdAt);
+  const updatedDate = formatDateOnly(order.updatedAt);
+  return [
+    {
+      date: createdDate,
+      title: "Order created",
+      description: `${order.customerName} order was added to Order Center.`
+    },
+    {
+      date: updatedDate,
+      title: `Current status: ${order.status}`,
+      description: order.nextAction || "No next action has been set yet."
+    },
+    {
+      date: order.dueDate || "No due date",
+      title: "Due date",
+      description: order.dueDate ? "Target date for the next major order milestone." : "Add a due date when the next milestone is confirmed."
+    }
+  ];
+}
+
+function formatDateOnly(value) {
+  if (!value) {
+    return "No date";
+  }
+
+  return value.slice(0, 10);
+}
+
+function setupOrderCenter() {
+  orderForm.addEventListener("submit", saveOrderFromForm);
+  resetOrderForm.addEventListener("click", clearOrderForm);
+
+  orderList.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-order-id]");
+    if (!card) {
+      return;
+    }
+
+    selectOrder(card.dataset.orderId);
+  });
+
+  orderDetail.addEventListener("click", (event) => {
+    const editButton = event.target.closest("[data-order-edit]");
+    const deleteButton = event.target.closest("[data-order-delete]");
+
+    if (editButton) {
+      editOrder(editButton.dataset.orderEdit);
+    }
+
+    if (deleteButton) {
+      deleteOrder(deleteButton.dataset.orderDelete);
+    }
+  });
+}
+
 function setupEditableLists() {
   document.querySelectorAll("[data-list-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
@@ -430,6 +801,22 @@ function getSearchRecords() {
   return moduleRecords;
 }
 
+function appendOrderSearchRecords(moduleRecords) {
+  const orderModule = moduleRecords.find((module) => module.name === "Moer OS Modules");
+  if (!orderModule) {
+    return;
+  }
+
+  orders.forEach((order) => {
+    orderModule.items.push({
+      title: order.orderName,
+      type: "Order",
+      description: `${order.customerName} · ${order.status} · ${order.nextAction || "No next action"}`,
+      page: "order-center"
+    });
+  });
+}
+
 function normalizeSearchText(value) {
   return value.toLowerCase().trim();
 }
@@ -464,7 +851,10 @@ function scoreFuzzyMatch(query, text) {
 }
 
 function searchItems(query) {
-  return getSearchRecords().map((module) => {
+  const records = getSearchRecords();
+  appendOrderSearchRecords(records);
+
+  return records.map((module) => {
     const results = module.items
       .map((item) => {
         const searchText = `${module.name} ${item.title} ${item.type} ${item.description}`;
@@ -604,7 +994,7 @@ function renderModuleCard(module) {
 function renderPortalModules() {
   document.querySelectorAll("[data-module-section]").forEach((container) => {
     const section = container.dataset.moduleSection;
-    const modules = portalModules.filter((module) => module.section === section || (section === "today" && module.id !== "today"));
+    const modules = portalModules.filter((module) => module.section === section || (section === "today" && module.id !== "today" && module.showOnToday !== false));
     container.innerHTML = modules.map(renderModuleCard).join("");
   });
 }
@@ -624,10 +1014,17 @@ function init() {
   buildCards();
   renderPortalModules();
   loadEditableLists();
+  loadOrders();
   setupEditableLists();
+  setupOrderCenter();
   setupPortalCards();
   setupCommandPalette();
   renderAllEditableLists();
+  renderOrders();
+
+  if (orders.length) {
+    selectOrder(orders[0].id);
+  }
 
   restoreField(userName, storageKeys.userName);
   restoreField(companyName, storageKeys.companyName);

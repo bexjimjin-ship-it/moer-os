@@ -17,6 +17,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Mobile bottom navigation
 - Universal Search command palette with Cmd + K or Ctrl + K
 - Editable Today lists for focus tasks, people waiting, and urgent items
+- Order Center V1 with local order list, create/edit/delete form, detail view, and per-order timeline
 - Editable local meal planner
 - Basic localStorage for Today data, meal ideas, and settings
 
@@ -48,6 +49,7 @@ You can also double-click `index.html` in Finder.
 
 Clickable prototypes:
 
+- Order Center: inside this shell
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`
 - Family Meal Planner: inside this shell
