@@ -1,5 +1,26 @@
 # Order Center
 
+## Working App
+
+Order Center V1 is now a working local prototype.
+
+Open it here:
+
+`/Users/mac/Documents/Codex Workspace/Moer-OS/03-Apps/Order-Center/index.html`
+
+## V1 Features
+
+- Desktop and mobile responsive interface
+- Left sidebar navigation for Dashboard, Orders, Customers, Suppliers, Shipments, Calendar, and Search
+- Dashboard metrics for today's orders, waiting supplier, waiting customer, production, QC today, and shipment this week
+- Create, edit, delete, search, and filter orders
+- Order fields for status, supplier, customer, shipment date, priority, next action, notes, QC date, and destination country
+- Per-order timeline generated from saved changes
+- Customer and supplier pages generated from real order data
+- Shipment and calendar views generated from saved dates
+- All data saved in localStorage
+- No backend, no login, no database
+
 ## Purpose
 
 Order Center is the operational heart of Moer OS.

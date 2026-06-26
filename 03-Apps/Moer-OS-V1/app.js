@@ -161,9 +161,9 @@ const portalModules = [
     id: "order-center",
     section: "today",
     name: "Order Center",
-    purpose: "Local prototype for tracking sourcing orders from inquiry to shipment.",
-    status: "Prototype",
-    internalPage: "order-center"
+    purpose: "Real V1 foundation for managing sourcing orders, suppliers, customers, shipments, and timelines.",
+    status: "Ready",
+    href: "../Order-Center/index.html"
   },
   {
     id: "customer-center",
@@ -176,7 +176,7 @@ const portalModules = [
   {
     id: "order-center-docs",
     section: "order-center",
-    name: "Order Center Architecture",
+    name: "Order Center Documents",
     purpose: "Long-term architecture documents for the full sourcing management system.",
     status: "Architecture ready",
     href: "../Order-Center/README.md",

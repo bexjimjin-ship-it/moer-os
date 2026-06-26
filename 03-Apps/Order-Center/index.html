@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moer OS Order Center</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">M</span>
+        <div>
+          <strong>Order Center</strong>
+          <small>Moer OS</small>
+        </div>
+      </div>
+      <nav class="nav-list" aria-label="Order Center navigation">
+        <button class="nav-item active" data-view="dashboard" type="button">Dashboard</button>
+        <button class="nav-item" data-view="orders" type="button">Orders</button>
+        <button class="nav-item" data-view="customers" type="button">Customers</button>
+        <button class="nav-item" data-view="suppliers" type="button">Suppliers</button>
+        <button class="nav-item" data-view="shipments" type="button">Shipments</button>
+        <button class="nav-item" data-view="calendar" type="button">Calendar</button>
+        <button class="nav-item" data-view="search" type="button">Search</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Moer Sourcing</p>
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-actions">
+          <input id="globalSearch" type="search" placeholder="Search orders, customers, suppliers">
+          <button class="primary-button" id="newOrderButton" type="button">Create Order</button>
+        </div>
+      </header>
+
+      <section class="view active" id="dashboard">
+        <div class="metric-grid" id="metricGrid"></div>
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="panel-heading">
+              <p class="eyebrow">Today</p>
+              <h2>Next Actions</h2>
+            </div>
+            <div id="todayActionList" class="stack-list"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading">
+              <p class="eyebrow">Risk</p>
+              <h2>Waiting Items</h2>
+            </div>
+            <div id="waitingList" class="stack-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="orders">
+        <div class="orders-layout">
+          <section class="panel orders-panel">
+            <div class="toolbar">
+              <input id="orderSearch" type="search" placeholder="Search orders">
+              <select id="statusFilter" aria-label="Filter by status">
+                <option value="">All status</option>
+              </select>
+              <select id="priorityFilter" aria-label="Filter by priority">
+                <option value="">All priority</option>
+              </select>
+            </div>
+            <div id="ordersList" class="orders-list"></div>
+          </section>
+          <section class="panel detail-panel">
+            <div id="orderDetail" class="order-detail empty-detail">
+              <p class="eyebrow">Order Detail</p>
+              <h2>Select an order</h2>
+              <p>Choose an order from the list, or create a new one to start tracking work.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="customers">
+        <div class="page-grid" id="customerGrid"></div>
+      </section>
+
+      <section class="view" id="suppliers">
+        <div class="page-grid" id="supplierGrid"></div>
+      </section>
+
+      <section class="view" id="shipments">
+        <div class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Shipping</p>
+            <h2>Shipment Plan</h2>
+          </div>
+          <div id="shipmentList" class="stack-list"></div>
+        </div>
+      </section>
+
+      <section class="view" id="calendar">
+        <div class="panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Calendar</p>
+            <h2>Upcoming Dates</h2>
+          </div>
+          <div id="calendarList" class="timeline-list"></div>
+        </div>
+      </section>
+
+      <section class="view" id="search">
+        <div class="panel search-panel">
+          <input id="searchPageInput" type="search" placeholder="Search all Order Center data">
+          <div id="searchResults" class="stack-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <button class="mobile-item active" data-view="dashboard" type="button">Dash</button>
+    <button class="mobile-item" data-view="orders" type="button">Orders</button>
+    <button class="mobile-item" data-view="customers" type="button">Customers</button>
+    <button class="mobile-item" data-view="suppliers" type="button">Suppliers</button>
+    <button class="mobile-item" data-view="shipments" type="button">Ship</button>
+    <button class="mobile-item" data-view="calendar" type="button">Cal</button>
+    <button class="mobile-item" data-view="search" type="button">Search</button>
+  </nav>
+
+  <dialog id="orderDialog" class="order-dialog">
+    <form id="orderForm" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">Order</p>
+          <h2 id="formTitle">Create Order</h2>
+        </div>
+        <button class="ghost-button icon-button" id="closeDialogButton" type="button" aria-label="Close">x</button>
+      </div>
+
+      <input id="orderId" type="hidden">
+      <div class="form-grid">
+        <label>
+          Order name
+          <input id="orderName" type="text" placeholder="Stationery mixed container" required>
+        </label>
+        <label>
+          Customer
+          <input id="customerName" type="text" placeholder="Customer name" required>
+        </label>
+        <label>
+          Supplier
+          <input id="supplierName" type="text" placeholder="Supplier name">
+        </label>
+        <label>
+          Status
+          <select id="orderStatus"></select>
+        </label>
+        <label>
+          Priority
+          <select id="orderPriority"></select>
+        </label>
+        <label>
+          Shipment date
+          <input id="shipmentDate" type="date">
+        </label>
+        <label>
+          QC date
+          <input id="qcDate" type="date">
+        </label>
+        <label>
+          Country
+          <input id="country" type="text" placeholder="Destination country">
+        </label>
+        <label class="full-field">
+          Next action
+          <input id="nextAction" type="text" placeholder="Ask supplier for update">
+        </label>
+        <label class="full-field">
+          Notes
+          <textarea id="notes" placeholder="Customer request, supplier update, quality issue, payment note"></textarea>
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="ghost-button" id="cancelFormButton" type="button">Cancel</button>
+        <button class="primary-button" type="submit">Save Order</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
