@@ -122,9 +122,11 @@
       <section class="page" id="order-center">
         <header class="page-header">
           <p class="eyebrow">Order Center</p>
-          <h1>Sourcing Operations</h1>
-          <p class="date-line">Track sourcing orders from inquiry to shipment, locally in this browser.</p>
+          <h1>Order Center V1</h1>
+          <p class="date-line">Manage real sourcing orders, payments, production, QC, warehouse, shipping, notes, and timeline.</p>
         </header>
+
+        <section class="order-dashboard" id="orderDashboard"></section>
 
         <div class="order-center-layout">
           <section class="order-panel order-form-panel">
@@ -135,26 +137,32 @@
             <form id="orderForm" class="order-form">
               <input id="orderId" type="hidden">
               <label>
-                Order name
-                <input id="orderName" type="text" placeholder="Stationery mixed container" required>
+                Order ID
+                <input id="orderCode" type="text" placeholder="MOER-2026-001" required>
               </label>
               <label>
-                Customer name
+                Order name
+                <input id="orderName" type="text" placeholder="Nicholas Trinidad container project" required>
+              </label>
+              <label>
+                Customer
                 <select id="orderCustomer" required></select>
+              </label>
+              <label>
+                Supplier
+                <input id="orderSupplier" type="text" placeholder="Yiwu supplier name">
               </label>
               <label>
                 Country
                 <input id="orderCountry" type="text" placeholder="Trinidad and Tobago">
               </label>
               <label>
-                Supplier name
-                <input id="orderSupplier" type="text" placeholder="Yiwu supplier name">
-              </label>
-              <label>
                 Status
                 <select id="orderStatus">
                   <option>New Inquiry</option>
                   <option>Quoting</option>
+                  <option>Waiting Supplier</option>
+                  <option>Waiting Customer</option>
                   <option>Order Confirmed</option>
                   <option>In Production</option>
                   <option>Inspection</option>
@@ -178,8 +186,8 @@
                 <input id="orderValue" type="text" placeholder="USD 8,500">
               </label>
               <label>
-                Due date
-                <input id="orderDueDate" type="date">
+                Quantity
+                <input id="orderQuantity" type="text" placeholder="1x40HQ / 12,000 pcs">
               </label>
               <label>
                 Deposit status
@@ -188,6 +196,15 @@
                   <option>Requested</option>
                   <option>Paid</option>
                   <option>Partial</option>
+                </select>
+              </label>
+              <label>
+                Balance status
+                <select id="balanceStatus">
+                  <option>Not Due</option>
+                  <option>Waiting</option>
+                  <option>Requested</option>
+                  <option>Paid</option>
                 </select>
               </label>
               <label>
@@ -200,10 +217,11 @@
                 </select>
               </label>
               <label>
-                Inspection status
-                <select id="inspectionStatus">
+                QC status
+                <select id="qcStatus">
                   <option>Not Needed</option>
                   <option>Planned</option>
+                  <option>Today</option>
                   <option>Passed</option>
                   <option>Issue Found</option>
                 </select>
@@ -228,16 +246,19 @@
                 </select>
               </label>
               <label>
-                Payment status
-                <select id="paymentStatus">
-                  <option>Unpaid</option>
-                  <option>Deposit Paid</option>
-                  <option>Balance Due</option>
-                  <option>Paid</option>
-                </select>
+                ETD
+                <input id="orderEtd" type="date">
+              </label>
+              <label>
+                ETA
+                <input id="orderEta" type="date">
+              </label>
+              <label>
+                Due date
+                <input id="orderDueDate" type="date">
               </label>
               <label class="full-field">
-                Products summary
+                Product summary
                 <textarea id="productsSummary" placeholder="Notebooks, pens, pencil cases, school bags"></textarea>
               </label>
               <label class="full-field">
@@ -260,6 +281,21 @@
               <p class="eyebrow">Orders</p>
               <h2>Order List</h2>
             </div>
+            <div class="order-filter-grid">
+              <input id="orderSearchInput" type="search" placeholder="Search orders">
+              <select id="orderStatusFilter">
+                <option value="">All status</option>
+              </select>
+              <select id="orderPriorityFilter">
+                <option value="">All priority</option>
+              </select>
+              <select id="orderCustomerFilter">
+                <option value="">All customers</option>
+              </select>
+              <select id="orderSupplierFilter">
+                <option value="">All suppliers</option>
+              </select>
+            </div>
             <div class="order-list" id="orderList"></div>
           </section>
 
@@ -271,6 +307,36 @@
             <div id="orderDetail" class="order-detail">
               <p class="empty-state">Choose an order to view details and timeline.</p>
             </div>
+            <form id="timelineForm" class="timeline-form">
+              <input id="timelineOrderId" type="hidden">
+              <p class="card-label">Add Timeline Event</p>
+              <label>
+                Date
+                <input id="timelineDate" type="date">
+              </label>
+              <label>
+                Status
+                <select id="timelineStatus">
+                  <option>Note</option>
+                  <option>Customer Update</option>
+                  <option>Supplier Update</option>
+                  <option>Production</option>
+                  <option>QC</option>
+                  <option>Warehouse</option>
+                  <option>Shipping</option>
+                  <option>Payment</option>
+                </select>
+              </label>
+              <label>
+                Title
+                <input id="timelineTitle" type="text" placeholder="Supplier confirmed packing">
+              </label>
+              <label class="full-field">
+                Description
+                <textarea id="timelineDescription" placeholder="Add the important update, decision, or next step."></textarea>
+              </label>
+              <button class="open-link" type="submit">Add Event</button>
+            </form>
             <div id="orderTimeline" class="order-timeline"></div>
           </section>
         </div>

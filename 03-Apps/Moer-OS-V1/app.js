@@ -12,8 +12,12 @@ const storageKeys = {
   sonMeal: "moerOS.sonMeal",
   mealPlanner: "moerOS.mealPlanner",
   orders: "moerOS.orders",
-  customers: "moerOS.customers"
+  customers: "moerOS.customers",
+  ordersSeededV1: "moerOS.ordersSeededV1"
 };
+
+const orderStatusOptions = ["New Inquiry", "Quoting", "Waiting Supplier", "Waiting Customer", "Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered", "On Hold"];
+const orderPriorityOptions = ["Normal", "High", "Urgent", "Low"];
 
 const customerSeedData = [
   {
@@ -84,47 +88,122 @@ const customerSeedData = [
 const orderSeedData = [
   {
     id: "order-001",
-    orderName: "Stationery Mixed Container",
+    orderCode: "MOER-2026-001",
+    orderName: "Nicholas Trinidad container project",
     customerName: "Nicholas",
     country: "Trinidad and Tobago",
     status: "In Production",
     priority: "High",
-    productsSummary: "Notebooks, pens, pencil cases, school bags",
-    supplierName: "Yiwu Stationery Supplier A",
-    orderValue: "USD 8,500",
+    productsSummary: "Mixed container with stationery, daily-use products, and household items",
+    quantity: "1x40HQ mixed container",
+    supplierName: "Yiwu Mixed Goods Supplier A",
+    orderValue: "USD 18,600",
     depositStatus: "Paid",
+    balanceStatus: "Not Due",
     productionStatus: "In Progress",
-    inspectionStatus: "Planned",
+    qcStatus: "Planned",
     warehouseStatus: "Not Arrived",
     shippingStatus: "Planning",
-    paymentStatus: "Deposit Paid",
-    nextAction: "Confirm final packing details with supplier",
+    etd: "2026-07-18",
+    eta: "2026-08-19",
+    nextAction: "Confirm final carton details and supplier delivery dates",
     dueDate: "2026-07-08",
     notes: "Customer wants practical products for back-to-school season. Watch carton volume for mixed container planning.",
     createdAt: "2026-06-20T09:15:00",
-    updatedAt: "2026-06-26T10:30:00"
+    updatedAt: "2026-06-26T10:30:00",
+    timeline: [
+      {
+        id: "timeline-001-a",
+        date: "2026-06-20",
+        title: "Order created",
+        description: "Nicholas confirmed the Trinidad mixed container project.",
+        status: "Customer Update"
+      },
+      {
+        id: "timeline-001-b",
+        date: "2026-06-26",
+        title: "Production started",
+        description: "Main supplier started production. Packing details still need confirmation.",
+        status: "Production"
+      }
+    ]
   },
   {
     id: "order-002",
-    orderName: "Daily-Use Product Reorder",
-    customerName: "Graham",
-    country: "Barbados",
-    status: "Quoting",
+    orderCode: "MOER-2026-002",
+    orderName: "Eddie UK Christmas items",
+    customerName: "Eddie",
+    country: "UK",
+    status: "Waiting Supplier",
     priority: "Normal",
-    productsSummary: "Notebooks, pens, pencil cases",
-    supplierName: "Yiwu Stationery Supplier B",
+    productsSummary: "Christmas decorations, ornaments, gift bags, seasonal display items",
+    quantity: "Assorted SKUs, quantity pending",
+    supplierName: "Yiwu Christmas Supplier B",
     orderValue: "Pending quote",
     depositStatus: "Not Requested",
+    balanceStatus: "Not Due",
     productionStatus: "Not Started",
-    inspectionStatus: "Not Needed",
+    qcStatus: "Not Needed",
     warehouseStatus: "Not Arrived",
     shippingStatus: "Not Planned",
-    paymentStatus: "Unpaid",
-    nextAction: "Compare supplier prices and MOQ",
-    dueDate: "2026-07-12",
-    notes: "Customer is focused on stationery quality and school season timing.",
+    etd: "2026-08-05",
+    eta: "2026-09-08",
+    nextAction: "Collect supplier quotes and MOQ options",
+    dueDate: "2026-07-03",
+    notes: "Seasonal timing is important. Need clear photos, packaging details, and early shipping plan.",
     createdAt: "2026-06-24T14:20:00",
-    updatedAt: "2026-06-25T16:00:00"
+    updatedAt: "2026-06-25T16:00:00",
+    timeline: [
+      {
+        id: "timeline-002-a",
+        date: "2026-06-24",
+        title: "Inquiry received",
+        description: "Eddie asked for Christmas item options for the UK market.",
+        status: "Customer Update"
+      }
+    ]
+  },
+  {
+    id: "order-003",
+    orderCode: "MOER-2026-003",
+    orderName: "Graham Barbados stationery",
+    customerName: "Graham",
+    country: "Barbados",
+    status: "Waiting Customer",
+    priority: "Normal",
+    productsSummary: "Notebooks, pens, pencil cases, rulers, school sets",
+    quantity: "8,000 pcs mixed stationery",
+    supplierName: "Yiwu Stationery Supplier C",
+    orderValue: "USD 6,200",
+    depositStatus: "Requested",
+    balanceStatus: "Not Due",
+    productionStatus: "Not Started",
+    qcStatus: "Planned",
+    warehouseStatus: "Not Arrived",
+    shippingStatus: "Planning",
+    etd: "2026-07-28",
+    eta: "2026-08-24",
+    nextAction: "Wait for customer confirmation on notebook designs",
+    dueDate: "2026-06-28",
+    notes: "Customer is focused on school season timing and stable quality.",
+    createdAt: "2026-06-22T15:15:00",
+    updatedAt: "2026-06-26T11:00:00",
+    timeline: [
+      {
+        id: "timeline-003-a",
+        date: "2026-06-22",
+        title: "Stationery project added",
+        description: "Graham shared the first school stationery list.",
+        status: "Customer Update"
+      },
+      {
+        id: "timeline-003-b",
+        date: "2026-06-26",
+        title: "Design confirmation pending",
+        description: "Need customer confirmation before supplier can hold price.",
+        status: "Payment"
+      }
+    ]
   }
 ];
 
@@ -163,7 +242,7 @@ const portalModules = [
     name: "Order Center",
     purpose: "Real V1 foundation for managing sourcing orders, suppliers, customers, shipments, and timelines.",
     status: "Ready",
-    href: "../Order-Center/index.html"
+    internalPage: "order-center"
   },
   {
     id: "customer-center",
@@ -320,6 +399,7 @@ const mealList = document.querySelector("#mealList");
 const orderForm = document.querySelector("#orderForm");
 const orderFormTitle = document.querySelector("#orderFormTitle");
 const orderId = document.querySelector("#orderId");
+const orderCode = document.querySelector("#orderCode");
 const orderName = document.querySelector("#orderName");
 const orderCustomer = document.querySelector("#orderCustomer");
 const orderCountry = document.querySelector("#orderCountry");
@@ -327,21 +407,36 @@ const orderSupplier = document.querySelector("#orderSupplier");
 const orderStatus = document.querySelector("#orderStatus");
 const orderPriority = document.querySelector("#orderPriority");
 const orderValue = document.querySelector("#orderValue");
+const orderQuantity = document.querySelector("#orderQuantity");
 const orderDueDate = document.querySelector("#orderDueDate");
 const depositStatus = document.querySelector("#depositStatus");
+const balanceStatus = document.querySelector("#balanceStatus");
 const productionStatus = document.querySelector("#productionStatus");
-const inspectionStatus = document.querySelector("#inspectionStatus");
+const qcStatus = document.querySelector("#qcStatus");
 const warehouseStatus = document.querySelector("#warehouseStatus");
 const shippingStatus = document.querySelector("#shippingStatus");
-const paymentStatus = document.querySelector("#paymentStatus");
+const orderEtd = document.querySelector("#orderEtd");
+const orderEta = document.querySelector("#orderEta");
 const productsSummary = document.querySelector("#productsSummary");
 const nextAction = document.querySelector("#nextAction");
 const orderNotes = document.querySelector("#orderNotes");
 const resetOrderForm = document.querySelector("#resetOrderForm");
+const orderDashboard = document.querySelector("#orderDashboard");
+const orderSearchInput = document.querySelector("#orderSearchInput");
+const orderStatusFilter = document.querySelector("#orderStatusFilter");
+const orderPriorityFilter = document.querySelector("#orderPriorityFilter");
+const orderCustomerFilter = document.querySelector("#orderCustomerFilter");
+const orderSupplierFilter = document.querySelector("#orderSupplierFilter");
 const orderList = document.querySelector("#orderList");
 const orderDetailTitle = document.querySelector("#orderDetailTitle");
 const orderDetail = document.querySelector("#orderDetail");
 const orderTimeline = document.querySelector("#orderTimeline");
+const timelineForm = document.querySelector("#timelineForm");
+const timelineOrderId = document.querySelector("#timelineOrderId");
+const timelineDate = document.querySelector("#timelineDate");
+const timelineStatus = document.querySelector("#timelineStatus");
+const timelineTitle = document.querySelector("#timelineTitle");
+const timelineDescription = document.querySelector("#timelineDescription");
 const customerForm = document.querySelector("#customerForm");
 const customerFormTitle = document.querySelector("#customerFormTitle");
 const customerId = document.querySelector("#customerId");
@@ -509,21 +604,61 @@ function deleteListItem(listName, id) {
 function loadOrders() {
   const savedOrders = localStorage.getItem(storageKeys.orders);
   if (!savedOrders) {
-    orders = orderSeedData;
+    orders = orderSeedData.map(normalizeOrder);
     saveOrders();
+    localStorage.setItem(storageKeys.ordersSeededV1, "true");
     return;
   }
 
   try {
     const parsedOrders = JSON.parse(savedOrders);
-    orders = Array.isArray(parsedOrders) ? parsedOrders : orderSeedData;
+    orders = Array.isArray(parsedOrders) ? parsedOrders.map(normalizeOrder) : orderSeedData.map(normalizeOrder);
   } catch (error) {
-    orders = orderSeedData;
+    orders = orderSeedData.map(normalizeOrder);
+  }
+
+  if (localStorage.getItem(storageKeys.ordersSeededV1) !== "true") {
+    const existingIds = new Set(orders.map((order) => order.id));
+    const missingSamples = orderSeedData.filter((order) => !existingIds.has(order.id)).map(normalizeOrder);
+    orders = [...missingSamples, ...orders];
+    localStorage.setItem(storageKeys.ordersSeededV1, "true");
+    saveOrders();
   }
 }
 
 function saveOrders() {
   localStorage.setItem(storageKeys.orders, JSON.stringify(orders));
+}
+
+function normalizeOrder(order) {
+  const now = new Date().toISOString();
+  return {
+    id: order.id || `order-${Date.now()}`,
+    orderCode: order.orderCode || order.id || `MOER-${new Date().getFullYear()}-${Math.floor(Math.random() * 900 + 100)}`,
+    orderName: order.orderName || "",
+    customerName: order.customerName || "",
+    country: order.country || "",
+    status: order.status || "New Inquiry",
+    priority: order.priority || "Normal",
+    productsSummary: order.productsSummary || "",
+    quantity: order.quantity || "",
+    supplierName: order.supplierName || "",
+    orderValue: order.orderValue || "",
+    depositStatus: order.depositStatus || "Not Requested",
+    balanceStatus: order.balanceStatus || (order.paymentStatus === "Balance Due" ? "Waiting" : "Not Due"),
+    productionStatus: order.productionStatus || "Not Started",
+    qcStatus: order.qcStatus || order.inspectionStatus || "Not Needed",
+    warehouseStatus: order.warehouseStatus || "Not Arrived",
+    shippingStatus: order.shippingStatus || "Not Planned",
+    etd: order.etd || "",
+    eta: order.eta || "",
+    nextAction: order.nextAction || "",
+    dueDate: order.dueDate || "",
+    notes: order.notes || "",
+    createdAt: order.createdAt || now,
+    updatedAt: order.updatedAt || now,
+    timeline: Array.isArray(order.timeline) ? order.timeline : []
+  };
 }
 
 function getOrderFormData() {
@@ -532,25 +667,36 @@ function getOrderFormData() {
 
   return {
     id: orderId.value || `order-${Date.now()}`,
+    orderCode: orderCode.value.trim(),
     orderName: orderName.value.trim(),
     customerName: orderCustomer.value.trim(),
     country: orderCountry.value.trim(),
     status: orderStatus.value,
     priority: orderPriority.value,
     productsSummary: productsSummary.value.trim(),
+    quantity: orderQuantity.value.trim(),
     supplierName: orderSupplier.value.trim(),
     orderValue: orderValue.value.trim(),
     depositStatus: depositStatus.value,
+    balanceStatus: balanceStatus.value,
     productionStatus: productionStatus.value,
-    inspectionStatus: inspectionStatus.value,
+    qcStatus: qcStatus.value,
     warehouseStatus: warehouseStatus.value,
     shippingStatus: shippingStatus.value,
-    paymentStatus: paymentStatus.value,
+    etd: orderEtd.value,
+    eta: orderEta.value,
     nextAction: nextAction.value.trim(),
     dueDate: orderDueDate.value,
     notes: orderNotes.value.trim(),
     createdAt: existingOrder ? existingOrder.createdAt : now,
-    updatedAt: now
+    updatedAt: now,
+    timeline: existingOrder ? existingOrder.timeline : [{
+      id: `timeline-${Date.now()}`,
+      date: now.slice(0, 10),
+      title: "Order created",
+      description: "Order was created in Moer OS Order Center.",
+      status: "Note"
+    }]
   };
 }
 
@@ -571,6 +717,8 @@ function saveOrderFromForm(event) {
 
   selectedOrderId = order.id;
   saveOrders();
+  renderOrderDashboard();
+  renderOrderFilters();
   renderOrders();
   selectOrder(order.id);
   refreshSelectedCustomerDetail();
@@ -580,26 +728,115 @@ function saveOrderFromForm(event) {
 function clearOrderForm() {
   orderForm.reset();
   orderId.value = "";
+  orderCode.value = `MOER-${new Date().getFullYear()}-${String(orders.length + 1).padStart(3, "0")}`;
+  renderOrderCustomerOptions();
   orderFormTitle.textContent = "New Order";
 }
 
+function getOrderFilterValues() {
+  return {
+    query: orderSearchInput.value.trim().toLowerCase(),
+    status: orderStatusFilter.value,
+    priority: orderPriorityFilter.value,
+    customer: orderCustomerFilter.value,
+    supplier: orderSupplierFilter.value
+  };
+}
+
+function getFilteredOrders() {
+  const filters = getOrderFilterValues();
+  return orders.filter((order) => {
+    const haystack = [
+      order.orderCode,
+      order.orderName,
+      order.customerName,
+      order.supplierName,
+      order.country,
+      order.productsSummary,
+      order.nextAction,
+      order.notes,
+      order.status,
+      order.priority
+    ].join(" ").toLowerCase();
+
+    return (!filters.query || haystack.includes(filters.query))
+      && (!filters.status || order.status === filters.status)
+      && (!filters.priority || order.priority === filters.priority)
+      && (!filters.customer || order.customerName === filters.customer)
+      && (!filters.supplier || order.supplierName === filters.supplier);
+  });
+}
+
+function renderOrderFilters() {
+  const selected = {
+    status: orderStatusFilter.value,
+    priority: orderPriorityFilter.value,
+    customer: orderCustomerFilter.value,
+    supplier: orderSupplierFilter.value
+  };
+  const customerNames = [...new Set(orders.map((order) => order.customerName).filter(Boolean))].sort();
+  const supplierNames = [...new Set(orders.map((order) => order.supplierName).filter(Boolean))].sort();
+
+  orderStatusFilter.innerHTML = '<option value="">All status</option>' + orderStatusOptions.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+  orderPriorityFilter.innerHTML = '<option value="">All priority</option>' + orderPriorityOptions.map((priority) => `<option value="${escapeHtml(priority)}">${escapeHtml(priority)}</option>`).join("");
+  orderCustomerFilter.innerHTML = '<option value="">All customers</option>' + customerNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+  orderSupplierFilter.innerHTML = '<option value="">All suppliers</option>' + supplierNames.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("");
+
+  orderStatusFilter.value = selected.status;
+  orderPriorityFilter.value = selected.priority;
+  orderCustomerFilter.value = selected.customer;
+  orderSupplierFilter.value = selected.supplier;
+}
+
+function renderOrderDashboard() {
+  const today = new Date().toISOString().slice(0, 10);
+  const weekEnd = new Date();
+  weekEnd.setDate(weekEnd.getDate() + 7);
+  const weekEndValue = weekEnd.toISOString().slice(0, 10);
+  const metrics = [
+    { label: "Total Orders", value: orders.length },
+    { label: "Waiting Supplier", value: orders.filter((order) => order.status === "Waiting Supplier").length },
+    { label: "Waiting Customer", value: orders.filter((order) => order.status === "Waiting Customer").length },
+    { label: "In Production", value: orders.filter((order) => order.status === "In Production" || order.productionStatus === "In Progress").length },
+    { label: "QC Today", value: orders.filter((order) => order.qcStatus === "Today" || order.dueDate === today).length },
+    { label: "Shipping This Week", value: orders.filter((order) => order.etd && order.etd >= today && order.etd <= weekEndValue).length },
+    { label: "Payment Waiting", value: orders.filter((order) => ["Requested", "Partial"].includes(order.depositStatus) || ["Waiting", "Requested"].includes(order.balanceStatus)).length }
+  ];
+
+  orderDashboard.innerHTML = metrics.map((metric) => `
+    <article class="order-metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${metric.value}</strong>
+    </article>
+  `).join("");
+}
+
 function renderOrders() {
-  if (!orders.length) {
-    orderList.innerHTML = '<p class="empty-state">No orders yet.</p>';
+  const filteredOrders = getFilteredOrders();
+
+  if (!filteredOrders.length) {
+    orderList.innerHTML = '<p class="empty-state">No orders found.</p>';
     orderDetailTitle.textContent = "Select an order";
-    orderDetail.innerHTML = '<p class="empty-state">Create an order to view details.</p>';
+    orderDetail.innerHTML = '<p class="empty-state">Create an order or adjust the search filters.</p>';
+    timelineForm.classList.add("hidden");
     orderTimeline.innerHTML = "";
     return;
   }
 
-  orderList.innerHTML = orders.map((order) => `
+  if (!selectedOrderId || !filteredOrders.some((order) => order.id === selectedOrderId)) {
+    selectedOrderId = filteredOrders[0].id;
+  }
+
+  orderList.innerHTML = filteredOrders.map((order) => `
     <button class="order-list-card ${order.id === selectedOrderId ? "active" : ""}" type="button" data-order-id="${order.id}">
       <h3>${escapeHtml(order.orderName)}</h3>
+      <p>${escapeHtml(order.orderCode)}</p>
       <p>${escapeHtml(order.customerName)}${order.country ? ` · ${escapeHtml(order.country)}` : ""}</p>
       <div class="order-list-meta">
         <span class="order-pill">${escapeHtml(order.status)}</span>
         <span class="order-pill priority-${escapeHtml(order.priority.toLowerCase())}">${escapeHtml(order.priority)}</span>
-        <span class="order-pill">${escapeHtml(order.dueDate || "No due date")}</span>
+        <span class="order-pill">${escapeHtml(order.supplierName || "No supplier")}</span>
+        <span class="order-pill">${escapeHtml(order.etd || "No ETD")}</span>
       </div>
     </button>
   `).join("");
@@ -623,6 +860,7 @@ function editOrder(id) {
   }
 
   orderId.value = order.id;
+  orderCode.value = order.orderCode;
   orderName.value = order.orderName;
   renderOrderCustomerOptions(order.customerName);
   orderCustomer.value = order.customerName;
@@ -631,13 +869,16 @@ function editOrder(id) {
   orderStatus.value = order.status;
   orderPriority.value = order.priority;
   orderValue.value = order.orderValue;
+  orderQuantity.value = order.quantity;
   orderDueDate.value = order.dueDate;
   depositStatus.value = order.depositStatus;
+  balanceStatus.value = order.balanceStatus;
   productionStatus.value = order.productionStatus;
-  inspectionStatus.value = order.inspectionStatus;
+  qcStatus.value = order.qcStatus;
   warehouseStatus.value = order.warehouseStatus;
   shippingStatus.value = order.shippingStatus;
-  paymentStatus.value = order.paymentStatus;
+  orderEtd.value = order.etd;
+  orderEta.value = order.eta;
   productsSummary.value = order.productsSummary;
   nextAction.value = order.nextAction;
   orderNotes.value = order.notes;
@@ -659,6 +900,8 @@ function deleteOrder(id) {
   orders = orders.filter((item) => item.id !== id);
   selectedOrderId = orders[0]?.id || "";
   saveOrders();
+  renderOrderDashboard();
+  renderOrderFilters();
   renderOrders();
   refreshSelectedCustomerDetail();
   clearOrderForm();
@@ -668,6 +911,7 @@ function deleteOrder(id) {
   } else {
     orderDetailTitle.textContent = "Select an order";
     orderDetail.innerHTML = '<p class="empty-state">Create an order to view details.</p>';
+    timelineForm.classList.add("hidden");
     orderTimeline.innerHTML = "";
   }
 }
@@ -685,22 +929,36 @@ function refreshSelectedCustomerDetail() {
 
 function renderOrderDetail(order) {
   orderDetailTitle.textContent = order.orderName;
+  timelineForm.classList.remove("hidden");
+  timelineOrderId.value = order.id;
+  timelineDate.value = new Date().toISOString().slice(0, 10);
   orderDetail.innerHTML = `
     <div class="order-status-row">
       <span class="order-pill">${escapeHtml(order.status)}</span>
       <span class="order-pill priority-${escapeHtml(order.priority.toLowerCase())}">${escapeHtml(order.priority)}</span>
-      <span class="order-pill status-${escapeHtml(order.paymentStatus.toLowerCase().replaceAll(" ", "-"))}">${escapeHtml(order.paymentStatus)}</span>
+      <span class="order-pill status-${escapeHtml(order.depositStatus.toLowerCase().replaceAll(" ", "-"))}">${escapeHtml(order.depositStatus)}</span>
+      <span class="order-pill status-${escapeHtml(order.balanceStatus.toLowerCase().replaceAll(" ", "-"))}">${escapeHtml(order.balanceStatus)}</span>
+    </div>
+    <div class="status-progress">
+      ${["Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered"].map((step) => `
+        <span class="${getProgressClass(order, step)}">${escapeHtml(step)}</span>
+      `).join("")}
     </div>
     <dl class="order-detail-grid">
+      ${renderDetailField("Order ID", order.orderCode)}
       ${renderDetailField("Customer", order.customerName)}
       ${renderDetailField("Country", order.country)}
       ${renderDetailField("Supplier", order.supplierName)}
       ${renderDetailField("Order Value", order.orderValue)}
+      ${renderDetailField("Quantity", order.quantity)}
       ${renderDetailField("Deposit", order.depositStatus)}
+      ${renderDetailField("Balance", order.balanceStatus)}
       ${renderDetailField("Production", order.productionStatus)}
-      ${renderDetailField("Inspection", order.inspectionStatus)}
+      ${renderDetailField("QC", order.qcStatus)}
       ${renderDetailField("Warehouse", order.warehouseStatus)}
       ${renderDetailField("Shipping", order.shippingStatus)}
+      ${renderDetailField("ETD", order.etd)}
+      ${renderDetailField("ETA", order.eta)}
       ${renderDetailField("Due Date", order.dueDate)}
     </dl>
     <div class="detail-text-block">
@@ -723,6 +981,12 @@ function renderOrderDetail(order) {
   renderOrderTimeline(order);
 }
 
+function getProgressClass(order, step) {
+  const orderIndex = orderStatusOptions.indexOf(order.status);
+  const stepIndex = orderStatusOptions.indexOf(step);
+  return stepIndex <= orderIndex ? "active" : "";
+}
+
 function renderDetailField(label, value) {
   return `
     <div class="detail-field">
@@ -741,6 +1005,7 @@ function renderOrderTimeline(order) {
         <span>${escapeHtml(item.date)}</span>
         <div>
           <strong>${escapeHtml(item.title)}</strong>
+          <small>${escapeHtml(item.status || "Note")}</small>
           <p>${escapeHtml(item.description)}</p>
         </div>
       </article>
@@ -749,25 +1014,28 @@ function renderOrderTimeline(order) {
 }
 
 function buildOrderTimeline(order) {
-  const createdDate = formatDateOnly(order.createdAt);
-  const updatedDate = formatDateOnly(order.updatedAt);
-  return [
+  const systemItems = [
     {
-      date: createdDate,
+      date: formatDateOnly(order.createdAt),
       title: "Order created",
-      description: `${order.customerName} order was added to Order Center.`
+      description: `${order.customerName} order was added to Order Center.`,
+      status: "Note"
     },
     {
-      date: updatedDate,
+      date: formatDateOnly(order.updatedAt),
       title: `Current status: ${order.status}`,
-      description: order.nextAction || "No next action has been set yet."
+      description: order.nextAction || "No next action has been set yet.",
+      status: order.status
     },
     {
       date: order.dueDate || "No due date",
       title: "Due date",
-      description: order.dueDate ? "Target date for the next major order milestone." : "Add a due date when the next milestone is confirmed."
+      description: order.dueDate ? "Target date for the next major order milestone." : "Add a due date when the next milestone is confirmed.",
+      status: "Due Date"
     }
   ];
+
+  return [...(order.timeline || []), ...systemItems].sort((a, b) => String(b.date).localeCompare(String(a.date)));
 }
 
 function formatDateOnly(value) {
@@ -781,6 +1049,10 @@ function formatDateOnly(value) {
 function setupOrderCenter() {
   orderForm.addEventListener("submit", saveOrderFromForm);
   resetOrderForm.addEventListener("click", clearOrderForm);
+  [orderSearchInput, orderStatusFilter, orderPriorityFilter, orderCustomerFilter, orderSupplierFilter].forEach((field) => {
+    field.addEventListener("input", renderOrders);
+    field.addEventListener("change", renderOrders);
+  });
 
   orderList.addEventListener("click", (event) => {
     const card = event.target.closest("[data-order-id]");
@@ -803,6 +1075,35 @@ function setupOrderCenter() {
       deleteOrder(deleteButton.dataset.orderDelete);
     }
   });
+
+  timelineForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    addTimelineEvent();
+  });
+}
+
+function addTimelineEvent() {
+  const order = orders.find((item) => item.id === timelineOrderId.value);
+  if (!order || !timelineTitle.value.trim()) {
+    return;
+  }
+
+  order.timeline = order.timeline || [];
+  order.timeline.unshift({
+    id: `timeline-${Date.now()}`,
+    date: timelineDate.value || new Date().toISOString().slice(0, 10),
+    title: timelineTitle.value.trim(),
+    description: timelineDescription.value.trim(),
+    status: timelineStatus.value
+  });
+  order.updatedAt = new Date().toISOString();
+  saveOrders();
+  renderOrders();
+  renderOrderDetail(order);
+  refreshSelectedCustomerDetail();
+  timelineTitle.value = "";
+  timelineDescription.value = "";
+  timelineStatus.value = "Note";
 }
 
 function loadCustomers() {
@@ -1156,7 +1457,7 @@ function setupEditableLists() {
 }
 
 function escapeHtml(value) {
-  return value
+  return String(value || "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -1239,9 +1540,9 @@ function appendOrderSearchRecords(moduleRecords) {
 
   orders.forEach((order) => {
     orderModule.items.push({
-      title: order.orderName,
+      title: `${order.orderCode} ${order.orderName}`,
       type: "Order",
-      description: `${order.customerName} · ${order.status} · ${order.nextAction || "No next action"}`,
+      description: `${order.customerName} · ${order.supplierName || "No supplier"} · ${order.status} · ${order.nextAction || "No next action"}`,
       page: "order-center"
     });
   });
@@ -1471,7 +1772,10 @@ function init() {
   renderAllEditableLists();
   renderCustomers();
   renderOrderCustomerOptions();
+  renderOrderDashboard();
+  renderOrderFilters();
   renderOrders();
+  clearOrderForm();
 
   if (orders.length) {
     selectOrder(orders[0].id);

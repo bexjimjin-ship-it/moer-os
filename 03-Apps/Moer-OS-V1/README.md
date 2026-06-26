@@ -18,7 +18,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Mobile bottom navigation
 - Universal Search command palette with Cmd + K or Ctrl + K
 - Editable Today lists for focus tasks, people waiting, and urgent items
-- Real Order Center V1 app with local order list, create/edit/delete form, dashboard, shipment view, calendar, search, and per-order timeline
+- Real Order Center V1 inside this shell with dashboard cards, local order list, create/edit/delete form, filters, detail view, status progress, and manual timeline events
 - Customer Center V1 with local customer list, create/edit/delete form, detail view, follow-up notes, related orders, and timeline
 - Order customer selection from saved Customer Center records
 - Editable local meal planner
@@ -52,7 +52,7 @@ You can also double-click `index.html` in Finder.
 
 Clickable prototypes:
 
-- Order Center: `../Order-Center/index.html`
+- Order Center: inside this shell
 - Customer Center: inside this shell
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`

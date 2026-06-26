@@ -547,6 +547,42 @@ select {
   gap: 16px;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.order-dashboard {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.order-metric-card {
+  min-height: 112px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.order-metric-card span {
+  display: block;
+  min-height: 34px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.order-metric-card strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--text);
+  font-size: 30px;
+  line-height: 1;
+}
+
 .order-center-layout,
 .customer-center-layout {
   display: grid;
@@ -601,6 +637,13 @@ select {
 .customer-timeline {
   display: grid;
   gap: 10px;
+}
+
+.order-filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
 .order-list-card,
@@ -725,6 +768,32 @@ select {
   flex-wrap: wrap;
 }
 
+.status-progress {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.status-progress span {
+  display: grid;
+  min-height: 34px;
+  place-items: center;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.status-progress span.active {
+  border-color: #a8d5b2;
+  background: #e7f1e9;
+  color: #3d6b4f;
+}
+
 .danger-button {
   min-height: 42px;
   padding: 0 14px;
@@ -741,6 +810,22 @@ select {
   margin-top: 18px;
 }
 
+.timeline-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.timeline-form .card-label,
+.timeline-form button {
+  grid-column: 1 / -1;
+}
+
 .order-timeline-item {
   display: grid;
   grid-template-columns: 104px minmax(0, 1fr);
@@ -753,6 +838,14 @@ select {
 
 .order-timeline-item span {
   color: var(--accent);
+  font-weight: 700;
+}
+
+.order-timeline-item small {
+  display: inline-block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -980,6 +1073,7 @@ select {
   .dashboard-grid,
   .card-grid,
   .module-grid,
+  .order-dashboard,
   .order-center-layout,
   .customer-center-layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1043,11 +1137,14 @@ select {
   .dashboard-grid,
   .card-grid,
   .module-grid,
+  .order-dashboard,
   .order-center-layout,
   .customer-center-layout,
   .order-form,
   .customer-form,
-  .order-detail-grid {
+  .order-detail-grid,
+  .status-progress,
+  .timeline-form {
     grid-template-columns: 1fr;
   }
 
