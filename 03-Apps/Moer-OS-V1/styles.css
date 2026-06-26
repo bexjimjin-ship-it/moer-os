@@ -558,7 +558,8 @@ select {
   margin-bottom: 18px;
 }
 
-.customer-dashboard {
+.customer-dashboard,
+.supplier-dashboard {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
@@ -591,7 +592,8 @@ select {
 }
 
 .order-center-layout,
-.customer-center-layout {
+.customer-center-layout,
+.supplier-center-layout {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(280px, 0.8fr) minmax(340px, 1fr);
   gap: 18px;
@@ -599,7 +601,8 @@ select {
 }
 
 .order-panel,
-.customer-panel {
+.customer-panel,
+.supplier-panel {
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -608,7 +611,8 @@ select {
 }
 
 .order-form,
-.customer-form {
+.customer-form,
+.supplier-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
@@ -617,7 +621,9 @@ select {
 .order-form label,
 .order-panel label,
 .customer-form label,
-.customer-panel label {
+.customer-panel label,
+.supplier-form label,
+.supplier-panel label {
   display: grid;
   gap: 7px;
   color: var(--muted);
@@ -627,12 +633,14 @@ select {
 
 .full-field,
 .order-form-actions,
-.customer-form-actions {
+.customer-form-actions,
+.supplier-form-actions {
   grid-column: 1 / -1;
 }
 
 .order-form-actions,
-.customer-form-actions {
+.customer-form-actions,
+.supplier-form-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -640,8 +648,10 @@ select {
 
 .order-list,
 .customer-list,
+.supplier-list,
 .related-orders,
-.customer-timeline {
+.customer-timeline,
+.supplier-timeline {
   display: grid;
   gap: 10px;
 }
@@ -653,7 +663,8 @@ select {
   margin-bottom: 14px;
 }
 
-.customer-filter-grid {
+.customer-filter-grid,
+.supplier-filter-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
@@ -699,6 +710,7 @@ select {
 
 .order-list-card,
 .customer-list-card,
+.supplier-list-card,
 .related-order-card {
   width: 100%;
   padding: 14px;
@@ -715,6 +727,9 @@ select {
 .customer-list-card:hover,
 .customer-list-card:focus,
 .customer-list-card.active,
+.supplier-list-card:hover,
+.supplier-list-card:focus,
+.supplier-list-card.active,
 .related-order-card:hover,
 .related-order-card:focus {
   border-color: var(--accent);
@@ -723,6 +738,7 @@ select {
 
 .order-list-card h3,
 .customer-list-card h3,
+.supplier-list-card h3,
 .related-order-card strong {
   margin: 0 0 6px;
   font-size: 18px;
@@ -730,6 +746,7 @@ select {
 
 .order-list-card p,
 .customer-list-card p,
+.supplier-list-card p,
 .related-order-card p {
   margin: 0;
   color: var(--muted);
@@ -771,7 +788,8 @@ select {
 }
 
 .order-detail,
-.customer-detail {
+.customer-detail,
+.supplier-detail {
   display: grid;
   gap: 14px;
 }
@@ -855,7 +873,8 @@ select {
 }
 
 .order-timeline,
-.customer-timeline {
+.customer-timeline,
+.supplier-timeline {
   display: grid;
   gap: 10px;
   margin-top: 18px;
@@ -872,7 +891,8 @@ select {
   background: var(--surface-soft);
 }
 
-.customer-sub-form {
+.customer-sub-form,
+.supplier-sub-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
@@ -884,7 +904,9 @@ select {
 }
 
 .customer-sub-form .card-label,
-.customer-sub-form button {
+.customer-sub-form button,
+.supplier-sub-form .card-label,
+.supplier-sub-form button {
   grid-column: 1 / -1;
 }
 
@@ -1139,12 +1161,14 @@ select {
 
   .dashboard-grid,
   .card-grid,
-  .module-grid,
-  .order-dashboard,
-  .customer-dashboard,
-  .order-center-layout,
-  .customer-center-layout,
-  .customer-followup-grid {
+    .module-grid,
+    .order-dashboard,
+    .customer-dashboard,
+    .supplier-dashboard,
+    .order-center-layout,
+    .customer-center-layout,
+    .supplier-center-layout,
+    .customer-followup-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1160,7 +1184,7 @@ select {
     bottom: 0;
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     gap: 4px;
     padding: 8px;
     background: rgba(255, 253, 249, 0.96);
@@ -1208,15 +1232,19 @@ select {
   .module-grid,
   .order-dashboard,
   .customer-dashboard,
+  .supplier-dashboard,
   .order-center-layout,
   .customer-center-layout,
+  .supplier-center-layout,
   .customer-followup-grid,
   .order-form,
   .customer-form,
+  .supplier-form,
   .order-detail-grid,
   .status-progress,
   .timeline-form,
-  .customer-sub-form {
+  .customer-sub-form,
+  .supplier-sub-form {
     grid-template-columns: 1fr;
   }
 

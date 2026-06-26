@@ -9,6 +9,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Today page
 - Order Center page
 - Customer Center page
+- Supplier Center page
 - Knowledge Center page
 - Timeline Engine page
 - Family Meal Planner page
@@ -20,7 +21,9 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Editable Today lists for focus tasks, people waiting, and urgent items
 - Real Order Center V1 inside this shell with dashboard cards, local order list, create/edit/delete form, filters, detail view, status progress, and manual timeline events
 - Customer Center V2 with dashboard cards, searchable customer memory, filters, follow-up system, related orders, and manual timeline events
+- Supplier Center V1 with dashboard cards, supplier memory, filters, reliability notes, related orders, and manual timeline events
 - Order customer selection from saved Customer Center records
+- Order supplier suggestions from saved Supplier Center records
 - Editable local meal planner
 - Basic localStorage for Today data, customers, orders, meal ideas, and settings
 
@@ -54,6 +57,7 @@ Clickable prototypes:
 
 - Order Center: inside this shell
 - Customer Center: inside this shell
+- Supplier Center: inside this shell
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`
 - Family Meal Planner: inside this shell

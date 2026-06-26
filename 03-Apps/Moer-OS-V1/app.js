@@ -13,8 +13,10 @@ const storageKeys = {
   mealPlanner: "moerOS.mealPlanner",
   orders: "moerOS.orders",
   customers: "moerOS.customers",
+  suppliers: "moerOS.suppliers",
   ordersSeededV1: "moerOS.ordersSeededV1",
-  customersSeededV2: "moerOS.customersSeededV2"
+  customersSeededV2: "moerOS.customersSeededV2",
+  suppliersSeededV1: "moerOS.suppliersSeededV1"
 };
 
 const orderStatusOptions = ["New Inquiry", "Quoting", "Waiting Supplier", "Waiting Customer", "Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered", "On Hold"];
@@ -22,6 +24,9 @@ const orderPriorityOptions = ["Normal", "High", "Urgent", "Low"];
 const customerStatusOptions = ["Lead", "Active", "Waiting Reply", "Follow Up", "Paused"];
 const customerPriorityOptions = ["Normal", "High", "Urgent", "Low"];
 const customerTypeOptions = ["Importer", "Wholesaler", "Distributor", "Retailer", "Amazon Seller", "E-commerce Seller", "Supermarket Buyer"];
+const supplierReliabilityOptions = ["Unknown", "Reliable", "Needs Follow-up", "Risky"];
+const supplierStatusOptions = ["New", "Active", "Preferred", "Backup", "Paused"];
+const supplierPriorityOptions = ["Normal", "High", "Urgent", "Low"];
 
 const customerSeedData = [
   {
@@ -150,6 +155,145 @@ const customerSeedData = [
         relatedOrderId: "MOER-2026-003",
         nextAction: "Follow up on quantity and cover design",
         status: "Open"
+      }
+    ]
+  }
+];
+
+const supplierSeedData = [
+  {
+    id: "supplier-001",
+    supplierName: "Yiwu Toy Supplier",
+    contactPerson: "Ms. Chen",
+    phone: "+86 138 0000 1001",
+    wechat: "yiwu-toy-chen",
+    email: "",
+    city: "Yiwu",
+    marketFactory: "Yiwu Market District 1",
+    productCategory: "Toys",
+    mainProducts: "Educational toys, plush toys, small gifts, party toys",
+    priceLevel: "Medium",
+    qualityLevel: "Standard",
+    deliverySpeed: "Normal",
+    reliabilityRating: "Reliable",
+    status: "Active",
+    priority: "Normal",
+    nextAction: "Ask for updated toy catalog and carton sizes",
+    notes: "Good communication and practical MOQ. Need to confirm EN71 testing before EU orders.",
+    createdAt: "2026-06-18T10:00:00",
+    updatedAt: "2026-06-24T15:00:00",
+    timeline: [
+      {
+        id: "supplier-timeline-001-a",
+        date: "2026-06-18",
+        eventType: "First contact",
+        title: "Met toy supplier in Yiwu Market",
+        description: "Supplier can provide educational toys and small gifts with flexible MOQ.",
+        relatedOrderId: "",
+        status: "Done",
+        nextAction: "Request catalog"
+      }
+    ]
+  },
+  {
+    id: "supplier-002",
+    supplierName: "Yiwu Stationery Supplier",
+    contactPerson: "Mr. Liu",
+    phone: "+86 138 0000 1002",
+    wechat: "stationery-liu",
+    email: "",
+    city: "Yiwu",
+    marketFactory: "Yiwu Market District 3",
+    productCategory: "Stationery",
+    mainProducts: "Notebooks, pens, pencil cases, school sets",
+    priceLevel: "Low",
+    qualityLevel: "Good",
+    deliverySpeed: "Fast",
+    reliabilityRating: "Reliable",
+    status: "Preferred",
+    priority: "High",
+    nextAction: "Confirm notebook cover designs for Graham",
+    notes: "Stable stationery supplier. Good for school season orders and mixed stationery cartons.",
+    createdAt: "2026-06-17T09:30:00",
+    updatedAt: "2026-06-26T11:20:00",
+    timeline: [
+      {
+        id: "supplier-timeline-002-a",
+        date: "2026-06-22",
+        eventType: "Quotation received",
+        title: "Stationery quote received",
+        description: "Received notebook and pen quotation for Barbados stationery project.",
+        relatedOrderId: "MOER-2026-003",
+        status: "Open",
+        nextAction: "Confirm cover designs"
+      }
+    ]
+  },
+  {
+    id: "supplier-003",
+    supplierName: "Christmas Decoration Factory",
+    contactPerson: "Ms. Wang",
+    phone: "+86 138 0000 1003",
+    wechat: "xmas-wang",
+    email: "",
+    city: "Jinhua",
+    marketFactory: "Factory",
+    productCategory: "Christmas Items",
+    mainProducts: "Christmas ornaments, gift bags, hanging decorations, display items",
+    priceLevel: "Medium",
+    qualityLevel: "Standard",
+    deliverySpeed: "Normal",
+    reliabilityRating: "Needs Follow-up",
+    status: "Active",
+    priority: "High",
+    nextAction: "Follow up Eddie UK Christmas quotation",
+    notes: "Seasonal factory. Need early confirmation because production schedule fills quickly.",
+    createdAt: "2026-06-21T14:00:00",
+    updatedAt: "2026-06-25T16:20:00",
+    timeline: [
+      {
+        id: "supplier-timeline-003-a",
+        date: "2026-06-24",
+        eventType: "Quotation received",
+        title: "Christmas item quote started",
+        description: "Factory started checking prices and MOQ for Eddie's UK Christmas list.",
+        relatedOrderId: "MOER-2026-002",
+        status: "Waiting",
+        nextAction: "Push factory for full quotation"
+      }
+    ]
+  },
+  {
+    id: "supplier-004",
+    supplierName: "Packaging Supplier",
+    contactPerson: "Mr. Zhang",
+    phone: "+86 138 0000 1004",
+    wechat: "packaging-zhang",
+    email: "",
+    city: "Yiwu",
+    marketFactory: "Yiwu Packaging Market",
+    productCategory: "Packaging",
+    mainProducts: "Gift boxes, cartons, labels, poly bags, paper bags",
+    priceLevel: "Medium",
+    qualityLevel: "Good",
+    deliverySpeed: "Fast",
+    reliabilityRating: "Reliable",
+    status: "Backup",
+    priority: "Normal",
+    nextAction: "Request packaging quote when private label order starts",
+    notes: "Useful backup supplier for packaging and label support.",
+    createdAt: "2026-06-19T16:00:00",
+    updatedAt: "2026-06-24T09:45:00",
+    timeline: [
+      {
+        id: "supplier-timeline-004-a",
+        date: "2026-06-19",
+        eventType: "First contact",
+        title: "Packaging supplier added",
+        description: "Supplier can support gift boxes, labels, and carton packaging.",
+        relatedOrderId: "",
+        status: "Done",
+        nextAction: "Keep as packaging backup"
       }
     ]
   }
@@ -288,6 +432,8 @@ let orders = [];
 let selectedOrderId = "";
 let customers = [];
 let selectedCustomerId = "";
+let suppliers = [];
+let selectedSupplierId = "";
 
 const portalModules = [
   {
@@ -321,6 +467,14 @@ const portalModules = [
     purpose: "Local CRM prototype for customers, follow-ups, related orders, and relationship history.",
     status: "Prototype",
     internalPage: "customer-center"
+  },
+  {
+    id: "supplier-center",
+    section: "today",
+    name: "Supplier Center",
+    purpose: "Supplier memory center for products, reliability, linked orders, timelines, and next actions.",
+    status: "Prototype",
+    internalPage: "supplier-center"
   },
   {
     id: "order-center-docs",
@@ -395,9 +549,9 @@ const searchModules = [
   {
     name: "Suppliers",
     items: [
-      { title: "Stationery supplier", type: "Supplier", description: "Mock supplier record for school and office products.", page: "order-center" },
-      { title: "Daily-use products supplier", type: "Supplier", description: "Mock supplier record for mixed container sourcing.", page: "order-center" },
-      { title: "Packaging factory", type: "Supplier", description: "Mock supplier record for private label and packaging support.", page: "order-center" }
+      { title: "Supplier Center", type: "Prototype", description: "Open the local Supplier Center prototype.", page: "supplier-center" },
+      { title: "Supplier reliability", type: "Supplier", description: "Track supplier reliability, quality, delivery speed, and notes.", page: "supplier-center" },
+      { title: "Related supplier orders", type: "Supplier", description: "View orders linked by supplier name.", page: "supplier-center" }
     ]
   },
   {
@@ -438,6 +592,7 @@ const searchModules = [
     items: [
       { title: "Order Center", type: "Prototype", description: "Open the local Order Center prototype.", page: "order-center" },
       { title: "Customer Center", type: "Prototype", description: "Open the local Customer Center prototype.", page: "customer-center" },
+      { title: "Supplier Center", type: "Prototype", description: "Open the local Supplier Center prototype.", page: "supplier-center" },
       { title: "Order Center Architecture", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
@@ -554,6 +709,49 @@ const customerTimelineDescription = document.querySelector("#customerTimelineDes
 const customerTimelineNextAction = document.querySelector("#customerTimelineNextAction");
 const customerTimelineStatus = document.querySelector("#customerTimelineStatus");
 const customerTimeline = document.querySelector("#customerTimeline");
+const supplierForm = document.querySelector("#supplierForm");
+const supplierFormTitle = document.querySelector("#supplierFormTitle");
+const supplierId = document.querySelector("#supplierId");
+const supplierName = document.querySelector("#supplierName");
+const supplierContactPerson = document.querySelector("#supplierContactPerson");
+const supplierPhone = document.querySelector("#supplierPhone");
+const supplierWechat = document.querySelector("#supplierWechat");
+const supplierEmail = document.querySelector("#supplierEmail");
+const supplierCity = document.querySelector("#supplierCity");
+const supplierMarketFactory = document.querySelector("#supplierMarketFactory");
+const supplierProductCategory = document.querySelector("#supplierProductCategory");
+const supplierMainProducts = document.querySelector("#supplierMainProducts");
+const supplierPriceLevel = document.querySelector("#supplierPriceLevel");
+const supplierQualityLevel = document.querySelector("#supplierQualityLevel");
+const supplierDeliverySpeed = document.querySelector("#supplierDeliverySpeed");
+const supplierReliabilityRating = document.querySelector("#supplierReliabilityRating");
+const supplierStatus = document.querySelector("#supplierStatus");
+const supplierPriority = document.querySelector("#supplierPriority");
+const supplierNextAction = document.querySelector("#supplierNextAction");
+const supplierNotes = document.querySelector("#supplierNotes");
+const resetSupplierForm = document.querySelector("#resetSupplierForm");
+const supplierDashboard = document.querySelector("#supplierDashboard");
+const supplierSearchInput = document.querySelector("#supplierSearchInput");
+const supplierCategoryFilter = document.querySelector("#supplierCategoryFilter");
+const supplierCityFilter = document.querySelector("#supplierCityFilter");
+const supplierReliabilityFilter = document.querySelector("#supplierReliabilityFilter");
+const supplierStatusFilter = document.querySelector("#supplierStatusFilter");
+const supplierPriorityFilter = document.querySelector("#supplierPriorityFilter");
+const supplierList = document.querySelector("#supplierList");
+const supplierDetailTitle = document.querySelector("#supplierDetailTitle");
+const supplierDetail = document.querySelector("#supplierDetail");
+const supplierRelatedOrders = document.querySelector("#supplierRelatedOrders");
+const supplierTimelineForm = document.querySelector("#supplierTimelineForm");
+const supplierTimelineSupplierId = document.querySelector("#supplierTimelineSupplierId");
+const supplierTimelineDate = document.querySelector("#supplierTimelineDate");
+const supplierTimelineEventType = document.querySelector("#supplierTimelineEventType");
+const supplierTimelineTitle = document.querySelector("#supplierTimelineTitle");
+const supplierTimelineOrderId = document.querySelector("#supplierTimelineOrderId");
+const supplierTimelineDescription = document.querySelector("#supplierTimelineDescription");
+const supplierTimelineStatus = document.querySelector("#supplierTimelineStatus");
+const supplierTimelineNextAction = document.querySelector("#supplierTimelineNextAction");
+const supplierTimeline = document.querySelector("#supplierTimeline");
+const supplierOptions = document.querySelector("#supplierOptions");
 
 function showPage(pageId) {
   pages.forEach((page) => {
@@ -812,8 +1010,10 @@ function saveOrderFromForm(event) {
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();
+  renderOrderSupplierOptions(order.supplierName);
   selectOrder(order.id);
   refreshSelectedCustomerDetail();
+  refreshSelectedSupplierDetail();
   clearOrderForm();
 }
 
@@ -995,7 +1195,9 @@ function deleteOrder(id) {
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();
+  renderOrderSupplierOptions();
   refreshSelectedCustomerDetail();
+  refreshSelectedSupplierDetail();
   clearOrderForm();
 
   if (selectedOrderId) {
@@ -1789,6 +1991,522 @@ function addCustomerTimelineEvent() {
   customerTimelineStatus.value = "Open";
 }
 
+function loadSuppliers() {
+  const savedSuppliers = localStorage.getItem(storageKeys.suppliers);
+  if (!savedSuppliers) {
+    suppliers = supplierSeedData.map(normalizeSupplier);
+    saveSuppliers();
+    localStorage.setItem(storageKeys.suppliersSeededV1, "true");
+    return;
+  }
+
+  try {
+    const parsedSuppliers = JSON.parse(savedSuppliers);
+    suppliers = Array.isArray(parsedSuppliers) ? parsedSuppliers.map(normalizeSupplier) : supplierSeedData.map(normalizeSupplier);
+  } catch (error) {
+    suppliers = supplierSeedData.map(normalizeSupplier);
+  }
+
+  if (localStorage.getItem(storageKeys.suppliersSeededV1) !== "true") {
+    const existingNames = new Set(suppliers.map((supplier) => supplier.supplierName.toLowerCase()));
+    const missingSamples = supplierSeedData
+      .filter((supplier) => !existingNames.has(supplier.supplierName.toLowerCase()))
+      .map(normalizeSupplier);
+    suppliers = [...missingSamples, ...suppliers.map(enrichSupplierTimeline)];
+    localStorage.setItem(storageKeys.suppliersSeededV1, "true");
+    saveSuppliers();
+  }
+}
+
+function saveSuppliers() {
+  localStorage.setItem(storageKeys.suppliers, JSON.stringify(suppliers));
+}
+
+function normalizeSupplier(supplier) {
+  const now = new Date().toISOString();
+  return {
+    id: supplier.id || `supplier-${Date.now()}`,
+    supplierName: supplier.supplierName || "",
+    contactPerson: supplier.contactPerson || "",
+    phone: supplier.phone || "",
+    wechat: supplier.wechat || "",
+    email: supplier.email || "",
+    city: supplier.city || "",
+    marketFactory: supplier.marketFactory || "",
+    productCategory: supplier.productCategory || "",
+    mainProducts: supplier.mainProducts || "",
+    priceLevel: supplier.priceLevel || "Medium",
+    qualityLevel: supplier.qualityLevel || "Standard",
+    deliverySpeed: supplier.deliverySpeed || "Normal",
+    reliabilityRating: supplier.reliabilityRating || "Unknown",
+    status: supplier.status || "New",
+    priority: supplier.priority || "Normal",
+    nextAction: supplier.nextAction || "",
+    notes: supplier.notes || "",
+    createdAt: supplier.createdAt || now,
+    updatedAt: supplier.updatedAt || now,
+    timeline: Array.isArray(supplier.timeline) ? supplier.timeline : []
+  };
+}
+
+function enrichSupplierTimeline(supplier) {
+  const normalizedSupplier = normalizeSupplier(supplier);
+  const sample = supplierSeedData.find((item) => item.supplierName.toLowerCase() === normalizedSupplier.supplierName.toLowerCase());
+  if (sample && !normalizedSupplier.timeline.length) {
+    normalizedSupplier.timeline = sample.timeline;
+  }
+  return normalizedSupplier;
+}
+
+function getSupplierFormData() {
+  const now = new Date().toISOString();
+  const existingSupplier = suppliers.find((supplier) => supplier.id === supplierId.value);
+
+  return {
+    id: supplierId.value || `supplier-${Date.now()}`,
+    supplierName: supplierName.value.trim(),
+    contactPerson: supplierContactPerson.value.trim(),
+    phone: supplierPhone.value.trim(),
+    wechat: supplierWechat.value.trim(),
+    email: supplierEmail.value.trim(),
+    city: supplierCity.value.trim(),
+    marketFactory: supplierMarketFactory.value.trim(),
+    productCategory: supplierProductCategory.value.trim(),
+    mainProducts: supplierMainProducts.value.trim(),
+    priceLevel: supplierPriceLevel.value,
+    qualityLevel: supplierQualityLevel.value,
+    deliverySpeed: supplierDeliverySpeed.value,
+    reliabilityRating: supplierReliabilityRating.value,
+    status: supplierStatus.value,
+    priority: supplierPriority.value,
+    nextAction: supplierNextAction.value.trim(),
+    notes: supplierNotes.value.trim(),
+    createdAt: existingSupplier ? existingSupplier.createdAt : now,
+    updatedAt: now,
+    timeline: existingSupplier ? existingSupplier.timeline : [{
+      id: `supplier-timeline-${Date.now()}`,
+      date: now.slice(0, 10),
+      eventType: "First contact",
+      title: "Supplier created",
+      description: "Supplier was added to Supplier Center.",
+      relatedOrderId: "",
+      status: "Open",
+      nextAction: supplierNextAction.value.trim()
+    }]
+  };
+}
+
+function saveSupplierFromForm(event) {
+  event.preventDefault();
+  const supplier = getSupplierFormData();
+  if (!supplier.supplierName) {
+    return;
+  }
+
+  const existingIndex = suppliers.findIndex((item) => item.id === supplier.id);
+  if (existingIndex >= 0) {
+    suppliers[existingIndex] = supplier;
+  } else {
+    suppliers.unshift(supplier);
+  }
+
+  selectedSupplierId = supplier.id;
+  saveSuppliers();
+  renderSupplierDashboard();
+  renderSupplierFilters();
+  renderSuppliers();
+  renderOrderSupplierOptions(supplier.supplierName);
+  selectSupplier(supplier.id);
+  clearSupplierForm();
+}
+
+function clearSupplierForm() {
+  supplierForm.reset();
+  supplierId.value = "";
+  supplierFormTitle.textContent = "New Supplier";
+}
+
+function getSupplierFilterValues() {
+  return {
+    query: supplierSearchInput.value.trim().toLowerCase(),
+    category: supplierCategoryFilter.value,
+    city: supplierCityFilter.value,
+    reliability: supplierReliabilityFilter.value,
+    status: supplierStatusFilter.value,
+    priority: supplierPriorityFilter.value
+  };
+}
+
+function getFilteredSuppliers() {
+  const filters = getSupplierFilterValues();
+  return suppliers.filter((supplier) => {
+    const haystack = [
+      supplier.supplierName,
+      supplier.contactPerson,
+      supplier.phone,
+      supplier.wechat,
+      supplier.email,
+      supplier.city,
+      supplier.marketFactory,
+      supplier.productCategory,
+      supplier.mainProducts,
+      supplier.reliabilityRating,
+      supplier.status,
+      supplier.priority,
+      supplier.notes,
+      supplier.nextAction
+    ].join(" ").toLowerCase();
+
+    return (!filters.query || haystack.includes(filters.query))
+      && (!filters.category || supplier.productCategory === filters.category)
+      && (!filters.city || supplier.city === filters.city)
+      && (!filters.reliability || supplier.reliabilityRating === filters.reliability)
+      && (!filters.status || supplier.status === filters.status)
+      && (!filters.priority || supplier.priority === filters.priority);
+  });
+}
+
+function renderSupplierFilters() {
+  const selected = {
+    category: supplierCategoryFilter.value,
+    city: supplierCityFilter.value,
+    reliability: supplierReliabilityFilter.value,
+    status: supplierStatusFilter.value,
+    priority: supplierPriorityFilter.value
+  };
+  const categories = [...new Set(suppliers.map((supplier) => supplier.productCategory).filter(Boolean))].sort();
+  const cities = [...new Set(suppliers.map((supplier) => supplier.city).filter(Boolean))].sort();
+  supplierCategoryFilter.innerHTML = '<option value="">All categories</option>' + categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("");
+  supplierCityFilter.innerHTML = '<option value="">All cities</option>' + cities.map((city) => `<option value="${escapeHtml(city)}">${escapeHtml(city)}</option>`).join("");
+  supplierReliabilityFilter.innerHTML = '<option value="">All reliability</option>' + supplierReliabilityOptions.map((reliability) => `<option value="${escapeHtml(reliability)}">${escapeHtml(reliability)}</option>`).join("");
+  supplierStatusFilter.innerHTML = '<option value="">All status</option>' + supplierStatusOptions.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+  supplierPriorityFilter.innerHTML = '<option value="">All priority</option>' + supplierPriorityOptions.map((priority) => `<option value="${escapeHtml(priority)}">${escapeHtml(priority)}</option>`).join("");
+  supplierCategoryFilter.value = selected.category;
+  supplierCityFilter.value = selected.city;
+  supplierReliabilityFilter.value = selected.reliability;
+  supplierStatusFilter.value = selected.status;
+  supplierPriorityFilter.value = selected.priority;
+}
+
+function renderSupplierDashboard() {
+  const today = new Date().toISOString().slice(0, 10);
+  const monthPrefix = today.slice(0, 7);
+  const activeOrderSuppliers = new Set(
+    orders
+      .filter((order) => !["Delivered", "Completed"].includes(order.status))
+      .map((order) => (order.supplierName || "").toLowerCase())
+      .filter(Boolean)
+  );
+  const metrics = [
+    { label: "Total Suppliers", value: suppliers.length },
+    { label: "Reliable Suppliers", value: suppliers.filter((supplier) => supplier.reliabilityRating === "Reliable").length },
+    { label: "Suppliers Needing Follow-up", value: suppliers.filter((supplier) => supplier.reliabilityRating === "Needs Follow-up" || supplier.nextAction).length },
+    { label: "Active Order Suppliers", value: suppliers.filter((supplier) => activeOrderSuppliers.has(supplier.supplierName.toLowerCase())).length },
+    { label: "New Suppliers This Month", value: suppliers.filter((supplier) => formatDateOnly(supplier.createdAt).startsWith(monthPrefix)).length }
+  ];
+
+  supplierDashboard.innerHTML = metrics.map((metric) => `
+    <article class="order-metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${metric.value}</strong>
+    </article>
+  `).join("");
+}
+
+function renderSuppliers() {
+  const filteredSuppliers = getFilteredSuppliers();
+
+  if (!filteredSuppliers.length) {
+    supplierList.innerHTML = '<p class="empty-state">No suppliers found.</p>';
+    supplierDetailTitle.textContent = "Select a supplier";
+    supplierDetail.innerHTML = '<p class="empty-state">Create a supplier or adjust the filters.</p>';
+    supplierRelatedOrders.innerHTML = "";
+    supplierTimelineForm.classList.add("hidden");
+    supplierTimeline.innerHTML = "";
+    return;
+  }
+
+  if (!selectedSupplierId || !filteredSuppliers.some((supplier) => supplier.id === selectedSupplierId)) {
+    selectedSupplierId = filteredSuppliers[0].id;
+  }
+
+  supplierList.innerHTML = filteredSuppliers.map((supplier) => `
+    <button class="supplier-list-card ${supplier.id === selectedSupplierId ? "active" : ""}" type="button" data-supplier-id="${supplier.id}">
+      <h3>${escapeHtml(supplier.supplierName)}</h3>
+      <p>${escapeHtml(supplier.productCategory || "No category")}${supplier.city ? ` · ${escapeHtml(supplier.city)}` : ""}</p>
+      <div class="order-list-meta">
+        <span class="order-pill">${escapeHtml(supplier.reliabilityRating)}</span>
+        <span class="order-pill">${escapeHtml(supplier.status)}</span>
+        <span class="order-pill priority-${escapeHtml(supplier.priority.toLowerCase())}">${escapeHtml(supplier.priority)}</span>
+      </div>
+    </button>
+  `).join("");
+}
+
+function selectSupplier(id) {
+  const supplier = suppliers.find((item) => item.id === id);
+  if (!supplier) {
+    return;
+  }
+
+  selectedSupplierId = id;
+  renderSuppliers();
+  renderSupplierDetail(supplier);
+}
+
+function editSupplier(id) {
+  const supplier = suppliers.find((item) => item.id === id);
+  if (!supplier) {
+    return;
+  }
+
+  supplierId.value = supplier.id;
+  supplierName.value = supplier.supplierName;
+  supplierContactPerson.value = supplier.contactPerson;
+  supplierPhone.value = supplier.phone;
+  supplierWechat.value = supplier.wechat;
+  supplierEmail.value = supplier.email;
+  supplierCity.value = supplier.city;
+  supplierMarketFactory.value = supplier.marketFactory;
+  supplierProductCategory.value = supplier.productCategory;
+  supplierMainProducts.value = supplier.mainProducts;
+  supplierPriceLevel.value = supplier.priceLevel;
+  supplierQualityLevel.value = supplier.qualityLevel;
+  supplierDeliverySpeed.value = supplier.deliverySpeed;
+  supplierReliabilityRating.value = supplier.reliabilityRating;
+  supplierStatus.value = supplier.status;
+  supplierPriority.value = supplier.priority;
+  supplierNextAction.value = supplier.nextAction;
+  supplierNotes.value = supplier.notes;
+  supplierFormTitle.textContent = "Edit Supplier";
+  supplierName.focus();
+}
+
+function deleteSupplier(id) {
+  const supplier = suppliers.find((item) => item.id === id);
+  if (!supplier) {
+    return;
+  }
+
+  const confirmed = window.confirm(`Delete supplier "${supplier.supplierName}"? Related orders will stay safe.`);
+  if (!confirmed) {
+    return;
+  }
+
+  suppliers = suppliers.filter((item) => item.id !== id);
+  selectedSupplierId = suppliers[0]?.id || "";
+  saveSuppliers();
+  renderSupplierDashboard();
+  renderSupplierFilters();
+  renderSuppliers();
+  renderOrderSupplierOptions();
+  clearSupplierForm();
+
+  if (selectedSupplierId) {
+    selectSupplier(selectedSupplierId);
+  } else {
+    supplierDetailTitle.textContent = "Select a supplier";
+    supplierDetail.innerHTML = '<p class="empty-state">Create a supplier to view details.</p>';
+    supplierRelatedOrders.innerHTML = "";
+    supplierTimelineForm.classList.add("hidden");
+    supplierTimeline.innerHTML = "";
+  }
+}
+
+function getRelatedSupplierOrders(supplierNameValue) {
+  return orders.filter((order) => (order.supplierName || "").toLowerCase() === supplierNameValue.toLowerCase());
+}
+
+function renderSupplierDetail(supplier) {
+  const relatedOrders = getRelatedSupplierOrders(supplier.supplierName);
+  const activeOrders = relatedOrders.filter((order) => !["Delivered", "Completed"].includes(order.status));
+  supplierDetailTitle.textContent = supplier.supplierName;
+  supplierTimelineForm.classList.remove("hidden");
+  supplierTimelineSupplierId.value = supplier.id;
+  supplierTimelineDate.value = new Date().toISOString().slice(0, 10);
+  supplierDetail.innerHTML = `
+    <div class="order-status-row">
+      <span class="order-pill">${escapeHtml(supplier.reliabilityRating)}</span>
+      <span class="order-pill">${escapeHtml(supplier.status)}</span>
+      <span class="order-pill priority-${escapeHtml(supplier.priority.toLowerCase())}">${escapeHtml(supplier.priority)}</span>
+      <span class="order-pill">${escapeHtml(activeOrders.length)} active order${activeOrders.length === 1 ? "" : "s"}</span>
+    </div>
+    <dl class="order-detail-grid">
+      ${renderDetailField("Supplier", supplier.supplierName)}
+      ${renderDetailField("Contact", supplier.contactPerson)}
+      ${renderDetailField("Phone / WhatsApp", supplier.phone)}
+      ${renderDetailField("WeChat", supplier.wechat)}
+      ${renderDetailField("Email", supplier.email)}
+      ${renderDetailField("City", supplier.city)}
+      ${renderDetailField("Market / Factory", supplier.marketFactory)}
+      ${renderDetailField("Product Category", supplier.productCategory)}
+      ${renderDetailField("Price Level", supplier.priceLevel)}
+      ${renderDetailField("Quality Level", supplier.qualityLevel)}
+      ${renderDetailField("Delivery Speed", supplier.deliverySpeed)}
+      ${renderDetailField("Reliability", supplier.reliabilityRating)}
+    </dl>
+    <div class="detail-text-block">
+      <strong>Main Products</strong>
+      <p>${escapeHtml(supplier.mainProducts || "No main products yet.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Next Action</strong>
+      <p>${escapeHtml(supplier.nextAction || "No next action set.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Reliability Notes</strong>
+      <p>${escapeHtml(supplier.notes || "No reliability notes yet.")}</p>
+    </div>
+    <div class="order-detail-actions">
+      <button class="open-link secondary" type="button" data-supplier-edit="${supplier.id}">Edit</button>
+      <button class="danger-button" type="button" data-supplier-delete="${supplier.id}">Delete</button>
+    </div>
+  `;
+  renderSupplierRelatedOrders(relatedOrders);
+  renderSupplierTimeline(supplier, relatedOrders);
+}
+
+function renderSupplierRelatedOrders(relatedOrders) {
+  supplierRelatedOrders.innerHTML = `
+    <p class="card-label">Related Orders</p>
+    ${relatedOrders.length ? relatedOrders.map((order) => `
+      <button class="related-order-card" type="button" data-open-order="${order.id}">
+        <strong>${escapeHtml(order.orderCode || order.id)} · ${escapeHtml(order.orderName)}</strong>
+        <span>${escapeHtml(order.customerName)} · ${escapeHtml(order.status)} · ${escapeHtml(order.nextAction || "No next action")}</span>
+      </button>
+    `).join("") : '<p class="empty-state">No related orders yet.</p>'}
+  `;
+}
+
+function renderSupplierTimeline(supplier, relatedOrders) {
+  const timelineItems = [
+    ...(supplier.timeline || []),
+    ...relatedOrders.map((order) => ({
+      date: formatDateOnly(order.updatedAt),
+      eventType: "Related order",
+      title: `Related order: ${order.orderName}`,
+      description: `${order.status}. ${order.nextAction || "No next action"}`,
+      relatedOrderId: order.orderCode || order.id,
+      status: order.status,
+      nextAction: order.nextAction
+    }))
+  ].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+  supplierTimeline.innerHTML = `
+    <p class="card-label">Supplier Timeline</p>
+    ${timelineItems.map((item) => `
+      <article class="order-timeline-item">
+        <span>${escapeHtml(item.date)}</span>
+        <div>
+          <strong>${escapeHtml(item.title)}</strong>
+          <small>${escapeHtml(item.eventType || "Note")}${item.relatedOrderId ? ` · ${escapeHtml(item.relatedOrderId)}` : ""}${item.status ? ` · ${escapeHtml(item.status)}` : ""}</small>
+          <p>${escapeHtml(item.description)}</p>
+          ${item.nextAction ? `<p>${escapeHtml(item.nextAction)}</p>` : ""}
+        </div>
+      </article>
+    `).join("") || '<p class="empty-state">No supplier timeline yet.</p>'}
+  `;
+}
+
+function renderOrderSupplierOptions(selectedValue = "") {
+  const existingOrderSupplierNames = orders.map((order) => order.supplierName).filter(Boolean);
+  const names = [...new Set([...suppliers.map((supplier) => supplier.supplierName), ...existingOrderSupplierNames])].sort();
+  supplierOptions.innerHTML = names.map((name) => `<option value="${escapeHtml(name)}"></option>`).join("");
+  if (selectedValue) {
+    orderSupplier.value = selectedValue;
+  }
+}
+
+function refreshSelectedSupplierDetail() {
+  renderSupplierDashboard();
+  if (!selectedSupplierId) {
+    return;
+  }
+
+  const supplier = suppliers.find((item) => item.id === selectedSupplierId);
+  if (supplier) {
+    renderSupplierDetail(supplier);
+  }
+}
+
+function setupSupplierCenter() {
+  supplierForm.addEventListener("submit", saveSupplierFromForm);
+  resetSupplierForm.addEventListener("click", clearSupplierForm);
+  [supplierSearchInput, supplierCategoryFilter, supplierCityFilter, supplierReliabilityFilter, supplierStatusFilter, supplierPriorityFilter].forEach((field) => {
+    field.addEventListener("input", renderSuppliers);
+    field.addEventListener("change", renderSuppliers);
+  });
+
+  supplierList.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-supplier-id]");
+    if (!card) {
+      return;
+    }
+
+    selectSupplier(card.dataset.supplierId);
+  });
+
+  supplierDetail.addEventListener("click", (event) => {
+    const editButton = event.target.closest("[data-supplier-edit]");
+    const deleteButton = event.target.closest("[data-supplier-delete]");
+
+    if (editButton) {
+      editSupplier(editButton.dataset.supplierEdit);
+    }
+
+    if (deleteButton) {
+      deleteSupplier(deleteButton.dataset.supplierDelete);
+    }
+  });
+
+  supplierRelatedOrders.addEventListener("click", (event) => {
+    const orderButton = event.target.closest("[data-open-order]");
+    if (!orderButton) {
+      return;
+    }
+
+    openInternalPage("order-center");
+    selectOrder(orderButton.dataset.openOrder);
+  });
+
+  supplierTimelineForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    addSupplierTimelineEvent();
+  });
+}
+
+function addSupplierTimelineEvent() {
+  const supplier = suppliers.find((item) => item.id === supplierTimelineSupplierId.value);
+  if (!supplier || !supplierTimelineTitle.value.trim()) {
+    return;
+  }
+
+  supplier.timeline = supplier.timeline || [];
+  supplier.timeline.unshift({
+    id: `supplier-timeline-${Date.now()}`,
+    date: supplierTimelineDate.value || new Date().toISOString().slice(0, 10),
+    eventType: supplierTimelineEventType.value,
+    title: supplierTimelineTitle.value.trim(),
+    description: supplierTimelineDescription.value.trim(),
+    relatedOrderId: supplierTimelineOrderId.value.trim(),
+    status: supplierTimelineStatus.value,
+    nextAction: supplierTimelineNextAction.value.trim()
+  });
+  supplier.nextAction = supplierTimelineNextAction.value.trim() || supplier.nextAction;
+  supplier.updatedAt = new Date().toISOString();
+  saveSuppliers();
+  renderSupplierDashboard();
+  renderSupplierFilters();
+  renderSuppliers();
+  renderSupplierDetail(supplier);
+  supplierTimelineTitle.value = "";
+  supplierTimelineDescription.value = "";
+  supplierTimelineOrderId.value = "";
+  supplierTimelineNextAction.value = "";
+  supplierTimelineEventType.value = "First contact";
+  supplierTimelineStatus.value = "Open";
+}
+
 function setupEditableLists() {
   document.querySelectorAll("[data-list-form]").forEach((form) => {
     form.addEventListener("submit", (event) => {
@@ -1934,6 +2652,22 @@ function appendCustomerSearchRecords(moduleRecords) {
   });
 }
 
+function appendSupplierSearchRecords(moduleRecords) {
+  const supplierModule = moduleRecords.find((module) => module.name === "Suppliers");
+  if (!supplierModule) {
+    return;
+  }
+
+  suppliers.forEach((supplier) => {
+    supplierModule.items.push({
+      title: supplier.supplierName,
+      type: "Supplier",
+      description: `${supplier.productCategory || "No category"} · ${supplier.city || "No city"} · ${supplier.reliabilityRating || "Unknown"} · ${supplier.nextAction || "No next action"}`,
+      page: "supplier-center"
+    });
+  });
+}
+
 function normalizeSearchText(value) {
   return value.toLowerCase().trim();
 }
@@ -1971,6 +2705,7 @@ function searchItems(query) {
   const records = getSearchRecords();
   appendOrderSearchRecords(records);
   appendCustomerSearchRecords(records);
+  appendSupplierSearchRecords(records);
 
   return records.map((module) => {
     const results = module.items
@@ -2133,10 +2868,12 @@ function init() {
   renderPortalModules();
   loadEditableLists();
   loadCustomers();
+  loadSuppliers();
   loadOrders();
   setupEditableLists();
   setupOrderCenter();
   setupCustomerCenter();
+  setupSupplierCenter();
   setupPortalCards();
   setupCommandPalette();
   renderAllEditableLists();
@@ -2145,6 +2882,10 @@ function init() {
   renderCustomerFollowups();
   renderCustomers();
   renderOrderCustomerOptions();
+  renderSupplierDashboard();
+  renderSupplierFilters();
+  renderSuppliers();
+  renderOrderSupplierOptions();
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();
@@ -2156,6 +2897,10 @@ function init() {
 
   if (customers.length) {
     selectCustomer(customers[0].id);
+  }
+
+  if (suppliers.length) {
+    selectSupplier(suppliers[0].id);
   }
 
   restoreField(userName, storageKeys.userName);

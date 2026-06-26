@@ -26,6 +26,7 @@
         <button class="nav-item active" data-page="today" type="button">Today</button>
         <button class="nav-item" data-page="order-center" type="button">Order Center</button>
         <button class="nav-item" data-page="customer-center" type="button">Customer Center</button>
+        <button class="nav-item" data-page="supplier-center" type="button">Supplier Center</button>
         <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
         <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
         <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
@@ -150,7 +151,8 @@
               </label>
               <label>
                 Supplier
-                <input id="orderSupplier" type="text" placeholder="Yiwu supplier name">
+                <input id="orderSupplier" type="text" placeholder="Yiwu supplier name" list="supplierOptions">
+                <datalist id="supplierOptions"></datalist>
               </label>
               <label>
                 Country
@@ -585,6 +587,220 @@
         </div>
       </section>
 
+      <section class="page" id="supplier-center">
+        <header class="page-header">
+          <p class="eyebrow">Supplier Center</p>
+          <h1>Supplier Memory Center</h1>
+          <p class="date-line">Track supplier reliability, product categories, linked orders, history, and next actions.</p>
+        </header>
+
+        <section class="supplier-dashboard" id="supplierDashboard"></section>
+
+        <div class="supplier-center-layout">
+          <section class="supplier-panel supplier-form-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Create / Edit</p>
+              <h2 id="supplierFormTitle">New Supplier</h2>
+            </div>
+            <form id="supplierForm" class="supplier-form">
+              <input id="supplierId" type="hidden">
+              <label>
+                Supplier name
+                <input id="supplierName" type="text" placeholder="Yiwu Toy Supplier" required>
+              </label>
+              <label>
+                Contact person
+                <input id="supplierContactPerson" type="text" placeholder="Main contact">
+              </label>
+              <label>
+                Phone / WhatsApp
+                <input id="supplierPhone" type="text" placeholder="+86...">
+              </label>
+              <label>
+                WeChat
+                <input id="supplierWechat" type="text" placeholder="WeChat ID">
+              </label>
+              <label>
+                Email
+                <input id="supplierEmail" type="email" placeholder="supplier@example.com">
+              </label>
+              <label>
+                City
+                <input id="supplierCity" type="text" placeholder="Yiwu">
+              </label>
+              <label>
+                Market / Factory
+                <input id="supplierMarketFactory" type="text" placeholder="Yiwu Market District 1">
+              </label>
+              <label>
+                Product category
+                <input id="supplierProductCategory" type="text" placeholder="Toys, Stationery, Packaging">
+              </label>
+              <label class="full-field">
+                Main products
+                <input id="supplierMainProducts" type="text" placeholder="Educational toys, plush toys, small gifts">
+              </label>
+              <label>
+                Price level
+                <select id="supplierPriceLevel">
+                  <option>Low</option>
+                  <option>Medium</option>
+                  <option>High</option>
+                  <option>Premium</option>
+                </select>
+              </label>
+              <label>
+                Quality level
+                <select id="supplierQualityLevel">
+                  <option>Basic</option>
+                  <option>Standard</option>
+                  <option>Good</option>
+                  <option>Premium</option>
+                </select>
+              </label>
+              <label>
+                Delivery speed
+                <select id="supplierDeliverySpeed">
+                  <option>Slow</option>
+                  <option>Normal</option>
+                  <option>Fast</option>
+                  <option>Very Fast</option>
+                </select>
+              </label>
+              <label>
+                Reliability rating
+                <select id="supplierReliabilityRating">
+                  <option>Unknown</option>
+                  <option>Reliable</option>
+                  <option>Needs Follow-up</option>
+                  <option>Risky</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="supplierStatus">
+                  <option>New</option>
+                  <option>Active</option>
+                  <option>Preferred</option>
+                  <option>Backup</option>
+                  <option>Paused</option>
+                </select>
+              </label>
+              <label>
+                Priority
+                <select id="supplierPriority">
+                  <option>Normal</option>
+                  <option>High</option>
+                  <option>Urgent</option>
+                  <option>Low</option>
+                </select>
+              </label>
+              <label class="full-field">
+                Next action
+                <input id="supplierNextAction" type="text" placeholder="Ask for updated quotation">
+              </label>
+              <label class="full-field">
+                Notes
+                <textarea id="supplierNotes" placeholder="Reliability, pricing, communication, quality, delivery, and risk notes"></textarea>
+              </label>
+              <div class="supplier-form-actions">
+                <button class="open-link" type="submit">Save Supplier</button>
+                <button class="open-link secondary" id="resetSupplierForm" type="button">New Blank Supplier</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="supplier-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Suppliers</p>
+              <h2>Supplier List</h2>
+            </div>
+            <div class="supplier-filter-grid">
+              <input id="supplierSearchInput" type="search" placeholder="Search suppliers">
+              <select id="supplierCategoryFilter">
+                <option value="">All categories</option>
+              </select>
+              <select id="supplierCityFilter">
+                <option value="">All cities</option>
+              </select>
+              <select id="supplierReliabilityFilter">
+                <option value="">All reliability</option>
+              </select>
+              <select id="supplierStatusFilter">
+                <option value="">All status</option>
+              </select>
+              <select id="supplierPriorityFilter">
+                <option value="">All priority</option>
+              </select>
+            </div>
+            <div class="supplier-list" id="supplierList"></div>
+          </section>
+
+          <section class="supplier-panel supplier-detail-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Detail</p>
+              <h2 id="supplierDetailTitle">Select a supplier</h2>
+            </div>
+            <div id="supplierDetail" class="supplier-detail">
+              <p class="empty-state">Choose a supplier to view details, orders, and timeline.</p>
+            </div>
+            <div id="supplierRelatedOrders" class="related-orders"></div>
+            <form id="supplierTimelineForm" class="supplier-sub-form hidden">
+              <input id="supplierTimelineSupplierId" type="hidden">
+              <p class="card-label">Add Supplier Timeline Event</p>
+              <label>
+                Date
+                <input id="supplierTimelineDate" type="date">
+              </label>
+              <label>
+                Event type
+                <select id="supplierTimelineEventType">
+                  <option>First contact</option>
+                  <option>Quotation received</option>
+                  <option>Sample requested</option>
+                  <option>Sample approved</option>
+                  <option>Production started</option>
+                  <option>Delay</option>
+                  <option>Quality issue</option>
+                  <option>Inspection passed</option>
+                  <option>Payment made</option>
+                  <option>Shipment update</option>
+                  <option>Note</option>
+                </select>
+              </label>
+              <label>
+                Title
+                <input id="supplierTimelineTitle" type="text" placeholder="Quotation received">
+              </label>
+              <label>
+                Related order ID
+                <input id="supplierTimelineOrderId" type="text" placeholder="MOER-2026-001">
+              </label>
+              <label class="full-field">
+                Description
+                <textarea id="supplierTimelineDescription" placeholder="What happened with this supplier?"></textarea>
+              </label>
+              <label>
+                Status
+                <select id="supplierTimelineStatus">
+                  <option>Open</option>
+                  <option>Waiting</option>
+                  <option>Done</option>
+                  <option>Important</option>
+                  <option>Risk</option>
+                </select>
+              </label>
+              <label>
+                Next action
+                <input id="supplierTimelineNextAction" type="text" placeholder="Follow up quotation">
+              </label>
+              <button class="open-link" type="submit">Add Event</button>
+            </form>
+            <div id="supplierTimeline" class="supplier-timeline"></div>
+          </section>
+        </div>
+      </section>
+
       <section class="page" id="knowledge-center">
         <header class="page-header">
           <p class="eyebrow">Knowledge Center</p>
@@ -676,6 +892,7 @@
       <button class="bottom-item active" data-page="today" type="button">Today</button>
       <button class="bottom-item" data-page="order-center" type="button">Orders</button>
       <button class="bottom-item" data-page="customer-center" type="button">Customers</button>
+      <button class="bottom-item" data-page="supplier-center" type="button">Suppliers</button>
       <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
       <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
       <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>
