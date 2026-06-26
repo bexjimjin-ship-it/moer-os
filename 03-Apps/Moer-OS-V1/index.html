@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moer OS V1</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div>
+          <p class="brand-name">Moer OS</p>
+          <p class="brand-subtitle">Daily command center</p>
+        </div>
+      </div>
+
+      <button class="search-trigger" id="searchTrigger" type="button">
+        <span>Search anything</span>
+        <kbd>⌘K</kbd>
+      </button>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-page="today" type="button">Today</button>
+        <button class="nav-item" data-page="business" type="button">Business</button>
+        <button class="nav-item" data-page="knowledge" type="button">Knowledge</button>
+        <button class="nav-item" data-page="family" type="button">Family</button>
+        <button class="nav-item" data-page="core" type="button">Core Engines</button>
+        <button class="nav-item" data-page="settings" type="button">Settings</button>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <section class="page active" id="today">
+        <header class="page-header">
+          <p class="eyebrow">Today</p>
+          <h1 id="greeting">Good Morning, Jim</h1>
+          <p class="date-line" id="todayDate">Today</p>
+        </header>
+
+        <section class="portal-section">
+          <div class="section-heading">
+            <p class="eyebrow">Moer OS Shell</p>
+            <h2>Open the main work areas</h2>
+          </div>
+          <div class="module-grid" data-module-section="today"></div>
+        </section>
+
+        <section class="portal-section">
+          <div class="section-heading">
+            <p class="eyebrow">Daily Notes</p>
+            <h2>Keep today visible</h2>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <article class="focus-card list-card" data-list-card="focusTasks">
+            <p class="card-label">Today's Focus</p>
+            <h2>Choose the most important work for today.</h2>
+            <form class="add-row" data-list-form="focusTasks">
+              <input type="text" placeholder="Add a focus task">
+              <button type="submit">Add</button>
+            </form>
+            <div class="editable-list" data-list="focusTasks"></div>
+          </article>
+
+          <article class="card list-card" data-list-card="peopleWaiting">
+            <p class="card-label">People Waiting</p>
+            <form class="add-row" data-list-form="peopleWaiting">
+              <input type="text" placeholder="Add a person or message">
+              <button type="submit">Add</button>
+            </form>
+            <div class="editable-list" data-list="peopleWaiting"></div>
+          </article>
+
+          <article class="card urgent list-card" data-list-card="urgentItems">
+            <p class="card-label">Urgent Items</p>
+            <form class="add-row" data-list-form="urgentItems">
+              <input type="text" placeholder="Add an urgent note">
+              <button type="submit">Add</button>
+            </form>
+            <div class="editable-list" data-list="urgentItems"></div>
+          </article>
+
+          <article class="card daily-card">
+            <p class="card-label">Content Plan</p>
+            <label class="field-label" for="contentPlan">Today's video or post</label>
+            <textarea id="contentPlan" placeholder="Example: Short video about how to check product quality before shipment."></textarea>
+          </article>
+
+          <article class="card daily-card">
+            <p class="card-label">Dinner</p>
+            <label class="field-label" for="dinnerPlan">Today's dinner</label>
+            <input id="dinnerPlan" type="text" placeholder="What is for dinner?">
+          </article>
+
+          <article class="card daily-card son-card">
+            <p class="card-label">Son Reminder</p>
+            <label class="field-label" for="sonSleep">Sleep</label>
+            <input id="sonSleep" type="text" placeholder="Sleep reminder">
+            <label class="field-label" for="sonExercise">Exercise</label>
+            <input id="sonExercise" type="text" placeholder="Exercise reminder">
+            <label class="field-label" for="sonMeal">Meal</label>
+            <input id="sonMeal" type="text" placeholder="Meal reminder">
+          </article>
+
+          <article class="card actions-card">
+            <p class="card-label">Quick Actions</p>
+            <div class="quick-actions">
+              <button type="button">Add Task</button>
+              <button type="button">Add Customer Note</button>
+              <button type="button">Plan Content</button>
+              <button type="button">Review Day</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="business">
+        <header class="page-header">
+          <p class="eyebrow">Business</p>
+          <h1>Business Control Center</h1>
+          <p class="date-line">Keep customer work, sourcing, and shipping visible.</p>
+        </header>
+        <div class="module-grid" data-module-section="business"></div>
+      </section>
+
+      <section class="page" id="knowledge">
+        <header class="page-header">
+          <p class="eyebrow">Knowledge</p>
+          <h1>Knowledge Center</h1>
+          <p class="date-line">Company knowledge, SOPs, SEO, prompts, and reusable assets.</p>
+        </header>
+        <div class="module-grid" data-module-section="knowledge"></div>
+      </section>
+
+      <section class="page" id="family">
+        <header class="page-header">
+          <p class="eyebrow">Family</p>
+          <h1>Family Life</h1>
+          <p class="date-line">Simple planning for meals, home, health, and family routines.</p>
+        </header>
+        <div class="module-grid" data-module-section="family"></div>
+      </section>
+
+      <section class="page" id="core">
+        <header class="page-header">
+          <p class="eyebrow">Core Engines</p>
+          <h1>Reusable Foundations</h1>
+          <p class="date-line">Core Moer OS infrastructure that future modules can share.</p>
+        </header>
+        <div class="module-grid" data-module-section="core"></div>
+      </section>
+
+      <section class="page" id="settings">
+        <header class="page-header">
+          <p class="eyebrow">Settings</p>
+          <h1>Settings</h1>
+          <p class="date-line">Basic settings for this local prototype.</p>
+        </header>
+
+        <div class="settings-panel">
+          <label>
+            User name
+            <input id="userName" type="text" value="Jim">
+          </label>
+          <label>
+            Company name
+            <input id="companyName" type="text" value="Moer Sourcing">
+          </label>
+          <label>
+            Theme option placeholder
+            <select id="themeOption">
+              <option>Warm Light</option>
+              <option>Calm White</option>
+              <option>Soft Gray</option>
+            </select>
+          </label>
+          <div class="storage-note">
+            <p class="card-label">Data Storage Note</p>
+            <p>This V1 prototype stores simple settings and Today notes in this browser with localStorage. There is no backend, database, login, or external API connection.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <button class="bottom-item active" data-page="today" type="button">Today</button>
+      <button class="bottom-item" data-page="business" type="button">Business</button>
+      <button class="bottom-item" data-page="knowledge" type="button">Knowledge</button>
+      <button class="bottom-item" data-page="family" type="button">Family</button>
+      <button class="bottom-item" data-page="core" type="button">Core</button>
+      <button class="bottom-item" data-page="settings" type="button">Settings</button>
+    </nav>
+  </div>
+
+  <button class="mobile-search-trigger" id="mobileSearchTrigger" type="button" aria-label="Open search">Search</button>
+
+  <div class="command-overlay" id="commandOverlay" aria-hidden="true">
+    <div class="command-palette" role="dialog" aria-modal="true" aria-labelledby="commandTitle">
+      <div class="command-search-row">
+        <div class="command-icon">⌕</div>
+        <input id="commandSearchInput" type="search" autocomplete="off" placeholder="Search Moer OS..." aria-label="Search Moer OS">
+        <kbd>Esc</kbd>
+      </div>
+      <div class="command-header">
+        <div>
+          <p class="eyebrow">Universal Search</p>
+          <h2 id="commandTitle">Find anything in Moer OS</h2>
+        </div>
+        <p class="command-hint">Mock data only</p>
+      </div>
+      <div class="command-results" id="commandResults"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+[
+  {
+    "id": "kc-001",
+    "title": "Moer Sourcing Service Overview",
+    "category": "Business",
+    "tags": ["moer", "services", "sourcing", "yiwu"],
+    "summary": "Core explanation of Moer Sourcing as a Yiwu-based sourcing and purchasing agent.",
+    "content": "Moer Sourcing helps overseas customers find products, communicate with suppliers, arrange samples, follow orders, inspect goods, consolidate products, and arrange shipping from China. The company is a sourcing and purchasing agent, not a factory or online store.",
+    "relatedArticles": ["China Sourcing Workflow", "Quality Inspection Basics"],
+    "attachments": [],
+    "favorite": true,
+    "createdAt": "2026-06-20",
+    "updatedAt": "2026-06-24",
+    "lastViewedAt": "2026-06-25T09:00:00",
+    "revisionHistory": [
+      { "date": "2026-06-20", "note": "Initial article created." },
+      { "date": "2026-06-24", "note": "Added service scope." }
+    ],
+    "ai": {
+      "sourceType": "company knowledge",
+      "audience": "internal",
+      "confidence": "high",
+      "retrievalKeywords": ["China sourcing agent", "Yiwu sourcing agent", "product sourcing", "shipping from China"],
+      "businessUse": "Use when explaining what Moer Sourcing does."
+    }
+  },
+  {
+    "id": "kc-002",
+    "title": "China Sourcing Workflow",
+    "category": "SOP",
+    "tags": ["workflow", "inquiry", "quotation", "order"],
+    "summary": "High-level workflow from customer inquiry to shipment delivery.",
+    "content": "The sourcing workflow starts with customer inquiry, product clarification, supplier search, supplier communication, samples, quotation, purchase order, production follow-up, inspection, warehouse receiving, consolidation, shipment, and delivery follow-up.",
+    "relatedArticles": ["Moer Sourcing Service Overview", "Supplier Verification Checklist"],
+    "attachments": [],
+    "favorite": true,
+    "createdAt": "2026-06-21",
+    "updatedAt": "2026-06-26",
+    "lastViewedAt": "2026-06-26T08:30:00",
+    "revisionHistory": [
+      { "date": "2026-06-21", "note": "Workflow draft." },
+      { "date": "2026-06-26", "note": "Added delivery follow-up." }
+    ],
+    "ai": {
+      "sourceType": "SOP",
+      "audience": "internal",
+      "confidence": "high",
+      "retrievalKeywords": ["sourcing workflow", "order follow up", "quality inspection", "consolidation"],
+      "businessUse": "Use when building systems or explaining sourcing steps."
+    }
+  },
+  {
+    "id": "kc-003",
+    "title": "Supplier Verification Checklist",
+    "category": "Suppliers",
+    "tags": ["supplier", "verification", "risk", "quality"],
+    "summary": "Checklist for checking supplier reliability before recommending options to customers.",
+    "content": "Check supplier product category, MOQ, price consistency, delivery ability, communication speed, sample quality, business license when needed, production capacity, packaging details, payment terms, and previous cooperation notes.",
+    "relatedArticles": ["China Sourcing Workflow", "Negotiation Principles"],
+    "attachments": [],
+    "favorite": false,
+    "createdAt": "2026-06-22",
+    "updatedAt": "2026-06-25",
+    "lastViewedAt": "2026-06-25T14:10:00",
+    "revisionHistory": [
+      { "date": "2026-06-22", "note": "Initial checklist." }
+    ],
+    "ai": {
+      "sourceType": "SOP",
+      "audience": "internal",
+      "confidence": "medium",
+      "retrievalKeywords": ["supplier verification", "supplier risk", "MOQ", "supplier quality"],
+      "businessUse": "Use before saving supplier records or comparing supplier options."
+    }
+  },
+  {
+    "id": "kc-004",
+    "title": "Quality Inspection Basics",
+    "category": "Inspection",
+    "tags": ["inspection", "quality", "photos", "shipment"],
+    "summary": "Basic inspection points before goods leave China.",
+    "content": "Before shipment, check quantity, product appearance, function, color, size, packaging, labels, carton marks, damage, and customer-specific requirements. Send clear photos or videos when required.",
+    "relatedArticles": ["China Sourcing Workflow"],
+    "attachments": [],
+    "favorite": false,
+    "createdAt": "2026-06-22",
+    "updatedAt": "2026-06-23",
+    "lastViewedAt": "",
+    "revisionHistory": [
+      { "date": "2026-06-22", "note": "Inspection article created." }
+    ],
+    "ai": {
+      "sourceType": "SOP",
+      "audience": "internal",
+      "confidence": "high",
+      "retrievalKeywords": ["quality inspection", "carton marks", "packing", "inspection report"],
+      "businessUse": "Use when creating inspection tasks or customer updates."
+    }
+  },
+  {
+    "id": "kc-005",
+    "title": "Website SEO Topic Map",
+    "category": "SEO",
+    "tags": ["SEO", "website", "content", "inquiries"],
+    "summary": "Core SEO themes for generating qualified sourcing inquiries.",
+    "content": "Main SEO themes include China sourcing agent, Yiwu sourcing agent, importing from China, supplier sourcing, quality inspection, shipping from China, Yiwu market guide, and country-specific sourcing topics.",
+    "relatedArticles": ["Moer Sourcing Service Overview"],
+    "attachments": [],
+    "favorite": true,
+    "createdAt": "2026-06-23",
+    "updatedAt": "2026-06-25",
+    "lastViewedAt": "2026-06-26T10:00:00",
+    "revisionHistory": [
+      { "date": "2026-06-23", "note": "SEO map created." }
+    ],
+    "ai": {
+      "sourceType": "marketing knowledge",
+      "audience": "internal",
+      "confidence": "high",
+      "retrievalKeywords": ["China sourcing SEO", "Yiwu sourcing", "qualified inquiries", "website content"],
+      "businessUse": "Use when planning website pages and blog topics."
+    }
+  }
+]

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moer OS Knowledge Center</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">K</div>
+        <div>
+          <p class="brand-title">Knowledge Center</p>
+          <p class="brand-subtitle">Moer company brain</p>
+        </div>
+      </div>
+
+      <nav class="nav-list" aria-label="Knowledge Center navigation">
+        <button class="nav-item active" data-view="dashboard" type="button">Dashboard</button>
+        <button class="nav-item" data-view="categories" type="button">Categories</button>
+        <button class="nav-item" data-view="articles" type="button">Articles</button>
+        <button class="nav-item" data-view="search" type="button">Global Search</button>
+        <button class="nav-item" data-view="ai-ready" type="button">AI Ready</button>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Moer OS</p>
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <button class="primary-button" id="newArticleButton" type="button">New Article</button>
+      </header>
+
+      <section class="view active" id="dashboard">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <p>Total knowledge articles</p>
+            <strong id="totalArticles">0</strong>
+          </article>
+          <article class="stat-card">
+            <p>Recently updated</p>
+            <strong id="recentlyUpdatedCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <p>Favorite articles</p>
+            <strong id="favoriteCount">0</strong>
+          </article>
+          <article class="stat-card">
+            <p>Recently viewed</p>
+            <strong id="recentlyViewedCount">0</strong>
+          </article>
+        </div>
+
+        <div class="dashboard-layout">
+          <section class="panel">
+            <div class="section-heading">
+              <p class="eyebrow">Recently Updated</p>
+              <h2>Fresh knowledge</h2>
+            </div>
+            <div class="article-list compact" id="recentlyUpdatedList"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-heading">
+              <p class="eyebrow">Favorites</p>
+              <h2>Important articles</h2>
+            </div>
+            <div class="article-list compact" id="favoriteList"></div>
+          </section>
+
+          <section class="panel wide-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Recently Viewed</p>
+              <h2>Continue where you stopped</h2>
+            </div>
+            <div class="article-list compact" id="recentlyViewedList"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="categories">
+        <div class="category-grid" id="categoryGrid"></div>
+      </section>
+
+      <section class="view" id="articles">
+        <div class="article-layout">
+          <aside class="article-index">
+            <div class="section-heading">
+              <p class="eyebrow">Library</p>
+              <h2>Articles</h2>
+            </div>
+            <div class="article-list" id="articleList"></div>
+          </aside>
+
+          <article class="article-editor">
+            <div class="editor-toolbar">
+              <button class="secondary-button" id="saveArticleButton" type="button">Save Article</button>
+              <button class="secondary-button" id="favoriteButton" type="button">Favorite</button>
+            </div>
+
+            <div class="editor-grid">
+              <label>
+                Title
+                <input id="articleTitle" type="text" placeholder="Article title">
+              </label>
+              <label>
+                Category
+                <select id="articleCategory"></select>
+              </label>
+              <label>
+                Tags
+                <input id="articleTags" type="text" placeholder="sourcing, inspection, supplier">
+              </label>
+              <label>
+                Related Articles
+                <input id="relatedArticles" type="text" placeholder="Article titles or IDs">
+              </label>
+            </div>
+
+            <label class="full-field">
+              Summary
+              <textarea id="articleSummary" placeholder="Short summary for quick scanning and future AI retrieval."></textarea>
+            </label>
+
+            <label class="full-field">
+              Main Content
+              <textarea id="articleContent" class="content-area" placeholder="Write the main knowledge here."></textarea>
+            </label>
+
+            <div class="metadata-grid">
+              <section class="metadata-card">
+                <p class="card-label">Attachments Placeholder</p>
+                <p>Future files can include photos, PDFs, supplier documents, inspection reports, videos, or screenshots.</p>
+              </section>
+              <section class="metadata-card">
+                <p class="card-label">Revision History</p>
+                <div id="revisionHistory"></div>
+              </section>
+              <section class="metadata-card">
+                <p class="card-label">AI Metadata</p>
+                <pre id="aiMetadataPreview"></pre>
+              </section>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="search">
+        <div class="search-panel">
+          <label class="search-box">
+            Search
+            <input id="globalSearchInput" type="search" placeholder="Search title, summary, content, tags, category, and AI metadata">
+          </label>
+          <div class="filter-grid">
+            <label>
+              Category
+              <select id="categoryFilter"></select>
+            </label>
+            <label>
+              Tag
+              <input id="tagFilter" type="text" placeholder="inspection">
+            </label>
+            <label>
+              Updated After
+              <input id="dateFilter" type="date">
+            </label>
+            <label class="checkbox-label">
+              <input id="favoriteFilter" type="checkbox">
+              Favorites only
+            </label>
+          </div>
+        </div>
+        <div class="article-list search-results" id="searchResults"></div>
+      </section>
+
+      <section class="view" id="ai-ready">
+        <div class="panel ai-panel">
+          <p class="eyebrow">AI Ready</p>
+          <h2>Retrieval metadata foundation</h2>
+          <p>Every article stores structured metadata for future AI retrieval. This helps a future assistant find the right knowledge, understand source quality, and connect answers to real Moer Sourcing operations.</p>
+          <div class="ai-schema-grid">
+            <article><strong>Article ID</strong><span>Stable local ID for retrieval.</span></article>
+            <article><strong>Category</strong><span>Main business knowledge area.</span></article>
+            <article><strong>Tags</strong><span>Search keywords and topic labels.</span></article>
+            <article><strong>Summary</strong><span>Short retrieval-friendly description.</span></article>
+            <article><strong>Source Type</strong><span>Company knowledge, SOP, case, prompt, or personal note.</span></article>
+            <article><strong>Audience</strong><span>Internal, customer-facing, supplier-facing, or AI-only.</span></article>
+            <article><strong>Confidence</strong><span>How reliable the article is.</span></article>
+            <article><strong>Updated Date</strong><span>Freshness signal for AI answers.</span></article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <button class="bottom-item active" data-view="dashboard" type="button">Home</button>
+    <button class="bottom-item" data-view="categories" type="button">Categories</button>
+    <button class="bottom-item" data-view="articles" type="button">Articles</button>
+    <button class="bottom-item" data-view="search" type="button">Search</button>
+    <button class="bottom-item" data-view="ai-ready" type="button">AI</button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
