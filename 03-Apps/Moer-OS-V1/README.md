@@ -8,24 +8,27 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 
 - Today page
 - Order Center page
+- Customer Center page
 - Knowledge Center page
 - Timeline Engine page
 - Family Meal Planner page
 - Settings page
-- Module cards for Today, Knowledge Center, Order Center, Timeline Engine, Family Meal Planner, and Focus Center
+- Module cards for Today, Customer Center, Knowledge Center, Order Center, Timeline Engine, Family Meal Planner, and Focus Center
 - Desktop sidebar navigation
 - Mobile bottom navigation
 - Universal Search command palette with Cmd + K or Ctrl + K
 - Editable Today lists for focus tasks, people waiting, and urgent items
 - Order Center V1 with local order list, create/edit/delete form, detail view, and per-order timeline
+- Customer Center V1 with local customer list, create/edit/delete form, detail view, follow-up notes, related orders, and timeline
+- Order customer selection from saved Customer Center records
 - Editable local meal planner
-- Basic localStorage for Today data, meal ideas, and settings
+- Basic localStorage for Today data, customers, orders, meal ideas, and settings
 
 ## Universal Search
 
 Open search with `Cmd + K` on Mac or `Ctrl + K` on Windows.
 
-The search uses mock module data and current Today notes from localStorage. It does not connect to any database or external service.
+The search uses mock module data plus current Today notes, customers, and orders from localStorage. It does not connect to any database or external service.
 
 ## Tech
 
@@ -50,6 +53,7 @@ You can also double-click `index.html` in Finder.
 Clickable prototypes:
 
 - Order Center: inside this shell
+- Customer Center: inside this shell
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`
 - Family Meal Planner: inside this shell

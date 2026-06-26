@@ -547,14 +547,16 @@ select {
   gap: 16px;
 }
 
-.order-center-layout {
+.order-center-layout,
+.customer-center-layout {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(280px, 0.8fr) minmax(340px, 1fr);
   gap: 18px;
   align-items: start;
 }
 
-.order-panel {
+.order-panel,
+.customer-panel {
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -562,14 +564,17 @@ select {
   box-shadow: var(--shadow);
 }
 
-.order-form {
+.order-form,
+.customer-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
 .order-form label,
-.order-panel label {
+.order-panel label,
+.customer-form label,
+.customer-panel label {
   display: grid;
   gap: 7px;
   color: var(--muted);
@@ -578,22 +583,29 @@ select {
 }
 
 .full-field,
-.order-form-actions {
+.order-form-actions,
+.customer-form-actions {
   grid-column: 1 / -1;
 }
 
-.order-form-actions {
+.order-form-actions,
+.customer-form-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.order-list {
+.order-list,
+.customer-list,
+.related-orders,
+.customer-timeline {
   display: grid;
   gap: 10px;
 }
 
-.order-list-card {
+.order-list-card,
+.customer-list-card,
+.related-order-card {
   width: 100%;
   padding: 14px;
   border: 1px solid var(--line);
@@ -605,17 +617,26 @@ select {
 
 .order-list-card:hover,
 .order-list-card:focus,
-.order-list-card.active {
+.order-list-card.active,
+.customer-list-card:hover,
+.customer-list-card:focus,
+.customer-list-card.active,
+.related-order-card:hover,
+.related-order-card:focus {
   border-color: var(--accent);
   outline: none;
 }
 
-.order-list-card h3 {
+.order-list-card h3,
+.customer-list-card h3,
+.related-order-card strong {
   margin: 0 0 6px;
   font-size: 18px;
 }
 
-.order-list-card p {
+.order-list-card p,
+.customer-list-card p,
+.related-order-card p {
   margin: 0;
   color: var(--muted);
   font-size: 14px;
@@ -655,7 +676,8 @@ select {
   color: #3d6b4f;
 }
 
-.order-detail {
+.order-detail,
+.customer-detail {
   display: grid;
   gap: 14px;
 }
@@ -712,7 +734,8 @@ select {
   color: var(--urgent);
 }
 
-.order-timeline {
+.order-timeline,
+.customer-timeline {
   display: grid;
   gap: 10px;
   margin-top: 18px;
@@ -740,6 +763,24 @@ select {
 
 .order-flow-section {
   margin-top: 18px;
+}
+
+.related-orders {
+  margin-top: 18px;
+}
+
+.related-order-card {
+  cursor: pointer;
+}
+
+.related-order-card strong {
+  display: block;
+  color: var(--text);
+}
+
+.related-order-card span {
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .settings-panel {
@@ -939,11 +980,13 @@ select {
   .dashboard-grid,
   .card-grid,
   .module-grid,
-  .order-center-layout {
+  .order-center-layout,
+  .customer-center-layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .order-detail-panel {
+  .order-detail-panel,
+  .customer-detail-panel {
     grid-column: 1 / -1;
   }
 
@@ -954,7 +997,7 @@ select {
     bottom: 0;
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 4px;
     padding: 8px;
     background: rgba(255, 253, 249, 0.96);
@@ -1001,7 +1044,9 @@ select {
   .card-grid,
   .module-grid,
   .order-center-layout,
+  .customer-center-layout,
   .order-form,
+  .customer-form,
   .order-detail-grid {
     grid-template-columns: 1fr;
   }

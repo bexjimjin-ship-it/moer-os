@@ -25,6 +25,7 @@
       <nav class="nav-list">
         <button class="nav-item active" data-page="today" type="button">Today</button>
         <button class="nav-item" data-page="order-center" type="button">Order Center</button>
+        <button class="nav-item" data-page="customer-center" type="button">Customer Center</button>
         <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
         <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
         <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
@@ -139,7 +140,7 @@
               </label>
               <label>
                 Customer name
-                <input id="orderCustomer" type="text" placeholder="Customer or company" required>
+                <select id="orderCustomer" required></select>
               </label>
               <label>
                 Country
@@ -292,6 +293,133 @@
         </section>
       </section>
 
+      <section class="page" id="customer-center">
+        <header class="page-header">
+          <p class="eyebrow">Customer Center</p>
+          <h1>Customer Relationships</h1>
+          <p class="date-line">Track customers, follow-ups, related orders, and relationship notes locally in this browser.</p>
+        </header>
+
+        <div class="customer-center-layout">
+          <section class="customer-panel customer-form-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Create / Edit</p>
+              <h2 id="customerFormTitle">New Customer</h2>
+            </div>
+            <form id="customerForm" class="customer-form">
+              <input id="customerId" type="hidden">
+              <label>
+                Customer name
+                <input id="customerName" type="text" placeholder="Nicholas" required>
+              </label>
+              <label>
+                Company name
+                <input id="customerCompany" type="text" placeholder="Customer company">
+              </label>
+              <label>
+                Country
+                <input id="customerCountry" type="text" placeholder="Trinidad and Tobago">
+              </label>
+              <label>
+                Contact person
+                <input id="customerContactPerson" type="text" placeholder="Main contact">
+              </label>
+              <label>
+                WhatsApp
+                <input id="customerWhatsapp" type="text" placeholder="+1...">
+              </label>
+              <label>
+                Email
+                <input id="customerEmail" type="email" placeholder="customer@example.com">
+              </label>
+              <label>
+                Website
+                <input id="customerWebsite" type="url" placeholder="https://example.com">
+              </label>
+              <label>
+                Customer type
+                <select id="customerType">
+                  <option>Importer</option>
+                  <option>Wholesaler</option>
+                  <option>Distributor</option>
+                  <option>Retailer</option>
+                  <option>Amazon Seller</option>
+                  <option>E-commerce Seller</option>
+                  <option>Supermarket Buyer</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="customerStatus">
+                  <option>Lead</option>
+                  <option>Active</option>
+                  <option>Waiting Reply</option>
+                  <option>Follow Up</option>
+                  <option>Paused</option>
+                </select>
+              </label>
+              <label>
+                Priority
+                <select id="customerPriority">
+                  <option>Normal</option>
+                  <option>High</option>
+                  <option>Urgent</option>
+                  <option>Low</option>
+                </select>
+              </label>
+              <label>
+                Last contact date
+                <input id="lastContactDate" type="date">
+              </label>
+              <label>
+                Next follow-up date
+                <input id="nextFollowUpDate" type="date">
+              </label>
+              <label class="full-field">
+                Main product interest
+                <input id="mainProductInterest" type="text" placeholder="Stationery, Christmas items, mixed container">
+              </label>
+              <label class="full-field">
+                Notes
+                <textarea id="customerNotes" placeholder="Relationship notes, buying habits, communication style, and follow-up reminders"></textarea>
+              </label>
+              <label class="full-field">
+                Follow-up notes
+                <textarea id="customerFollowUpNotes" placeholder="Recent conversations and next follow-up details"></textarea>
+              </label>
+              <label class="full-field">
+                Next action
+                <input id="customerNextAction" type="text" placeholder="Send quotation, ask for product list, follow up on samples">
+              </label>
+              <div class="customer-form-actions">
+                <button class="open-link" type="submit">Save Customer</button>
+                <button class="open-link secondary" id="resetCustomerForm" type="button">New Blank Customer</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="customer-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Customers</p>
+              <h2>Customer List</h2>
+            </div>
+            <div class="customer-list" id="customerList"></div>
+          </section>
+
+          <section class="customer-panel customer-detail-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Detail</p>
+              <h2 id="customerDetailTitle">Select a customer</h2>
+            </div>
+            <div id="customerDetail" class="customer-detail">
+              <p class="empty-state">Choose a customer to view details, orders, and timeline.</p>
+            </div>
+            <div id="customerRelatedOrders" class="related-orders"></div>
+            <div id="customerTimeline" class="customer-timeline"></div>
+          </section>
+        </div>
+      </section>
+
       <section class="page" id="knowledge-center">
         <header class="page-header">
           <p class="eyebrow">Knowledge Center</p>
@@ -382,6 +510,7 @@
     <nav class="bottom-nav" aria-label="Mobile navigation">
       <button class="bottom-item active" data-page="today" type="button">Today</button>
       <button class="bottom-item" data-page="order-center" type="button">Orders</button>
+      <button class="bottom-item" data-page="customer-center" type="button">Customers</button>
       <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
       <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
       <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>
