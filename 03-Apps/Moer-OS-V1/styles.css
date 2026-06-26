@@ -558,6 +558,13 @@ select {
   margin-bottom: 18px;
 }
 
+.customer-dashboard {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
 .order-metric-card {
   min-height: 112px;
   padding: 16px;
@@ -644,6 +651,50 @@ select {
   grid-template-columns: 1fr;
   gap: 10px;
   margin-bottom: 14px;
+}
+
+.customer-filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.customer-followup-panel {
+  margin-bottom: 18px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.customer-followup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.customer-mini-list {
+  display: grid;
+  gap: 8px;
+}
+
+.customer-mini-card {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf9;
+  color: var(--text);
+  text-align: left;
+}
+
+.customer-mini-card span {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .order-list-card,
@@ -819,6 +870,22 @@ select {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface-soft);
+}
+
+.customer-sub-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.customer-sub-form .card-label,
+.customer-sub-form button {
+  grid-column: 1 / -1;
 }
 
 .timeline-form .card-label,
@@ -1074,8 +1141,10 @@ select {
   .card-grid,
   .module-grid,
   .order-dashboard,
+  .customer-dashboard,
   .order-center-layout,
-  .customer-center-layout {
+  .customer-center-layout,
+  .customer-followup-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1138,13 +1207,16 @@ select {
   .card-grid,
   .module-grid,
   .order-dashboard,
+  .customer-dashboard,
   .order-center-layout,
   .customer-center-layout,
+  .customer-followup-grid,
   .order-form,
   .customer-form,
   .order-detail-grid,
   .status-progress,
-  .timeline-form {
+  .timeline-form,
+  .customer-sub-form {
     grid-template-columns: 1fr;
   }
 

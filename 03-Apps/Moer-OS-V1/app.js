@@ -13,11 +13,15 @@ const storageKeys = {
   mealPlanner: "moerOS.mealPlanner",
   orders: "moerOS.orders",
   customers: "moerOS.customers",
-  ordersSeededV1: "moerOS.ordersSeededV1"
+  ordersSeededV1: "moerOS.ordersSeededV1",
+  customersSeededV2: "moerOS.customersSeededV2"
 };
 
 const orderStatusOptions = ["New Inquiry", "Quoting", "Waiting Supplier", "Waiting Customer", "Order Confirmed", "In Production", "Inspection", "In Warehouse", "Shipping", "Delivered", "On Hold"];
 const orderPriorityOptions = ["Normal", "High", "Urgent", "Low"];
+const customerStatusOptions = ["Lead", "Active", "Waiting Reply", "Follow Up", "Paused"];
+const customerPriorityOptions = ["Normal", "High", "Urgent", "Low"];
+const customerTypeOptions = ["Importer", "Wholesaler", "Distributor", "Retailer", "Amazon Seller", "E-commerce Seller", "Supermarket Buyer"];
 
 const customerSeedData = [
   {
@@ -39,7 +43,29 @@ const customerSeedData = [
     followUpNotes: "Follow up with supplier options and carton estimate for next mixed container.",
     nextAction: "Send updated product options",
     createdAt: "2026-06-20T09:00:00",
-    updatedAt: "2026-06-25T10:00:00"
+    updatedAt: "2026-06-25T10:00:00",
+    timeline: [
+      {
+        id: "customer-timeline-001-a",
+        date: "2026-06-20",
+        eventType: "First contact",
+        title: "Relationship started",
+        description: "Nicholas discussed mixed container sourcing for Trinidad and Tobago.",
+        relatedOrderId: "MOER-2026-001",
+        nextAction: "Prepare mixed container product options",
+        status: "Done"
+      },
+      {
+        id: "customer-timeline-001-b",
+        date: "2026-06-25",
+        eventType: "Order confirmed",
+        title: "Trinidad container project confirmed",
+        description: "Customer confirmed the container project and asked for carton planning.",
+        relatedOrderId: "MOER-2026-001",
+        nextAction: "Confirm carton details with suppliers",
+        status: "Open"
+      }
+    ]
   },
   {
     id: "customer-002",
@@ -60,7 +86,29 @@ const customerSeedData = [
     followUpNotes: "Ask which Christmas categories are priority this year.",
     nextAction: "Prepare Christmas product list",
     createdAt: "2026-06-21T11:30:00",
-    updatedAt: "2026-06-24T16:20:00"
+    updatedAt: "2026-06-24T16:20:00",
+    timeline: [
+      {
+        id: "customer-timeline-002-a",
+        date: "2026-06-21",
+        eventType: "Inquiry received",
+        title: "Christmas item request",
+        description: "Eddie asked for Christmas decorations and seasonal product options for the UK.",
+        relatedOrderId: "MOER-2026-002",
+        nextAction: "Collect supplier quotes",
+        status: "Waiting"
+      },
+      {
+        id: "customer-timeline-002-b",
+        date: "2026-06-24",
+        eventType: "Follow-up",
+        title: "Asked for priority categories",
+        description: "Need to confirm which Christmas categories are most important this year.",
+        relatedOrderId: "MOER-2026-002",
+        nextAction: "Send first product shortlist",
+        status: "Open"
+      }
+    ]
   },
   {
     id: "customer-003",
@@ -81,7 +129,29 @@ const customerSeedData = [
     followUpNotes: "Waiting for confirmation on notebook quantity and cover designs.",
     nextAction: "Follow up on notebook quantity",
     createdAt: "2026-06-22T15:15:00",
-    updatedAt: "2026-06-23T18:10:00"
+    updatedAt: "2026-06-23T18:10:00",
+    timeline: [
+      {
+        id: "customer-timeline-003-a",
+        date: "2026-06-22",
+        eventType: "Inquiry received",
+        title: "Stationery inquiry received",
+        description: "Graham shared a school stationery list for Barbados.",
+        relatedOrderId: "MOER-2026-003",
+        nextAction: "Confirm notebook designs",
+        status: "Waiting"
+      },
+      {
+        id: "customer-timeline-003-b",
+        date: "2026-06-23",
+        eventType: "Quotation sent",
+        title: "Stationery options shared",
+        description: "Sent initial stationery supplier options and requested customer confirmation.",
+        relatedOrderId: "MOER-2026-003",
+        nextAction: "Follow up on quantity and cover design",
+        status: "Open"
+      }
+    ]
   }
 ];
 
@@ -457,10 +527,32 @@ const customerNotes = document.querySelector("#customerNotes");
 const customerFollowUpNotes = document.querySelector("#customerFollowUpNotes");
 const customerNextAction = document.querySelector("#customerNextAction");
 const resetCustomerForm = document.querySelector("#resetCustomerForm");
+const customerDashboard = document.querySelector("#customerDashboard");
+const followupDueToday = document.querySelector("#followupDueToday");
+const followupOverdue = document.querySelector("#followupOverdue");
+const customerSearchInput = document.querySelector("#customerSearchInput");
+const customerCountryFilter = document.querySelector("#customerCountryFilter");
+const customerStatusFilter = document.querySelector("#customerStatusFilter");
+const customerPriorityFilter = document.querySelector("#customerPriorityFilter");
+const customerTypeFilter = document.querySelector("#customerTypeFilter");
+const customerInterestFilter = document.querySelector("#customerInterestFilter");
 const customerList = document.querySelector("#customerList");
 const customerDetailTitle = document.querySelector("#customerDetailTitle");
 const customerDetail = document.querySelector("#customerDetail");
 const customerRelatedOrders = document.querySelector("#customerRelatedOrders");
+const customerFollowupForm = document.querySelector("#customerFollowupForm");
+const customerFollowupId = document.querySelector("#customerFollowupId");
+const customerFollowupDate = document.querySelector("#customerFollowupDate");
+const customerFollowupNote = document.querySelector("#customerFollowupNote");
+const customerTimelineForm = document.querySelector("#customerTimelineForm");
+const customerTimelineCustomerId = document.querySelector("#customerTimelineCustomerId");
+const customerTimelineDate = document.querySelector("#customerTimelineDate");
+const customerTimelineEventType = document.querySelector("#customerTimelineEventType");
+const customerTimelineTitle = document.querySelector("#customerTimelineTitle");
+const customerTimelineOrderId = document.querySelector("#customerTimelineOrderId");
+const customerTimelineDescription = document.querySelector("#customerTimelineDescription");
+const customerTimelineNextAction = document.querySelector("#customerTimelineNextAction");
+const customerTimelineStatus = document.querySelector("#customerTimelineStatus");
 const customerTimeline = document.querySelector("#customerTimeline");
 
 function showPage(pageId) {
@@ -917,6 +1009,8 @@ function deleteOrder(id) {
 }
 
 function refreshSelectedCustomerDetail() {
+  renderCustomerDashboard();
+  renderCustomerFollowups();
   if (!selectedCustomerId) {
     return;
   }
@@ -1109,21 +1203,67 @@ function addTimelineEvent() {
 function loadCustomers() {
   const savedCustomers = localStorage.getItem(storageKeys.customers);
   if (!savedCustomers) {
-    customers = customerSeedData;
+    customers = customerSeedData.map(normalizeCustomer);
     saveCustomers();
+    localStorage.setItem(storageKeys.customersSeededV2, "true");
     return;
   }
 
   try {
     const parsedCustomers = JSON.parse(savedCustomers);
-    customers = Array.isArray(parsedCustomers) ? parsedCustomers : customerSeedData;
+    customers = Array.isArray(parsedCustomers) ? parsedCustomers.map(normalizeCustomer) : customerSeedData.map(normalizeCustomer);
   } catch (error) {
-    customers = customerSeedData;
+    customers = customerSeedData.map(normalizeCustomer);
+  }
+
+  if (localStorage.getItem(storageKeys.customersSeededV2) !== "true") {
+    const existingNames = new Set(customers.map((customer) => customer.customerName.toLowerCase()));
+    const missingSamples = customerSeedData
+      .filter((customer) => !existingNames.has(customer.customerName.toLowerCase()))
+      .map(normalizeCustomer);
+    customers = [...missingSamples, ...customers.map(enrichCustomerTimeline)];
+    localStorage.setItem(storageKeys.customersSeededV2, "true");
+    saveCustomers();
   }
 }
 
 function saveCustomers() {
   localStorage.setItem(storageKeys.customers, JSON.stringify(customers));
+}
+
+function normalizeCustomer(customer) {
+  const now = new Date().toISOString();
+  return {
+    id: customer.id || `customer-${Date.now()}`,
+    customerName: customer.customerName || "",
+    companyName: customer.companyName || "",
+    country: customer.country || "",
+    contactPerson: customer.contactPerson || customer.customerName || "",
+    whatsapp: customer.whatsapp || "",
+    email: customer.email || "",
+    website: customer.website || "",
+    customerType: customer.customerType || "Importer",
+    status: customer.status || "Lead",
+    priority: customer.priority || "Normal",
+    mainProductInterest: customer.mainProductInterest || "",
+    lastContactDate: customer.lastContactDate || "",
+    nextFollowUpDate: customer.nextFollowUpDate || "",
+    notes: customer.notes || "",
+    followUpNotes: customer.followUpNotes || "",
+    nextAction: customer.nextAction || "",
+    createdAt: customer.createdAt || now,
+    updatedAt: customer.updatedAt || now,
+    timeline: Array.isArray(customer.timeline) ? customer.timeline : []
+  };
+}
+
+function enrichCustomerTimeline(customer) {
+  const normalizedCustomer = normalizeCustomer(customer);
+  const sample = customerSeedData.find((item) => item.customerName.toLowerCase() === normalizedCustomer.customerName.toLowerCase());
+  if (sample && !normalizedCustomer.timeline.length) {
+    normalizedCustomer.timeline = sample.timeline;
+  }
+  return normalizedCustomer;
 }
 
 function getCustomerFormData() {
@@ -1149,7 +1289,17 @@ function getCustomerFormData() {
     followUpNotes: customerFollowUpNotes.value.trim(),
     nextAction: customerNextAction.value.trim(),
     createdAt: existingCustomer ? existingCustomer.createdAt : now,
-    updatedAt: now
+    updatedAt: now,
+    timeline: existingCustomer ? existingCustomer.timeline : [{
+      id: `customer-timeline-${Date.now()}`,
+      date: now.slice(0, 10),
+      eventType: "First contact",
+      title: "Customer created",
+      description: "Customer was added to Customer Center.",
+      relatedOrderId: "",
+      nextAction: customerNextAction.value.trim(),
+      status: "Open"
+    }]
   };
 }
 
@@ -1170,6 +1320,9 @@ function saveCustomerFromForm(event) {
 
   selectedCustomerId = customer.id;
   saveCustomers();
+  renderCustomerDashboard();
+  renderCustomerFilters();
+  renderCustomerFollowups();
   renderCustomers();
   renderOrderCustomerOptions(customer.customerName);
   selectCustomer(customer.id);
@@ -1182,17 +1335,134 @@ function clearCustomerForm() {
   customerFormTitle.textContent = "New Customer";
 }
 
+function getCustomerFilterValues() {
+  return {
+    query: customerSearchInput.value.trim().toLowerCase(),
+    country: customerCountryFilter.value,
+    status: customerStatusFilter.value,
+    priority: customerPriorityFilter.value,
+    type: customerTypeFilter.value,
+    interest: customerInterestFilter.value
+  };
+}
+
+function getFilteredCustomers() {
+  const filters = getCustomerFilterValues();
+  return customers.filter((customer) => {
+    const haystack = [
+      customer.customerName,
+      customer.companyName,
+      customer.country,
+      customer.contactPerson,
+      customer.whatsapp,
+      customer.email,
+      customer.website,
+      customer.customerType,
+      customer.status,
+      customer.priority,
+      customer.mainProductInterest,
+      customer.followUpNotes,
+      customer.nextAction,
+      customer.notes
+    ].join(" ").toLowerCase();
+
+    return (!filters.query || haystack.includes(filters.query))
+      && (!filters.country || customer.country === filters.country)
+      && (!filters.status || customer.status === filters.status)
+      && (!filters.priority || customer.priority === filters.priority)
+      && (!filters.type || customer.customerType === filters.type)
+      && (!filters.interest || customer.mainProductInterest === filters.interest);
+  });
+}
+
+function renderCustomerFilters() {
+  const selected = {
+    country: customerCountryFilter.value,
+    status: customerStatusFilter.value,
+    priority: customerPriorityFilter.value,
+    type: customerTypeFilter.value,
+    interest: customerInterestFilter.value
+  };
+  const countries = [...new Set(customers.map((customer) => customer.country).filter(Boolean))].sort();
+  const interests = [...new Set(customers.map((customer) => customer.mainProductInterest).filter(Boolean))].sort();
+
+  customerCountryFilter.innerHTML = '<option value="">All countries</option>' + countries.map((country) => `<option value="${escapeHtml(country)}">${escapeHtml(country)}</option>`).join("");
+  customerStatusFilter.innerHTML = '<option value="">All status</option>' + customerStatusOptions.map((status) => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("");
+  customerPriorityFilter.innerHTML = '<option value="">All priority</option>' + customerPriorityOptions.map((priority) => `<option value="${escapeHtml(priority)}">${escapeHtml(priority)}</option>`).join("");
+  customerTypeFilter.innerHTML = '<option value="">All types</option>' + customerTypeOptions.map((type) => `<option value="${escapeHtml(type)}">${escapeHtml(type)}</option>`).join("");
+  customerInterestFilter.innerHTML = '<option value="">All interests</option>' + interests.map((interest) => `<option value="${escapeHtml(interest)}">${escapeHtml(interest)}</option>`).join("");
+
+  customerCountryFilter.value = selected.country;
+  customerStatusFilter.value = selected.status;
+  customerPriorityFilter.value = selected.priority;
+  customerTypeFilter.value = selected.type;
+  customerInterestFilter.value = selected.interest;
+}
+
+function renderCustomerDashboard() {
+  const today = new Date().toISOString().slice(0, 10);
+  const monthPrefix = today.slice(0, 7);
+  const activeOrderCustomers = new Set(
+    orders
+      .filter((order) => !["Delivered", "Completed"].includes(order.status))
+      .map((order) => order.customerName.toLowerCase())
+  );
+  const metrics = [
+    { label: "Total Customers", value: customers.length },
+    { label: "Customers Waiting Follow-up", value: customers.filter((customer) => customer.nextFollowUpDate && customer.nextFollowUpDate <= today).length },
+    { label: "High Priority Customers", value: customers.filter((customer) => ["High", "Urgent"].includes(customer.priority)).length },
+    { label: "Active Order Customers", value: customers.filter((customer) => activeOrderCustomers.has(customer.customerName.toLowerCase())).length },
+    { label: "New Customers This Month", value: customers.filter((customer) => formatDateOnly(customer.createdAt).startsWith(monthPrefix)).length }
+  ];
+
+  customerDashboard.innerHTML = metrics.map((metric) => `
+    <article class="order-metric-card">
+      <span>${escapeHtml(metric.label)}</span>
+      <strong>${metric.value}</strong>
+    </article>
+  `).join("");
+}
+
+function renderCustomerFollowups() {
+  const today = new Date().toISOString().slice(0, 10);
+  const dueToday = customers.filter((customer) => customer.nextFollowUpDate === today);
+  const overdue = customers.filter((customer) => customer.nextFollowUpDate && customer.nextFollowUpDate < today);
+  followupDueToday.innerHTML = renderCustomerMiniList(dueToday, "No follow-ups due today.");
+  followupOverdue.innerHTML = renderCustomerMiniList(overdue, "No overdue follow-ups.");
+}
+
+function renderCustomerMiniList(items, emptyText) {
+  if (!items.length) {
+    return `<p class="empty-state">${escapeHtml(emptyText)}</p>`;
+  }
+
+  return items.map((customer) => `
+    <button class="customer-mini-card" type="button" data-customer-id="${customer.id}">
+      <strong>${escapeHtml(customer.customerName)}</strong>
+      <span>${escapeHtml(customer.nextFollowUpDate)} · ${escapeHtml(customer.nextAction || "No next action")}</span>
+    </button>
+  `).join("");
+}
+
 function renderCustomers() {
-  if (!customers.length) {
-    customerList.innerHTML = '<p class="empty-state">No customers yet.</p>';
+  const filteredCustomers = getFilteredCustomers();
+
+  if (!filteredCustomers.length) {
+    customerList.innerHTML = '<p class="empty-state">No customers found.</p>';
     customerDetailTitle.textContent = "Select a customer";
-    customerDetail.innerHTML = '<p class="empty-state">Create a customer to view details.</p>';
+    customerDetail.innerHTML = '<p class="empty-state">Create a customer or adjust the filters.</p>';
+    customerFollowupForm.classList.add("hidden");
     customerRelatedOrders.innerHTML = "";
+    customerTimelineForm.classList.add("hidden");
     customerTimeline.innerHTML = "";
     return;
   }
 
-  customerList.innerHTML = customers.map((customer) => `
+  if (!selectedCustomerId || !filteredCustomers.some((customer) => customer.id === selectedCustomerId)) {
+    selectedCustomerId = filteredCustomers[0].id;
+  }
+
+  customerList.innerHTML = filteredCustomers.map((customer) => `
     <button class="customer-list-card ${customer.id === selectedCustomerId ? "active" : ""}" type="button" data-customer-id="${customer.id}">
       <h3>${escapeHtml(customer.customerName)}</h3>
       <p>${escapeHtml(customer.companyName || "No company")}${customer.country ? ` · ${escapeHtml(customer.country)}` : ""}</p>
@@ -1200,6 +1470,7 @@ function renderCustomers() {
         <span class="order-pill">${escapeHtml(customer.customerType)}</span>
         <span class="order-pill">${escapeHtml(customer.status)}</span>
         <span class="order-pill priority-${escapeHtml(customer.priority.toLowerCase())}">${escapeHtml(customer.priority)}</span>
+        <span class="order-pill">${escapeHtml(customer.nextFollowUpDate || "No follow-up")}</span>
       </div>
     </button>
   `).join("");
@@ -1257,6 +1528,9 @@ function deleteCustomer(id) {
   customers = customers.filter((item) => item.id !== id);
   selectedCustomerId = customers[0]?.id || "";
   saveCustomers();
+  renderCustomerDashboard();
+  renderCustomerFilters();
+  renderCustomerFollowups();
   renderCustomers();
   renderOrderCustomerOptions();
   clearCustomerForm();
@@ -1266,23 +1540,38 @@ function deleteCustomer(id) {
   } else {
     customerDetailTitle.textContent = "Select a customer";
     customerDetail.innerHTML = '<p class="empty-state">Create a customer to view details.</p>';
+    customerFollowupForm.classList.add("hidden");
     customerRelatedOrders.innerHTML = "";
+    customerTimelineForm.classList.add("hidden");
     customerTimeline.innerHTML = "";
   }
 }
 
 function renderCustomerDetail(customer) {
   const relatedOrders = getRelatedOrders(customer.customerName);
+  const activeOrders = relatedOrders.filter((order) => !["Delivered", "Completed"].includes(order.status));
   customerDetailTitle.textContent = customer.customerName;
+  customerFollowupForm.classList.remove("hidden");
+  customerTimelineForm.classList.remove("hidden");
+  customerFollowupId.value = customer.id;
+  customerFollowupDate.value = customer.nextFollowUpDate;
+  customerFollowupNote.value = customer.followUpNotes;
+  customerTimelineCustomerId.value = customer.id;
+  customerTimelineDate.value = new Date().toISOString().slice(0, 10);
   customerDetail.innerHTML = `
     <div class="order-status-row">
       <span class="order-pill">${escapeHtml(customer.status)}</span>
       <span class="order-pill priority-${escapeHtml(customer.priority.toLowerCase())}">${escapeHtml(customer.priority)}</span>
       <span class="order-pill">${escapeHtml(customer.customerType)}</span>
+      <span class="order-pill">${escapeHtml(activeOrders.length)} active order${activeOrders.length === 1 ? "" : "s"}</span>
     </div>
     <dl class="order-detail-grid">
+      ${renderDetailField("Customer", customer.customerName)}
       ${renderDetailField("Company", customer.companyName)}
       ${renderDetailField("Country", customer.country)}
+      ${renderDetailField("Relationship Status", customer.status)}
+      ${renderDetailField("Customer Type", customer.customerType)}
+      ${renderDetailField("Priority", customer.priority)}
       ${renderDetailField("Contact Person", customer.contactPerson)}
       ${renderDetailField("WhatsApp", customer.whatsapp)}
       ${renderDetailField("Email", customer.email)}
@@ -1291,16 +1580,16 @@ function renderCustomerDetail(customer) {
       ${renderDetailField("Next Follow-Up", customer.nextFollowUpDate)}
     </dl>
     <div class="detail-text-block">
-      <strong>Main Product Interest</strong>
+      <strong>Main Product Interests</strong>
       <p>${escapeHtml(customer.mainProductInterest || "No product interest yet.")}</p>
-    </div>
-    <div class="detail-text-block">
-      <strong>Follow-Up Notes</strong>
-      <p>${escapeHtml(customer.followUpNotes || "No follow-up notes yet.")}</p>
     </div>
     <div class="detail-text-block">
       <strong>Next Action</strong>
       <p>${escapeHtml(customer.nextAction || "No next action set.")}</p>
+    </div>
+    <div class="detail-text-block">
+      <strong>Follow-Up Note</strong>
+      <p>${escapeHtml(customer.followUpNotes || "No follow-up notes yet.")}</p>
     </div>
     <div class="detail-text-block">
       <strong>Notes</strong>
@@ -1324,8 +1613,8 @@ function renderCustomerRelatedOrders(relatedOrders) {
     <p class="card-label">Related Orders</p>
     ${relatedOrders.length ? relatedOrders.map((order) => `
       <button class="related-order-card" type="button" data-open-order="${order.id}">
-        <strong>${escapeHtml(order.orderName)}</strong>
-        <span>${escapeHtml(order.status)} · ${escapeHtml(order.nextAction || "No next action")}</span>
+        <strong>${escapeHtml(order.orderCode || order.id)} · ${escapeHtml(order.orderName)}</strong>
+        <span>${escapeHtml(order.status)} · ${escapeHtml(order.productsSummary || "No products")} · ${escapeHtml(order.nextAction || "No next action")}</span>
       </button>
     `).join("") : '<p class="empty-state">No related orders yet.</p>'}
   `;
@@ -1333,27 +1622,17 @@ function renderCustomerRelatedOrders(relatedOrders) {
 
 function renderCustomerTimeline(customer, relatedOrders) {
   const timelineItems = [
-    {
-      date: formatDateOnly(customer.createdAt),
-      title: "Customer created",
-      description: `${customer.customerName} was added to Customer Center.`
-    },
-    {
-      date: customer.lastContactDate || "No date",
-      title: "Last contact",
-      description: customer.followUpNotes || "No follow-up notes yet."
-    },
-    {
-      date: customer.nextFollowUpDate || "No date",
-      title: "Next follow-up",
-      description: customer.nextAction || "No next action set."
-    },
+    ...(customer.timeline || []),
     ...relatedOrders.map((order) => ({
       date: formatDateOnly(order.updatedAt),
+      eventType: "Related order",
       title: `Related order: ${order.orderName}`,
-      description: `${order.status}. ${order.nextAction || "No next action"}`
+      description: `${order.status}. ${order.nextAction || "No next action"}`,
+      relatedOrderId: order.orderCode || order.id,
+      nextAction: order.nextAction,
+      status: order.status
     }))
-  ];
+  ].sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
   customerTimeline.innerHTML = `
     <p class="card-label">Timeline</p>
@@ -1362,10 +1641,12 @@ function renderCustomerTimeline(customer, relatedOrders) {
         <span>${escapeHtml(item.date)}</span>
         <div>
           <strong>${escapeHtml(item.title)}</strong>
+          <small>${escapeHtml(item.eventType || "Note")}${item.relatedOrderId ? ` · ${escapeHtml(item.relatedOrderId)}` : ""}${item.status ? ` · ${escapeHtml(item.status)}` : ""}</small>
           <p>${escapeHtml(item.description)}</p>
+          ${item.nextAction ? `<p>${escapeHtml(item.nextAction)}</p>` : ""}
         </div>
       </article>
-    `).join("")}
+    `).join("") || '<p class="empty-state">No customer timeline yet.</p>'}
   `;
 }
 
@@ -1385,6 +1666,10 @@ function renderOrderCustomerOptions(selectedValue = "") {
 function setupCustomerCenter() {
   customerForm.addEventListener("submit", saveCustomerFromForm);
   resetCustomerForm.addEventListener("click", clearCustomerForm);
+  [customerSearchInput, customerCountryFilter, customerStatusFilter, customerPriorityFilter, customerTypeFilter, customerInterestFilter].forEach((field) => {
+    field.addEventListener("input", renderCustomers);
+    field.addEventListener("change", renderCustomers);
+  });
 
   customerList.addEventListener("click", (event) => {
     const card = event.target.closest("[data-customer-id]");
@@ -1393,6 +1678,17 @@ function setupCustomerCenter() {
     }
 
     selectCustomer(card.dataset.customerId);
+  });
+
+  [followupDueToday, followupOverdue].forEach((list) => {
+    list.addEventListener("click", (event) => {
+      const card = event.target.closest("[data-customer-id]");
+      if (!card) {
+        return;
+      }
+
+      selectCustomer(card.dataset.customerId);
+    });
   });
 
   customerDetail.addEventListener("click", (event) => {
@@ -1408,6 +1704,16 @@ function setupCustomerCenter() {
     }
   });
 
+  customerFollowupForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveCustomerFollowup();
+  });
+
+  customerTimelineForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    addCustomerTimelineEvent();
+  });
+
   customerRelatedOrders.addEventListener("click", (event) => {
     const orderButton = event.target.closest("[data-open-order]");
     if (!orderButton) {
@@ -1417,6 +1723,70 @@ function setupCustomerCenter() {
     openInternalPage("order-center");
     selectOrder(orderButton.dataset.openOrder);
   });
+}
+
+function saveCustomerFollowup() {
+  const customer = customers.find((item) => item.id === customerFollowupId.value);
+  if (!customer) {
+    return;
+  }
+
+  customer.nextFollowUpDate = customerFollowupDate.value;
+  customer.followUpNotes = customerFollowupNote.value.trim();
+  customer.nextAction = customerFollowupNote.value.trim() || customer.nextAction;
+  customer.updatedAt = new Date().toISOString();
+  customer.timeline = customer.timeline || [];
+  customer.timeline.unshift({
+    id: `customer-timeline-${Date.now()}`,
+    date: new Date().toISOString().slice(0, 10),
+    eventType: "Follow-up",
+    title: "Follow-up updated",
+    description: customer.followUpNotes || "Follow-up date was updated.",
+    relatedOrderId: "",
+    nextAction: customer.nextAction,
+    status: "Open"
+  });
+
+  saveCustomers();
+  renderCustomerDashboard();
+  renderCustomerFilters();
+  renderCustomerFollowups();
+  renderCustomers();
+  renderCustomerDetail(customer);
+}
+
+function addCustomerTimelineEvent() {
+  const customer = customers.find((item) => item.id === customerTimelineCustomerId.value);
+  if (!customer || !customerTimelineTitle.value.trim()) {
+    return;
+  }
+
+  customer.timeline = customer.timeline || [];
+  customer.timeline.unshift({
+    id: `customer-timeline-${Date.now()}`,
+    date: customerTimelineDate.value || new Date().toISOString().slice(0, 10),
+    eventType: customerTimelineEventType.value,
+    title: customerTimelineTitle.value.trim(),
+    description: customerTimelineDescription.value.trim(),
+    relatedOrderId: customerTimelineOrderId.value.trim(),
+    nextAction: customerTimelineNextAction.value.trim(),
+    status: customerTimelineStatus.value
+  });
+  customer.nextAction = customerTimelineNextAction.value.trim() || customer.nextAction;
+  customer.lastContactDate = customerTimelineDate.value || customer.lastContactDate;
+  customer.updatedAt = new Date().toISOString();
+  saveCustomers();
+  renderCustomerDashboard();
+  renderCustomerFilters();
+  renderCustomerFollowups();
+  renderCustomers();
+  renderCustomerDetail(customer);
+  customerTimelineTitle.value = "";
+  customerTimelineDescription.value = "";
+  customerTimelineOrderId.value = "";
+  customerTimelineNextAction.value = "";
+  customerTimelineEventType.value = "First contact";
+  customerTimelineStatus.value = "Open";
 }
 
 function setupEditableLists() {
@@ -1770,6 +2140,9 @@ function init() {
   setupPortalCards();
   setupCommandPalette();
   renderAllEditableLists();
+  renderCustomerDashboard();
+  renderCustomerFilters();
+  renderCustomerFollowups();
   renderCustomers();
   renderOrderCustomerOptions();
   renderOrderDashboard();

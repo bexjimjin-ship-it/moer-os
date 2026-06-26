@@ -362,9 +362,28 @@
       <section class="page" id="customer-center">
         <header class="page-header">
           <p class="eyebrow">Customer Center</p>
-          <h1>Customer Relationships</h1>
-          <p class="date-line">Track customers, follow-ups, related orders, and relationship notes locally in this browser.</p>
+          <h1>Customer Memory Center</h1>
+          <p class="date-line">See who each customer is, what happened before, active orders, follow-ups, and the next action.</p>
         </header>
+
+        <section class="customer-dashboard" id="customerDashboard"></section>
+
+        <section class="customer-followup-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Follow-up</p>
+            <h2>Customers needing attention</h2>
+          </div>
+          <div class="customer-followup-grid">
+            <article>
+              <p class="card-label">Due Today</p>
+              <div id="followupDueToday" class="customer-mini-list"></div>
+            </article>
+            <article>
+              <p class="card-label">Overdue</p>
+              <div id="followupOverdue" class="customer-mini-list"></div>
+            </article>
+          </div>
+        </section>
 
         <div class="customer-center-layout">
           <section class="customer-panel customer-form-panel">
@@ -469,6 +488,24 @@
               <p class="eyebrow">Customers</p>
               <h2>Customer List</h2>
             </div>
+            <div class="customer-filter-grid">
+              <input id="customerSearchInput" type="search" placeholder="Search customers">
+              <select id="customerCountryFilter">
+                <option value="">All countries</option>
+              </select>
+              <select id="customerStatusFilter">
+                <option value="">All status</option>
+              </select>
+              <select id="customerPriorityFilter">
+                <option value="">All priority</option>
+              </select>
+              <select id="customerTypeFilter">
+                <option value="">All types</option>
+              </select>
+              <select id="customerInterestFilter">
+                <option value="">All interests</option>
+              </select>
+            </div>
             <div class="customer-list" id="customerList"></div>
           </section>
 
@@ -480,7 +517,69 @@
             <div id="customerDetail" class="customer-detail">
               <p class="empty-state">Choose a customer to view details, orders, and timeline.</p>
             </div>
+            <form id="customerFollowupForm" class="customer-sub-form hidden">
+              <input id="customerFollowupId" type="hidden">
+              <p class="card-label">Follow-up</p>
+              <label>
+                Next follow-up date
+                <input id="customerFollowupDate" type="date">
+              </label>
+              <label class="full-field">
+                Follow-up note
+                <textarea id="customerFollowupNote" placeholder="What should Jim remember for the next follow-up?"></textarea>
+              </label>
+              <button class="open-link" type="submit">Save Follow-up</button>
+            </form>
             <div id="customerRelatedOrders" class="related-orders"></div>
+            <form id="customerTimelineForm" class="customer-sub-form hidden">
+              <input id="customerTimelineCustomerId" type="hidden">
+              <p class="card-label">Add Customer Timeline Event</p>
+              <label>
+                Date
+                <input id="customerTimelineDate" type="date">
+              </label>
+              <label>
+                Event type
+                <select id="customerTimelineEventType">
+                  <option>First contact</option>
+                  <option>Inquiry received</option>
+                  <option>Quotation sent</option>
+                  <option>Order confirmed</option>
+                  <option>Payment received</option>
+                  <option>Shipment update</option>
+                  <option>Follow-up</option>
+                  <option>Complaint</option>
+                  <option>Visit</option>
+                  <option>Note</option>
+                </select>
+              </label>
+              <label>
+                Title
+                <input id="customerTimelineTitle" type="text" placeholder="Quotation sent">
+              </label>
+              <label>
+                Related order ID
+                <input id="customerTimelineOrderId" type="text" placeholder="MOER-2026-001">
+              </label>
+              <label class="full-field">
+                Description
+                <textarea id="customerTimelineDescription" placeholder="What happened?"></textarea>
+              </label>
+              <label>
+                Next action
+                <input id="customerTimelineNextAction" type="text" placeholder="Follow up next week">
+              </label>
+              <label>
+                Status
+                <select id="customerTimelineStatus">
+                  <option>Open</option>
+                  <option>Waiting</option>
+                  <option>Done</option>
+                  <option>Important</option>
+                </select>
+              </label>
+              <button class="open-link" type="submit">Add Event</button>
+            </form>
             <div id="customerTimeline" class="customer-timeline"></div>
           </section>
         </div>

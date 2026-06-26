@@ -19,7 +19,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Universal Search command palette with Cmd + K or Ctrl + K
 - Editable Today lists for focus tasks, people waiting, and urgent items
 - Real Order Center V1 inside this shell with dashboard cards, local order list, create/edit/delete form, filters, detail view, status progress, and manual timeline events
-- Customer Center V1 with local customer list, create/edit/delete form, detail view, follow-up notes, related orders, and timeline
+- Customer Center V2 with dashboard cards, searchable customer memory, filters, follow-up system, related orders, and manual timeline events
 - Order customer selection from saved Customer Center records
 - Editable local meal planner
 - Basic localStorage for Today data, customers, orders, meal ideas, and settings
