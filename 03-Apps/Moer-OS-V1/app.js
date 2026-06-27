@@ -995,6 +995,14 @@ const portalModules = [
     internalPage: "finance-center"
   },
   {
+    id: "ai-command-center",
+    section: "today",
+    name: "AI Command Center",
+    purpose: "Universal local command search across customers, orders, suppliers, products, quotations, shipments, finance, and knowledge.",
+    status: "Prototype",
+    internalPage: "ai-command-center"
+  },
+  {
     id: "order-center-docs",
     section: "order-center",
     name: "Order Center Documents",
@@ -1139,6 +1147,7 @@ const searchModules = [
       { title: "Shipment Center", type: "Prototype", description: "Open the local Shipment Center prototype.", page: "shipment-center" },
       { title: "Product Center", type: "Prototype", description: "Open the local Product Center prototype.", page: "product-center" },
       { title: "Finance Center", type: "Prototype", description: "Open the local Finance Center prototype.", page: "finance-center" },
+      { title: "AI Command Center", type: "Prototype", description: "Open the universal local command search page.", page: "ai-command-center" },
       { title: "Order Center Architecture", type: "Architecture", description: "Open Order Center architecture docs.", href: "../Order-Center/README.md" },
       { title: "Timeline Engine", type: "Core Engine", description: "Open reusable Timeline Engine prototype.", href: "../../Core/Timeline/index.html" },
       { title: "Focus Center", type: "Architecture", description: "Open Focus Center documentation.", href: "../Focus-Center/README.md" },
@@ -1157,6 +1166,8 @@ const mobileSearchTrigger = document.querySelector("#mobileSearchTrigger");
 const commandOverlay = document.querySelector("#commandOverlay");
 const commandSearchInput = document.querySelector("#commandSearchInput");
 const commandResults = document.querySelector("#commandResults");
+const aiCommandInput = document.querySelector("#aiCommandInput");
+const aiCommandResults = document.querySelector("#aiCommandResults");
 const userName = document.querySelector("#userName");
 const companyName = document.querySelector("#companyName");
 const themeOption = document.querySelector("#themeOption");
@@ -5244,7 +5255,7 @@ function escapeHtml(value) {
 function getSearchRecords() {
   const moduleRecords = searchModules.map((module) => ({
     name: module.name,
-    items: [...module.items]
+    items: module.items.map((item) => ({ ...item, source: "static" }))
   }));
 
   const todayModule = moduleRecords.find((module) => module.name === "Today");
@@ -5309,7 +5320,7 @@ function getSearchRecords() {
 }
 
 function appendOrderSearchRecords(moduleRecords) {
-  const orderModule = moduleRecords.find((module) => module.name === "Moer OS Modules");
+  const orderModule = moduleRecords.find((module) => module.name === "Orders") || moduleRecords.find((module) => module.name === "Moer OS Modules");
   if (!orderModule) {
     return;
   }
@@ -5319,7 +5330,9 @@ function appendOrderSearchRecords(moduleRecords) {
       title: `${order.orderCode} ${order.orderName}`,
       type: "Order",
       description: `${order.customerName} · ${order.supplierName || "No supplier"} · ${order.status} · ${order.nextAction || "No next action"}`,
-      page: "order-center"
+      page: "order-center",
+      recordType: "order",
+      recordId: order.id
     });
   });
 }
@@ -5335,7 +5348,9 @@ function appendCustomerSearchRecords(moduleRecords) {
       title: customer.customerName,
       type: "Customer",
       description: `${customer.country || "No country"} · ${customer.mainProductInterest || "No product interest"} · ${customer.nextAction || "No next action"}`,
-      page: "customer-center"
+      page: "customer-center",
+      recordType: "customer",
+      recordId: customer.id
     });
   });
 }
@@ -5351,7 +5366,9 @@ function appendSupplierSearchRecords(moduleRecords) {
       title: supplier.supplierName,
       type: "Supplier",
       description: `${supplier.productCategory || "No category"} · ${supplier.city || "No city"} · ${supplier.reliabilityRating || "Unknown"} · ${supplier.nextAction || "No next action"}`,
-      page: "supplier-center"
+      page: "supplier-center",
+      recordType: "supplier",
+      recordId: supplier.id
     });
   });
 }
@@ -5367,7 +5384,9 @@ function appendQuotationSearchRecords(moduleRecords) {
       title: `${quotation.quotationCode} ${quotation.customerName}`,
       type: "Quotation",
       description: `${quotation.productSummary || "No product summary"} · ${quotation.currency} ${quotation.totalAmount || "0"} · ${quotation.status} · ${quotation.nextAction || "No next action"}`,
-      page: "quotation-center"
+      page: "quotation-center",
+      recordType: "quotation",
+      recordId: quotation.id
     });
   });
 }
@@ -5383,7 +5402,9 @@ function appendShipmentSearchRecords(moduleRecords) {
       title: `${shipment.shipmentCode} ${shipment.customerName}`,
       type: "Shipment",
       description: `${shipment.pol || "No POL"} to ${shipment.pod || "No POD"} · ${shipment.status} · ${shipment.documentsStatus} · ${shipment.nextAction || "No next action"}`,
-      page: "shipment-center"
+      page: "shipment-center",
+      recordType: "shipment",
+      recordId: shipment.id
     });
   });
 }
@@ -5399,7 +5420,9 @@ function appendProductSearchRecords(moduleRecords) {
       title: product.productName,
       type: "Product",
       description: `${product.category || "No category"} · ${product.supplierName || "No supplier"} · ${product.customerInterested || "No customer"} · ${product.price || "No price"}`,
-      page: "product-center"
+      page: "product-center",
+      recordType: "product",
+      recordId: product.id
     });
   });
 }
@@ -5415,9 +5438,45 @@ function appendFinanceSearchRecords(moduleRecords) {
       title: `${record.financeCode} ${record.type}`,
       type: "Finance",
       description: `${record.customerName || "No customer"} · ${record.supplierName || "No supplier"} · ${record.relatedOrder || "No order"} · ${formatFinanceMoney(record)} · ${record.paymentStatus}`,
-      page: "finance-center"
+      page: "finance-center",
+      recordType: "finance",
+      recordId: record.id
     });
   });
+}
+
+function ensureSearchModule(moduleRecords, name) {
+  let module = moduleRecords.find((item) => item.name === name);
+  if (!module) {
+    module = { name, items: [] };
+    moduleRecords.push(module);
+  }
+  return module;
+}
+
+function appendKnowledgeSearchRecords(moduleRecords) {
+  const knowledgeModule = ensureSearchModule(moduleRecords, "Knowledge");
+  [
+    { title: "Moer Sourcing services", type: "Knowledge", description: "Product sourcing, supplier communication, samples, order follow-up, inspection, consolidation, shipping, and Yiwu Market guide.", page: "knowledge-center" },
+    { title: "Ideal customer profiles", type: "Knowledge", description: "Caribbean, African, North American, European, and first-time importers who need reliable sourcing support.", page: "knowledge-center" },
+    { title: "Moer advantages", type: "Knowledge", description: "Yiwu location, practical sourcing experience, transparent communication, one-stop support, and long-term relationships.", page: "knowledge-center" },
+    { title: "Content and video strategy", type: "Knowledge", description: "Build trust with practical sourcing education, market visits, supplier visits, container loading, and customer questions.", page: "knowledge-center" },
+    { title: "Business goals 2026", type: "Knowledge", description: "SEO, content marketing, customer relationship systems, automation, Africa market development, and personal brand.", page: "knowledge-center" }
+  ].forEach((item) => knowledgeModule.items.push(item));
+}
+
+function getQuickCommandPage(query) {
+  const command = normalizeSearchText(query);
+  const commandPages = {
+    today: "today",
+    orders: "order-center",
+    customers: "customer-center",
+    shipments: "shipment-center",
+    payments: "finance-center",
+    products: "product-center",
+    suppliers: "supplier-center"
+  };
+  return commandPages[command] || "";
 }
 
 function normalizeSearchText(value) {
@@ -5455,6 +5514,7 @@ function scoreFuzzyMatch(query, text) {
 
 function searchItems(query) {
   const records = getSearchRecords();
+  ensureSearchModule(records, "Orders");
   appendOrderSearchRecords(records);
   appendCustomerSearchRecords(records);
   appendSupplierSearchRecords(records);
@@ -5462,14 +5522,18 @@ function searchItems(query) {
   appendShipmentSearchRecords(records);
   appendProductSearchRecords(records);
   appendFinanceSearchRecords(records);
+  appendKnowledgeSearchRecords(records);
+  const quickPage = getQuickCommandPage(query);
 
   return records.map((module) => {
     const results = module.items
       .map((item) => {
         const searchText = `${module.name} ${item.title} ${item.type} ${item.description}`;
+        const quickScore = quickPage && item.page === quickPage ? 500 : 0;
         return {
           ...item,
-          score: scoreFuzzyMatch(query, searchText)
+          module: module.name,
+          score: quickScore || scoreFuzzyMatch(query, searchText)
         };
       })
       .filter((item) => item.score > 0)
@@ -5482,20 +5546,36 @@ function searchItems(query) {
   }).filter((module) => module.results.length > 0);
 }
 
-function renderSearchResults(query) {
+function getResultButtonAttributes(item) {
+  const attributes = [];
+  if (item.href) {
+    attributes.push(`data-result-href="${escapeHtml(item.href)}"`);
+  } else if (item.page) {
+    attributes.push(`data-result-page="${escapeHtml(item.page)}"`);
+  }
+  if (item.recordType) {
+    attributes.push(`data-result-record-type="${escapeHtml(item.recordType)}"`);
+  }
+  if (item.recordId) {
+    attributes.push(`data-result-record-id="${escapeHtml(item.recordId)}"`);
+  }
+  return attributes.join(" ");
+}
+
+function renderGroupedSearchResults(query, targetElement, emptyMessage = "No results found.") {
   const groupedResults = searchItems(query);
 
   if (!groupedResults.length) {
-    commandResults.innerHTML = '<p class="no-results">No results found.</p>';
+    targetElement.innerHTML = `<p class="no-results">${escapeHtml(emptyMessage)}</p>`;
     return;
   }
 
-  commandResults.innerHTML = groupedResults.map((group) => `
+  targetElement.innerHTML = groupedResults.map((group) => `
     <section class="result-group">
       <p class="result-group-title">${escapeHtml(group.name)}</p>
       <div class="result-list">
         ${group.results.map((item) => `
-          <button class="result-item" type="button" ${item.href ? `data-result-href="${item.href}"` : `data-result-page="${item.page}"`}>
+          <button class="result-item" type="button" ${getResultButtonAttributes(item)}>
             <p class="result-title">
               <span>${escapeHtml(item.title)}</span>
               <span class="result-type">${escapeHtml(item.type)}</span>
@@ -5508,8 +5588,60 @@ function renderSearchResults(query) {
   `).join("");
 }
 
+function renderSearchResults(query) {
+  renderGroupedSearchResults(query, commandResults);
+}
+
+function openSearchResult(result) {
+  if (!result) {
+    return;
+  }
+
+  if (result.dataset.resultHref) {
+    window.location.href = result.dataset.resultHref;
+    return;
+  }
+
+  const page = result.dataset.resultPage;
+  const recordType = result.dataset.resultRecordType;
+  const recordId = result.dataset.resultRecordId;
+
+  if (page) {
+    openInternalPage(page);
+  }
+
+  if (!recordType || !recordId) {
+    return;
+  }
+
+  if (recordType === "order") {
+    selectOrder(recordId);
+  }
+  if (recordType === "customer") {
+    selectCustomer(recordId);
+  }
+  if (recordType === "supplier") {
+    selectSupplier(recordId);
+  }
+  if (recordType === "quotation") {
+    selectQuotation(recordId);
+  }
+  if (recordType === "shipment") {
+    selectShipment(recordId);
+  }
+  if (recordType === "product") {
+    selectProduct(recordId);
+  }
+  if (recordType === "finance") {
+    selectFinanceRecord(recordId);
+  }
+}
+
 function setupCommandPalette() {
-  searchTrigger.addEventListener("click", openCommandPalette);
+  searchTrigger.addEventListener("click", () => {
+    openInternalPage("ai-command-center");
+    window.setTimeout(() => aiCommandInput.focus(), 0);
+  });
   mobileSearchTrigger.addEventListener("click", openCommandPalette);
 
   commandSearchInput.addEventListener("input", () => {
@@ -5528,11 +5660,7 @@ function setupCommandPalette() {
       return;
     }
 
-    if (result.dataset.resultHref) {
-      window.location.href = result.dataset.resultHref;
-    } else {
-      showPage(result.dataset.resultPage);
-    }
+    openSearchResult(result);
     closeCommandPalette();
   });
 
@@ -5548,6 +5676,33 @@ function setupCommandPalette() {
     if (event.key === "Escape" && commandOverlay.classList.contains("open")) {
       closeCommandPalette();
     }
+  });
+}
+
+function renderAiCommandResults(query = "") {
+  renderGroupedSearchResults(query, aiCommandResults, "No local records found.");
+}
+
+function setupAiCommandCenter() {
+  aiCommandInput.addEventListener("input", () => {
+    renderAiCommandResults(aiCommandInput.value);
+  });
+
+  document.querySelectorAll("[data-ai-command]").forEach((button) => {
+    button.addEventListener("click", () => {
+      aiCommandInput.value = button.dataset.aiCommand;
+      renderAiCommandResults(aiCommandInput.value);
+      aiCommandInput.focus();
+    });
+  });
+
+  aiCommandResults.addEventListener("click", (event) => {
+    const result = event.target.closest("[data-result-page], [data-result-href]");
+    if (!result) {
+      return;
+    }
+
+    openSearchResult(result);
   });
 }
 
@@ -5691,6 +5846,7 @@ function init() {
   setupPortalCards();
   setupTodayDashboardActions();
   setupCommandPalette();
+  setupAiCommandCenter();
   renderAllEditableLists();
   renderCustomerDashboard();
   renderCustomerFilters();
@@ -5720,6 +5876,7 @@ function init() {
   renderFinanceRecords();
   renderFinanceCustomerOptions();
   renderFinanceOrderOptions();
+  renderAiCommandResults("");
   renderOrderDashboard();
   renderOrderFilters();
   renderOrders();

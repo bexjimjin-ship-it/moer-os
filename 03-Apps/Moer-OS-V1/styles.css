@@ -1229,6 +1229,69 @@ select {
   color: var(--muted);
 }
 
+.ai-command-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.ai-command-box {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.ai-command-box input {
+  min-height: 52px;
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+}
+
+.ai-command-box input:focus {
+  box-shadow: none;
+}
+
+.ai-command-shortcuts {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ai-command-shortcuts button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.ai-command-shortcuts button:hover,
+.ai-command-shortcuts button:focus {
+  border-color: var(--accent);
+  color: var(--text);
+  outline: none;
+}
+
+.ai-command-results {
+  display: grid;
+  gap: 12px;
+}
+
+.ai-command-results .result-group {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
 .bottom-nav {
   display: none;
 }
@@ -1439,7 +1502,7 @@ select {
     bottom: 0;
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(12, minmax(72px, 1fr));
+    grid-template-columns: repeat(13, minmax(72px, 1fr));
     gap: 4px;
     overflow-x: auto;
     padding: 8px;

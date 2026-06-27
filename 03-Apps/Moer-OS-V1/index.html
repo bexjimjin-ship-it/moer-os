@@ -31,6 +31,7 @@
         <button class="nav-item" data-page="shipment-center" type="button">Shipment Center</button>
         <button class="nav-item" data-page="product-center" type="button">Product Center</button>
         <button class="nav-item" data-page="finance-center" type="button">Finance Center</button>
+        <button class="nav-item" data-page="ai-command-center" type="button">AI Command Center</button>
         <button class="nav-item" data-page="knowledge-center" type="button">Knowledge Center</button>
         <button class="nav-item" data-page="timeline-engine" type="button">Timeline Engine</button>
         <button class="nav-item" data-page="family-meal-planner" type="button">Meal Planner</button>
@@ -1359,6 +1360,31 @@
         </div>
       </section>
 
+      <section class="page" id="ai-command-center">
+        <header class="page-header">
+          <p class="eyebrow">AI Command Center</p>
+          <h1>Universal Command Search</h1>
+          <p class="date-line">Search customers, orders, suppliers, products, quotations, shipments, finance records, and knowledge. Local data only.</p>
+        </header>
+
+        <section class="ai-command-panel">
+          <div class="ai-command-box">
+            <span class="command-icon">⌕</span>
+            <input id="aiCommandInput" type="search" autocomplete="off" placeholder="Type anything, or try orders, payments, products..." aria-label="Search Moer OS records">
+          </div>
+          <div class="ai-command-shortcuts" aria-label="Quick commands">
+            <button type="button" data-ai-command="today">today</button>
+            <button type="button" data-ai-command="orders">orders</button>
+            <button type="button" data-ai-command="customers">customers</button>
+            <button type="button" data-ai-command="shipments">shipments</button>
+            <button type="button" data-ai-command="payments">payments</button>
+            <button type="button" data-ai-command="products">products</button>
+            <button type="button" data-ai-command="suppliers">suppliers</button>
+          </div>
+          <div class="ai-command-results" id="aiCommandResults"></div>
+        </section>
+      </section>
+
       <section class="page" id="family-meal-planner">
         <header class="page-header">
           <p class="eyebrow">Family Meal Planner</p>
@@ -1416,6 +1442,7 @@
       <button class="bottom-item" data-page="shipment-center" type="button">Shipments</button>
       <button class="bottom-item" data-page="product-center" type="button">Products</button>
       <button class="bottom-item" data-page="finance-center" type="button">Finance</button>
+      <button class="bottom-item" data-page="ai-command-center" type="button">Command</button>
       <button class="bottom-item" data-page="knowledge-center" type="button">Knowledge</button>
       <button class="bottom-item" data-page="timeline-engine" type="button">Timeline</button>
       <button class="bottom-item" data-page="family-meal-planner" type="button">Meals</button>

@@ -14,6 +14,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Shipment Center page
 - Product Center page
 - Finance Center page
+- AI Command Center page
 - Knowledge Center page
 - Timeline Engine page
 - Family Meal Planner page
@@ -24,6 +25,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 - Universal Search command palette with Cmd + K or Ctrl + K
 - Today Dashboard Integration V1 with daily overview cards from orders, customers, suppliers, quotations, shipments, finance records, products, and family reminders
 - Quick action buttons for new order, customer, supplier, quotation, shipment, finance record, and knowledge search
+- AI Command Center V1 with one universal local command box, grouped results, quick commands, and click-to-open records
 - Editable Today lists for focus tasks, people waiting, and urgent items
 - Real Order Center V1 inside this shell with dashboard cards, local order list, create/edit/delete form, filters, detail view, status progress, and manual timeline events
 - Customer Center V2 with dashboard cards, searchable customer memory, filters, follow-up system, related orders, and manual timeline events
@@ -49,7 +51,7 @@ Version 0.1 connects the main Moer OS areas into one clickable local shell.
 
 Open search with `Cmd + K` on Mac or `Ctrl + K` on Windows.
 
-The search uses mock module data plus current Today notes, customers, suppliers, quotations, shipments, products, finance records, and orders from localStorage. It does not connect to any database or external service.
+The search uses mock module data plus current Today notes, customers, suppliers, quotations, shipments, products, finance records, knowledge entries, and orders from localStorage. It does not connect to any database, GPT, API, or external service.
 
 ## Tech
 
@@ -80,6 +82,7 @@ Clickable prototypes:
 - Shipment Center: inside this shell
 - Product Center: inside this shell
 - Finance Center: inside this shell
+- AI Command Center: inside this shell
 - Knowledge Center: `../Knowledge-Center/index.html`
 - Timeline Engine: `../../Core/Timeline/index.html`
 - Family Meal Planner: inside this shell
